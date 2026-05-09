@@ -5,11 +5,11 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const mobileNavItems = [
-  { href: '/dashboard', label: 'Home', icon: '🏠' },
-  { href: '/leads', label: 'Leads', icon: '📥' },
-  { href: '/pipeline', label: 'Pipeline', icon: '🔄' },
-  { href: '/messages', label: 'Chat', icon: '💬' },
-  { href: '/settings', label: 'More', icon: '⚙️' },
+  { href: '/dashboard', label: 'Home' },
+  { href: '/leads', label: 'Leads' },
+  { href: '/pipeline', label: 'Pipe' },
+  { href: '/messages', label: 'Chat' },
+  { href: '/settings', label: 'More' },
 ];
 
 export function MobileNav({ className }: { className?: string }) {
@@ -18,24 +18,33 @@ export function MobileNav({ className }: { className?: string }) {
   return (
     <nav
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white px-2 pb-[env(safe-area-inset-bottom)]',
+        'fixed bottom-0 left-0 right-0 z-50 border-t border-onyx-line bg-onyx px-[18px] pb-[env(safe-area-inset-bottom)]',
         className
       )}
     >
-      <div className="flex items-center justify-around">
+      <div className="flex items-center justify-around py-3">
         {mobileNavItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={cn(
-                'flex flex-col items-center py-2 px-3 text-xs',
-                isActive ? 'text-brand-600' : 'text-gray-500'
-              )}
+              className="flex flex-col items-center gap-1"
             >
-              <span className="text-xl mb-0.5">{item.icon}</span>
-              <span className="font-medium">{item.label}</span>
+              <span
+                className={cn(
+                  'w-[5px] h-[5px] rounded-full',
+                  isActive ? 'bg-aqua' : 'bg-gray-2'
+                )}
+              />
+              <span
+                className={cn(
+                  'text-[10px] font-semibold',
+                  isActive ? 'text-white' : 'text-gray-2'
+                )}
+              >
+                {item.label}
+              </span>
             </Link>
           );
         })}

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Send, Check, CheckCheck, FileText } from 'lucide-react';
 import Link from 'next/link';
 import type { Message, Contact } from '@propagent/shared';
 
@@ -18,19 +17,17 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  async function handleSend() {
-    const body = inputValue.trim();
-    if (!body || isSending) return;
+  async function handleSend(body?: string) {
+    const text = (body ?? inputValue).trim();
+    if (!text || isSending) return;
 
     setInputValue('');
     setIsSending(true);
 
-    // Optimistically add message to UI
     const optimisticMessage: Message = {
       id: `temp-${Date.now()}`,
       tenant_id: tenantId,
@@ -39,7 +36,7 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
       wa_number_id: null,
       direction: 'outbound',
       channel: 'whatsapp',
-      body,
+      body: text,
       media_url: null,
       wa_message_id: null,
       status: 'sent',
@@ -54,19 +51,17 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contact_id: contact.id,
-          body,
+          body: text,
           tenant_id: tenantId,
         }),
       });
 
       if (res.ok) {
         const { message: savedMessage } = await res.json();
-        // Replace optimistic message with the real one
         setMessages((prev) =>
           prev.map((m) => (m.id === optimisticMessage.id ? savedMessage : m))
         );
       } else {
-        // Mark as failed
         setMessages((prev) =>
           prev.map((m) =>
             m.id === optimisticMessage.id ? { ...m, status: 'failed' as const } : m
@@ -92,61 +87,91 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
     }
   }
 
+  // Mock smart reply suggestion
+  const suggestedReply =
+    'Confirmed — Saturday 4pm at 32 Mt Faber. I\'ll send the lobby code Friday evening. Last unit in the stack closed at $2,180 psf, so we\'re well-positioned to discuss pricing.';
+
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-onyx">
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200 shadow-sm">
-        <Link
-          href="/messages"
-          className="lg:hidden p-1 -ml-1 rounded-md hover:bg-gray-100"
-          aria-label="Back to messages"
-        >
-          <ArrowLeft className="h-5 w-5 text-gray-600" />
-        </Link>
-
-        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-brand-100 flex items-center justify-center">
-          <span className="text-sm font-semibold text-brand-700">
-            {contact.full_name.charAt(0).toUpperCase()}
-          </span>
+      <div className="flex items-center justify-between px-5 lg:px-7 py-4 border-b border-onyx-line">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/messages"
+            className="lg:hidden p-1 -ml-1 rounded-md hover:bg-onyx-card text-gray-2"
+            aria-label="Back to messages"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-aqua flex-shrink-0" />
+          <div>
+            <div className="text-sm font-semibold text-white">{contact.full_name}</div>
+            <div className="text-[11px] text-gray-2">
+              {contact.phone} · Lead in Qualified
+            </div>
+          </div>
         </div>
-
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-gray-900 truncate">
-            {contact.full_name}
-          </p>
-          <p className="text-xs text-gray-500">{contact.phone}</p>
+        <div className="flex gap-2">
+          <button className="btn-ghost text-xs py-1.5 px-3">View lead</button>
+          <button className="btn-ghost text-xs py-1.5 px-3">Book viewing</button>
         </div>
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
+      <div className="flex-1 overflow-y-auto px-5 lg:px-7 py-5 space-y-3 bg-[radial-gradient(ellipse_at_top,rgba(40,89,247,0.06),transparent_60%)]">
         {messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />
         ))}
+
+        {/* Smart suggestion */}
+        {messages.length > 0 && (
+          <div className="border border-aqua/40 rounded-[14px] p-3.5 bg-brand/10 max-w-[460px]">
+            <div className="text-[11px] font-display font-bold tracking-wider text-aqua">
+              SUGGESTED REPLY · BASED ON HER BRIEF
+            </div>
+            <p className="text-[13px] text-white mt-1.5 leading-relaxed">
+              {suggestedReply}
+            </p>
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={() => handleSend(suggestedReply)}
+                className="btn-primary text-xs py-1.5 px-3"
+              >
+                Send
+              </button>
+              <button
+                onClick={() => setInputValue(suggestedReply)}
+                className="btn-ghost text-xs py-1.5 px-3"
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input area */}
-      <div className="px-4 py-3 bg-white border-t border-gray-200">
-        <div className="flex items-center gap-2">
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message..."
-            className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
-          <button
-            onClick={handleSend}
-            disabled={!inputValue.trim() || isSending}
-            className="flex-shrink-0 h-10 w-10 rounded-full bg-brand-600 flex items-center justify-center text-white hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            aria-label="Send message"
-          >
-            <Send className="h-4 w-4" />
-          </button>
-        </div>
+      {/* Composer */}
+      <div className="px-5 lg:px-7 py-4 border-t border-onyx-line flex items-center gap-3">
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Reply via WhatsApp..."
+          className="flex-1 rounded-pill border border-onyx-line bg-onyx-card px-[18px] py-3 text-[13px] text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+        />
+        <button
+          onClick={() => handleSend()}
+          disabled={!inputValue.trim() || isSending}
+          className="btn-primary py-3 px-5 disabled:opacity-50"
+        >
+          Send
+        </button>
       </div>
     </div>
   );
@@ -157,83 +182,41 @@ function MessageBubble({ message }: { message: Message }) {
 
   return (
     <div className={`flex ${isOutbound ? 'justify-end' : 'justify-start'}`}>
-      <div
-        className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-          isOutbound
-            ? 'bg-brand-600 text-white rounded-br-md'
-            : 'bg-gray-100 text-gray-900 rounded-bl-md'
-        }`}
-      >
-        {/* Media content */}
-        {message.media_url && (
-          <MediaContent url={message.media_url} isOutbound={isOutbound} />
-        )}
-
-        {/* Message body */}
-        {message.body && (
-          <p className="text-sm whitespace-pre-wrap break-words">{message.body}</p>
-        )}
-
-        {/* Timestamp and status */}
+      <div className="max-w-[460px]">
         <div
-          className={`flex items-center justify-end gap-1 mt-1 ${
-            isOutbound ? 'text-white/70' : 'text-gray-400'
+          className={`px-4 py-2.5 text-[13px] leading-[1.45] ${
+            isOutbound
+              ? 'bg-brand text-white rounded-2xl rounded-br-[4px]'
+              : 'bg-onyx-card border border-onyx-line text-white rounded-2xl rounded-bl-[4px]'
           }`}
         >
-          <span className="text-[10px]">
+          {message.body && (
+            <p className="whitespace-pre-wrap break-words">{message.body}</p>
+          )}
+        </div>
+        <div
+          className={`flex items-center gap-1 mt-1 ${
+            isOutbound ? 'justify-end' : 'justify-start'
+          }`}
+        >
+          <span className="text-[10px] text-gray-2">
             {formatMessageTime(message.sent_at)}
           </span>
-          {isOutbound && <StatusIcon status={message.status} />}
+          {isOutbound && (
+            <span className="text-[10px] text-gray-2">
+              {message.status === 'read'
+                ? '✓✓'
+                : message.status === 'delivered'
+                ? '✓✓'
+                : message.status === 'failed'
+                ? 'Failed'
+                : '✓'}
+            </span>
+          )}
         </div>
       </div>
     </div>
   );
-}
-
-function MediaContent({ url, isOutbound }: { url: string; isOutbound: boolean }) {
-  const isImage = /\.(jpg|jpeg|png|gif|webp)/i.test(url);
-
-  if (isImage) {
-    return (
-      <div className="mb-1 -mx-1 -mt-0.5">
-        <img
-          src={url}
-          alt="Shared image"
-          className="rounded-lg max-h-48 w-auto object-cover"
-          loading="lazy"
-        />
-      </div>
-    );
-  }
-
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`flex items-center gap-2 mb-1 p-2 rounded-lg ${
-        isOutbound ? 'bg-brand-700/50' : 'bg-gray-200'
-      }`}
-    >
-      <FileText className="h-4 w-4 flex-shrink-0" />
-      <span className="text-xs truncate">Document</span>
-    </a>
-  );
-}
-
-function StatusIcon({ status }: { status: string }) {
-  switch (status) {
-    case 'read':
-      return <CheckCheck className="h-3.5 w-3.5 text-blue-300" />;
-    case 'delivered':
-      return <CheckCheck className="h-3.5 w-3.5" />;
-    case 'sent':
-      return <Check className="h-3.5 w-3.5" />;
-    case 'failed':
-      return <span className="text-[10px] text-red-300">Failed</span>;
-    default:
-      return null;
-  }
 }
 
 function formatMessageTime(dateStr: string): string {

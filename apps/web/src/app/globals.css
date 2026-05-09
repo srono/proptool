@@ -5,9 +5,44 @@
 @layer base {
   :root {
     --radius: 0.5rem;
+    --onyx: #121212;
+    --onyx-card: #1A1A1A;
+    --onyx-raised: #222222;
+    --onyx-line: #2A2A2A;
+    --brand: #2859F7;
+    --brand-deep: #0945E6;
+    --aqua: #8EFEFF;
   }
 
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-onyx text-white;
+  }
+
+  /* Scrollbar styling for dark theme */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2A2A2A;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #454545;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply rounded-pill bg-aqua text-onyx font-medium text-sm px-[18px] py-[10px] cursor-pointer transition-opacity hover:opacity-90;
+  }
+  .btn-ghost {
+    @apply rounded-pill border border-onyx-line bg-transparent text-white font-medium text-sm px-[18px] py-[10px] cursor-pointer transition-colors hover:bg-onyx-card;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-pill border text-[11px] font-semibold font-display uppercase tracking-wide;
   }
 }

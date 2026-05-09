@@ -1,5 +1,18 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter, Figtree } from 'next/font/google';
 import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const figtree = Figtree({
+  subsets: ['latin'],
+  variable: '--font-figtree',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'PropAgent SG',
@@ -11,7 +24,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#0c93e7',
+  themeColor: '#121212',
 };
 
 export default function RootLayout({
@@ -20,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${figtree.variable}`}>
       <body className="font-sans antialiased">
         {children}
       </body>

@@ -1,4 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
+import Link from 'next/link';
+import { TheBrief } from '@/components/dashboard/the-brief';
+import { KPIStrip } from '@/components/dashboard/kpi-strip';
+import { PipelineFunnel } from '@/components/dashboard/pipeline-funnel';
+import { ScheduleCard } from '@/components/dashboard/schedule-card';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -26,54 +31,50 @@ export default async function DashboardPage() {
     .select('*', { count: 'exact', head: true })
     .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
 
+  const today = new Date().toLocaleDateString('en-SG', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+
   return (
-    <div className="p-4 lg:p-8 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-600 mt-1">Your property business at a glance</p>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard label="Active Leads" value={activeLeads ?? 0} />
-        <KPICard label="New This Week" value={newLeadsThisWeek ?? 0} />
-        <KPICard label="Viewings Scheduled" value={viewingsThisWeek ?? 0} />
-        <KPICard label="Overdue Tasks" value={overdueTasks ?? 0} alert={!!overdueTasks && overdueTasks > 0} />
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <QuickAction href="/leads/new" label="Add Lead" icon="➕" />
-          <QuickAction href="/pipeline" label="Pipeline" icon="📊" />
-          <QuickAction href="/listings/new" label="Add Listing" icon="🏠" />
-          <QuickAction href="/messages" label="Messages" icon="💬" />
+    <div className="p-4 lg:p-7 space-y-5">
+      {/* Page header */}
+      <div className="flex items-end justify-between border-b border-onyx-line pb-5">
+        <div>
+          <h1 className="font-display font-bold text-[26px] text-white tracking-tight">
+            Today, {today}
+          </h1>
+          <p className="text-[13px] text-gray-2 mt-1">
+            Good morning. {overdueTasks ?? 0} leads need follow-up.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Link href="/tools/stamp-duty" className="btn-ghost text-xs">
+            Stamp duty
+          </Link>
+          <Link href="/leads/new" className="btn-primary text-xs">
+            + New lead
+          </Link>
         </div>
       </div>
-    </div>
-  );
-}
 
-function KPICard({ label, value, alert }: { label: string; value: number; alert?: boolean }) {
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4">
-      <p className="text-sm text-gray-600">{label}</p>
-      <p className={`text-2xl font-bold mt-1 ${alert ? 'text-red-600' : 'text-gray-900'}`}>
-        {value}
-      </p>
-    </div>
-  );
-}
+      {/* The Brief — distinctive moment */}
+      <TheBrief />
 
-function QuickAction({ href, label, icon }: { href: string; label: string; icon: string }) {
-  return (
-    <a
-      href={href}
-      className="flex flex-col items-center justify-center rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors"
-    >
-      <span className="text-2xl mb-1">{icon}</span>
-      <span className="text-xs font-medium text-gray-700">{label}</span>
-    </a>
+      {/* KPI strip */}
+      <KPIStrip
+        activeLeads={activeLeads ?? 0}
+        viewingsBooked={viewingsThisWeek ?? 0}
+        overdueTasks={overdueTasks ?? 0}
+        newLeadsThisWeek={newLeadsThisWeek ?? 0}
+      />
+
+      {/* Two-up: Pipeline funnel + Schedule */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-4">
+        <PipelineFunnel />
+        <ScheduleCard />
+      </div>
+    </div>
   );
 }

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PropTool — Refined Design (Print)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Figtree:wght@400;500;600;700&family=Kalam:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0d; color: #fff; font-family: "Inter", system-ui, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { box-sizing: border-box; }
+
+  .print-doc { display: flex; flex-direction: column; align-items: center; padding: 32px 0; gap: 28px; }
+  .page {
+    background: #0b0b0d;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    break-after: page;
+    page-break-after: always;
+    width: 1280px;
+    display: flex; flex-direction: column;
+    align-items: stretch;
+    padding: 28px;
+    border-radius: 8px;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+  .page-label {
+    font-family: "Figtree", sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 1.5px;
+    color: #8EFEFF; text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .page-label .dot { width: 6px; height: 6px; border-radius: 999px; background: #8EFEFF; box-shadow: 0 0 10px #8EFEFF; }
+  .section-header {
+    width: 1280px; padding: 18px 0 6px; color: #fff;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    margin-top: 16px;
+  }
+  .section-header h2 { font-family: "Figtree", sans-serif; font-weight: 700; font-size: 22px; margin: 0; letter-spacing: -0.4px; }
+  .section-header p  { font-family: "Inter", sans-serif; font-size: 13px; color: #898E92; margin: 6px 0 0; max-width: 900px; line-height: 1.5; }
+
+  .artboard-wrap {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+    align-self: center;
+  }
+  /* Wireframe boards have a paper background; hi-fi boards are dark */
+  .artboard-wrap.dark { background: #121212; }
+
+  @page {
+    size: 1340px 920px;
+    margin: 0;
+  }
+  @media print {
+    html, body { background: #fff; }
+    .print-doc { padding: 0; gap: 0; }
+    .page { background: #fff; box-shadow: none; border-radius: 0; padding: 20px; width: 1340px; height: 920px; justify-content: flex-start; }
+    .section-header { width: 1300px; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="wireframes.jsx"></script>
+<script type="text/babel" src="hifi.jsx"></script>
+
+<script type="text/babel">
+function IntroCard() {
+  return (
+    <div style={{
+      width: 1280, padding: '40px 56px',
+      background: 'linear-gradient(135deg, #0945E6 0%, #2859F7 50%, #0C5AFF 100%)',
+      color: '#fff', fontFamily: 'Inter, sans-serif',
+      position: 'relative', overflow: 'hidden',
+    }}>
+      <div style={{ position: 'absolute', top: -100, right: -80, width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(142,254,255,0.5), transparent)' }} />
+      <div style={{ position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 6, height: 6, borderRadius: 999, background: '#8EFEFF' }} />
+          <div style={{ fontFamily: 'Figtree, sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: 1.6, color: '#8EFEFF' }}>PROPTOOL · DESIGN REVIEW · 8 MAY 2026</div>
+        </div>
+        <h1 style={{ fontFamily: 'Figtree, sans-serif', fontWeight: 700, fontSize: 40, lineHeight: 1.1, letterSpacing: -1, margin: '14px 0 10px', maxWidth: 900 }}>
+          From a generic Tailwind CRM to a branded operator's tool for Singapore property agents.
+        </h1>
+        <p style={{ fontSize: 14, lineHeight: 1.6, opacity: 0.88, maxWidth: 760, margin: '0 0 24px' }}>
+          Two sections follow. <b>Wireframes</b> reverse-engineered from the current build, with annotations on what's not yet working. <b>Refined direction</b> — a single hi-fi pick in the 10thirtyLabs brand language: onyx-first, Full-Spectrum-Blue accents, aqua CTA, Inter + Figtree, no emoji.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 24, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.18)', maxWidth: 1100 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, color: '#8EFEFF' }}>SYSTEM</div>
+            <div style={{ fontSize: 12, marginTop: 8, lineHeight: 1.55, opacity: 0.9 }}>
+              Onyx #121212 canvas · cards #1A1A1A · 1px #2A2A2A divider · Full Spectrum Blue #2859F7 primary · Aqua #8EFEFF for CTAs and "moments". Pill geometry on every interactive element.
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, color: '#8EFEFF' }}>TYPOGRAPHY</div>
+            <div style={{ fontSize: 12, marginTop: 8, lineHeight: 1.55, opacity: 0.9 }}>
+              Display in Figtree (BT Beau Sans fallback) — section labels in tracked all-caps, page titles in sentence case at 26–28px. Body in Inter 13/15. No emoji anywhere.
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, color: '#8EFEFF' }}>TWO DISTINCTIVE MOMENTS</div>
+            <div style={{ fontSize: 12, marginTop: 8, lineHeight: 1.55, opacity: 0.9 }}>
+              <b>1. The Brief</b> — daily hero that names the highest-leverage call.<br/>
+              <b>2. Area Insight as hero</b> — PSF chart + tap-to-copy seller pitch on every listing.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Page({ label, children, dark }) {
+  return (
+    <div className="page">
+      <div className="page-label"><span className="dot"/>{label}</div>
+      <div className={"artboard-wrap" + (dark ? " dark" : "")}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function SectionHeader({ title, subtitle }) {
+  return (
+    <div className="section-header">
+      <h2>{title}</h2>
+      {subtitle && <p>{subtitle}</p>}
+    </div>
+  );
+}
+
+const { WFDashboardDesktop, WFPipelineDesktop, WFListingsMobile, WFLeadDetail, WFMessagesMobile, WFLogin,
+        HFDashboard, HFPipeline, HFListingDetail, HFMobilePipeline, HFLogin, HFMessages } = window;
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <div className="print-doc">
+    <div className="page">
+      <IntroCard />
+    </div>
+
+    <Page label="Section 1 · Wireframes — current state, reverse-engineered">
+      <WFLogin />
+    </Page>
+    <Page label="Wireframe · Dashboard">
+      <WFDashboardDesktop />
+    </Page>
+    <Page label="Wireframe · Pipeline (Kanban)">
+      <WFPipelineDesktop />
+    </Page>
+    <Page label="Wireframe · Lead detail with Area Insight surface">
+      <WFLeadDetail />
+    </Page>
+    <Page label="Wireframe · Listings (mobile)">
+      <WFListingsMobile />
+    </Page>
+    <Page label="Wireframe · Messages (mobile)">
+      <WFMessagesMobile />
+    </Page>
+
+    <Page label="Section 2 · Refined direction — 10thirtyLabs brand applied" dark>
+      <HFLogin />
+    </Page>
+    <Page label="Refined · Dashboard with The Brief" dark>
+      <HFDashboard />
+    </Page>
+    <Page label="Refined · Pipeline" dark>
+      <HFPipeline />
+    </Page>
+    <Page label="Refined · Listing detail with Area Insight as hero" dark>
+      <HFListingDetail />
+    </Page>
+    <Page label="Refined · Messages with WhatsApp + smart reply" dark>
+      <HFMessages />
+    </Page>
+    <Page label="Refined · Mobile Pipeline" dark>
+      <HFMobilePipeline />
+    </Page>
+  </div>
+);
+
+// Wait for fonts + a tick for React to settle, then trigger print.
+(async () => {
+  try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (e) {}
+  await new Promise(r => setTimeout(r, 800));
+  window.print();
+})();
+</script>
+</body>
+</html>

@@ -35,21 +35,12 @@ interface LeadCardProps {
 export function LeadCard({ lead }: LeadCardProps) {
   const router = useRouter();
   const [updating, setUpdating] = useState(false);
-  const urgency = URGENCY_CONFIG[lead.urgency as keyof typeof URGENCY_CONFIG];
+
   const daysSinceActivity = Math.floor(
     (Date.now() - new Date(lead.last_activity_at).getTime()) / (1000 * 60 * 60 * 24)
   );
-  const overdueTasks = lead.tasks.filter(
-    (t) => !t.completed_at && new Date(t.due_at) < new Date()
-  );
 
-  const verificationBadge = lead.verification_score === 3
-    ? '🟢'
-    : lead.verification_score === 2
-    ? '🟡'
-    : lead.verification_score === 1
-    ? '🔴'
-    : null;
+  const isHot = lead.urgency === 'hot' || (lead.intent_score && lead.intent_score >= 4);
 
   async function handleStageChange(e: React.ChangeEvent<HTMLSelectElement>) {
     e.preventDefault();
@@ -68,63 +59,74 @@ export function LeadCard({ lead }: LeadCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm hover:shadow-md transition-shadow">
-      <Link href={`/leads/${lead.id}`}>
-        {/* Header row */}
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {lead.contact?.full_name ?? 'Unknown'}
-            </p>
-            <p className="text-xs text-gray-500 truncate">
-              {lead.contact?.phone}
-            </p>
+    <div
+      className={`bg-onyx-card border rounded-[14px] p-3.5 transition-shadow hover:shadow-lg ${
+        isHot ? 'border-aqua/40' : 'border-onyx-line'
+      }`}
+    >
+      <Link href={`/leads/${lead.id}`} className="block">
+        {/* Hot indicator */}
+        {isHot && (
+          <div className="flex items-center gap-1 mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-aqua shadow-[0_0_8px_theme(colors.aqua.DEFAULT)]" />
+            <span className="text-[10px] text-aqua font-bold tracking-wider">HOT</span>
           </div>
-          <span className="text-xs ml-2">{urgency?.emoji}</span>
+        )}
+
+        {/* Name + phone */}
+        <div className="text-sm font-semibold text-white tracking-tight">
+          {lead.contact?.full_name ?? 'Unknown'}
+        </div>
+        <div className="text-[11px] text-gray-2 mt-0.5">
+          {lead.contact?.phone}
         </div>
 
-        {/* Badges row */}
-        <div className="flex flex-wrap gap-1 mb-2">
-          <span className="inline-flex items-center rounded-md bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
+        {/* Chips */}
+        <div className="flex flex-wrap gap-1.5 mt-2.5">
+          <span className="chip text-aqua border-brand/50 bg-brand/[0.12]">
             {lead.deal_type}
           </span>
           {lead.eligibility_risk && (
-            <span className="inline-flex items-center rounded-md bg-red-50 px-1.5 py-0.5 text-xs text-red-700">
-              🔴 Eligibility
-            </span>
-          )}
-          {verificationBadge && (
-            <span className="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-xs">
-              {verificationBadge}
+            <span className="chip text-status-red border-status-red/40 bg-status-red/10">
+              ELIG WATCH
             </span>
           )}
           {lead.intent_score && (
-            <span className="inline-flex items-center rounded-md bg-blue-50 px-1.5 py-0.5 text-xs text-blue-700">
-              Intent: {lead.intent_score}/5
+            <span
+              className={`chip ${
+                lead.intent_score >= 4
+                  ? 'text-status-green border-status-green/40 bg-status-green/10'
+                  : 'text-status-amber border-status-amber/40 bg-status-amber/10'
+              }`}
+            >
+              INTENT {lead.intent_score}
             </span>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between text-xs">
-          <span className={daysSinceActivity > 3 ? 'text-red-600 font-medium' : 'text-gray-400'}>
+        <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-onyx-line">
+          <span className="text-[11px] text-gray-2">
             {daysSinceActivity === 0 ? 'Today' : `${daysSinceActivity}d ago`}
           </span>
-          {overdueTasks.length > 0 && (
-            <span className="text-red-600 font-medium">
-              {overdueTasks.length} overdue
+          <div className="flex gap-1.5">
+            <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-pill border border-onyx-line text-[10px] text-gray-2 font-semibold tracking-wide">
+              WA
             </span>
-          )}
+            <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-pill border border-onyx-line text-[10px] text-gray-2 font-semibold tracking-wide">
+              Call
+            </span>
+          </div>
         </div>
       </Link>
 
       {/* Stage selector */}
-      <div className="mt-2 pt-2 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
+      <div className="mt-2.5 pt-2.5 border-t border-onyx-line" onClick={(e) => e.stopPropagation()}>
         <select
           value={lead.status}
           onChange={handleStageChange}
           disabled={updating}
-          className="w-full text-xs bg-gray-50 border border-gray-200 rounded-md px-2 py-1 text-gray-700 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+          className="w-full text-xs bg-onyx-raised border border-onyx-line rounded-pill px-3 py-1.5 text-gray-2 focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-50"
         >
           {PIPELINE_STAGES.map((stage) => (
             <option key={stage.key} value={stage.key}>

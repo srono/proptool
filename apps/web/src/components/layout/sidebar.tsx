@@ -6,15 +6,15 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: '📊', badgeKey: 'overdue_tasks_count' },
-  { href: '/leads', label: 'Leads', icon: '📥', badgeKey: 'new_leads_count' },
-  { href: '/pipeline', label: 'Pipeline', icon: '🔄', badgeKey: null },
-  { href: '/listings', label: 'Listings', icon: '🏠', badgeKey: null },
-  { href: '/viewings', label: 'Viewings', icon: '📅', badgeKey: null },
-  { href: '/messages', label: 'Messages', icon: '💬', badgeKey: 'unread_messages_count' },
-  { href: '/deals', label: 'Deals', icon: '🤝', badgeKey: null },
-  { href: '/tools', label: 'Tools', icon: '🧮', badgeKey: null },
-  { href: '/settings', label: 'Settings', icon: '⚙️', badgeKey: null },
+  { href: '/dashboard', label: 'Dashboard', badgeKey: 'overdue_tasks_count' },
+  { href: '/leads', label: 'Leads', badgeKey: 'new_leads_count' },
+  { href: '/pipeline', label: 'Pipeline', badgeKey: null },
+  { href: '/listings', label: 'Listings', badgeKey: null },
+  { href: '/viewings', label: 'Viewings', badgeKey: null },
+  { href: '/messages', label: 'Messages', badgeKey: 'unread_messages_count' },
+  { href: '/deals', label: 'Deals', badgeKey: null },
+  { href: '/tools', label: 'Insights', badgeKey: null },
+  { href: '/settings', label: 'Settings', badgeKey: null },
 ] as const;
 
 interface BadgeCounts {
@@ -35,31 +35,59 @@ export function Sidebar({ className }: { className?: string }) {
   }, []);
 
   return (
-    <aside className={cn('w-64 border-r border-gray-200 bg-white flex flex-col', className)}>
-      <div className="p-6">
-        <h1 className="text-lg font-bold text-brand-700">PropAgent</h1>
-        <p className="text-xs text-gray-400 mt-0.5">Singapore</p>
+    <aside
+      className={cn(
+        'w-[232px] bg-onyx border-r border-onyx-line flex flex-col text-white',
+        className
+      )}
+    >
+      {/* Logo */}
+      <div className="px-[22px] pt-[22px] pb-[18px] flex items-center gap-3">
+        <LogoMark />
+        <div className="leading-tight">
+          <div className="font-display font-bold text-base">PropAgent</div>
+          <div className="text-[11px] text-gray-2 mt-0.5">SG · Singapore</div>
+        </div>
       </div>
 
-      <nav className="flex-1 px-3 space-y-1">
+      {/* Navigation */}
+      <nav className="flex-1 px-3">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
-          const badgeCount = item.badgeKey && badges ? badges[item.badgeKey as keyof BadgeCounts] : 0;
+          const badgeCount =
+            item.badgeKey && badges
+              ? badges[item.badgeKey as keyof BadgeCounts]
+              : 0;
+
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'flex items-center justify-between px-[14px] py-[10px] rounded-pill mb-0.5 text-[13px] font-medium transition-colors',
                 isActive
-                  ? 'bg-brand-50 text-brand-700'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-brand/[0.18] border border-brand/50 text-white'
+                  : 'border border-transparent text-gray-2 hover:text-white hover:bg-onyx-card'
               )}
             >
-              <span className="text-base">{item.icon}</span>
-              <span className="flex-1">{item.label}</span>
+              <span className="flex items-center gap-2.5">
+                <span
+                  className={cn(
+                    'w-1 h-1 rounded-full',
+                    isActive ? 'bg-aqua' : 'bg-gray-2'
+                  )}
+                />
+                {item.label}
+              </span>
               {badgeCount > 0 && (
-                <span className="h-5 w-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+                <span
+                  className={cn(
+                    'rounded-pill px-[7px] py-px text-[10px] font-bold',
+                    isActive
+                      ? 'bg-aqua text-onyx'
+                      : 'bg-onyx-raised text-gray-2'
+                  )}
+                >
                   {badgeCount > 9 ? '9+' : badgeCount}
                 </span>
               )}
@@ -68,21 +96,32 @@ export function Sidebar({ className }: { className?: string }) {
         })}
       </nav>
 
-      <div className="p-3 border-t border-gray-100">
-        <SignOutButton />
+      {/* User footer */}
+      <div className="p-4 border-t border-onyx-line">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand to-aqua flex-shrink-0" />
+          <div className="leading-tight flex-1 min-w-0">
+            <div className="text-xs font-semibold truncate">Agent</div>
+            <div className="text-[10px] text-gray-2">CEA R0000000</div>
+          </div>
+        </div>
       </div>
     </aside>
   );
 }
 
-function SignOutButton() {
+function LogoMark() {
   return (
-    <a
-      href="/auth/signout"
-      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 w-full transition-colors"
-    >
-      <span className="text-base">🚪</span>
-      Sign Out
-    </a>
+    <div className="w-8 h-8 rounded-md bg-brand flex items-center justify-center flex-shrink-0">
+      <svg width={19} height={19} viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke="#fff" strokeWidth="1.6" />
+        <path
+          d="M12 7 L12 12 L15 13.5"
+          stroke="#fff"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
   );
 }

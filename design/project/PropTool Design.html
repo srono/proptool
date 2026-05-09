@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PropTool — Refined Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Figtree:wght@400;500;600;700&family=Kalam:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0d; color: #fff; font-family: "Inter", system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="wireframes.jsx"></script>
+<script type="text/babel" src="hifi.jsx"></script>
+
+<script type="text/babel">
+const { DesignCanvas, DCSection, DCArtboard } = window;
+
+function IntroCard() {
+  return (
+    <div style={{
+      width: 1280, padding: '40px 56px',
+      background: 'linear-gradient(135deg, #0945E6 0%, #2859F7 50%, #0C5AFF 100%)',
+      color: '#fff', fontFamily: 'Inter, sans-serif',
+      borderRadius: 0, position: 'relative', overflow: 'hidden',
+    }}>
+      <div style={{ position: 'absolute', top: -100, right: -80, width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(142,254,255,0.5), transparent)' }} />
+      <div style={{ position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 6, height: 6, borderRadius: 999, background: '#8EFEFF', boxShadow: '0 0 10px #8EFEFF' }} />
+          <div style={{ fontFamily: 'Figtree, sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: 1.6, color: '#8EFEFF' }}>PROPTOOL · DESIGN REVIEW · 8 MAY 2026</div>
+        </div>
+        <h1 style={{ fontFamily: 'Figtree, sans-serif', fontWeight: 700, fontSize: 44, lineHeight: 1.1, letterSpacing: -1, margin: '14px 0 10px', maxWidth: 900 }}>
+          From a generic Tailwind CRM to a branded operator's tool for Singapore property agents.
+        </h1>
+        <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.88, maxWidth: 760, margin: '0 0 24px' }}>
+          Two boards below. <b>Top:</b> low-fi wireframes reverse-engineered from the current build, with annotations on what's not yet working. <b>Bottom:</b> a single refined direction in the 10thirtyLabs brand language — onyx-first, Full-Spectrum-Blue accents, aqua CTA, Inter + Figtree, no emoji.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 28, paddingTop: 28, borderTop: '1px solid rgba(255,255,255,0.18)', maxWidth: 1000 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, color: '#8EFEFF' }}>SYSTEM</div>
+            <div style={{ fontSize: 13, marginTop: 8, lineHeight: 1.55, opacity: 0.9 }}>
+              Onyx <code>#121212</code> canvas · cards <code>#1A1A1A</code> · 1px <code>#2A2A2A</code> divider · Full Spectrum Blue <code>#2859F7</code> primary · Aqua <code>#8EFEFF</code> for CTAs and "moments". Pill geometry on every interactive element — buttons 999px, sidebar items 999px.
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, color: '#8EFEFF' }}>TYPOGRAPHY</div>
+            <div style={{ fontSize: 13, marginTop: 8, lineHeight: 1.55, opacity: 0.9 }}>
+              Display in Figtree (BT Beau Sans fallback) — section labels in tracked all-caps, page titles in sentence case at 26–28px <code>-0.5</code> tracking. Body in Inter 13/15. No emoji anywhere; status carried by chips and dot indicators.
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, color: '#8EFEFF' }}>TWO DISTINCTIVE MOMENTS</div>
+            <div style={{ fontSize: 13, marginTop: 8, lineHeight: 1.55, opacity: 0.9 }}>
+              <b>1. The Brief</b> — daily blue-gradient hero on the dashboard at 10:30 that names the highest-leverage call, talking points, and risks.<br/>
+              <b>2. Area Insight as hero</b> — on every listing, a benchmarking surface with a real PSF chart and tap-to-copy seller pitch, instead of a buried metadata card.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <DesignCanvas title="PropTool · Design refinement" subtitle="Wireframes → refined direction. Click any artboard to focus.">
+    <DCSection id="intro" title="Brief">
+      <DCArtboard id="intro" label="Direction summary" width={1280} height={360}>
+        <IntroCard />
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="wireframes" title="1. Wireframes — current state, reverse-engineered" subtitle="Annotations in red flag what isn't yet working. Read these as the brief for the refined direction below.">
+      <DCArtboard id="wf-login" label="Auth · Sign in" width={720} height={720}>
+        <WFLogin />
+      </DCArtboard>
+      <DCArtboard id="wf-dashboard" label="Dashboard · current" width={1080} height={720}>
+        <WFDashboardDesktop />
+      </DCArtboard>
+      <DCArtboard id="wf-pipeline" label="Pipeline · current Kanban" width={1280} height={720}>
+        <WFPipelineDesktop />
+      </DCArtboard>
+      <DCArtboard id="wf-lead" label="Lead detail · with Area Insight surface" width={1080} height={800}>
+        <WFLeadDetail />
+      </DCArtboard>
+      <DCArtboard id="wf-listings" label="Listings · mobile" width={390} height={720}>
+        <WFListingsMobile />
+      </DCArtboard>
+      <DCArtboard id="wf-msgs" label="Messages · mobile" width={390} height={720}>
+        <WFMessagesMobile />
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="hifi" title="2. Refined direction — 10thirtyLabs brand applied" subtitle="Onyx canvas · Full-Spectrum-Blue · Aqua CTA · Figtree display + Inter body · pill geometry. Two distinctive moments: The Brief (dashboard) and Area Insight (listing detail).">
+      <DCArtboard id="hf-login" label="Auth · Sign in" width={1200} height={760}>
+        <HFLogin />
+      </DCArtboard>
+      <DCArtboard id="hf-dashboard" label="Dashboard · with The Brief" width={1280} height={800}>
+        <HFDashboard />
+      </DCArtboard>
+      <DCArtboard id="hf-pipeline" label="Pipeline · Kanban" width={1280} height={800}>
+        <HFPipeline />
+      </DCArtboard>
+      <DCArtboard id="hf-listing" label="Listing detail · Area Insight as hero" width={1280} height={850}>
+        <HFListingDetail />
+      </DCArtboard>
+      <DCArtboard id="hf-msgs" label="Messages · WhatsApp + smart reply" width={1280} height={800}>
+        <HFMessages />
+      </DCArtboard>
+      <DCArtboard id="hf-mobile" label="Mobile · Pipeline" width={390} height={800}>
+        <HFMobilePipeline />
+      </DCArtboard>
+    </DCSection>
+  </DesignCanvas>
+);
+</script>
+</body>
+</html>

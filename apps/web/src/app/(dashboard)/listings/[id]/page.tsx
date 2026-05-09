@@ -2,27 +2,22 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { ListingStatus } from '@propagent/shared';
-import { AreaInsightCard } from '@/components/insights/area-insight-card';
-import { SellerPitchCard } from '@/components/insights/seller-pitch-card';
+import { AreaInsightHero } from '@/components/insights/area-insight-hero';
+import { MatchedBuyersCard } from '@/components/insights/matched-buyers-card';
+import { PerformanceCard } from '@/components/insights/performance-card';
 
 const STATUS_STYLES: Record<ListingStatus, string> = {
-  draft: 'bg-gray-100 text-gray-700',
-  live: 'bg-green-50 text-green-700',
-  under_offer: 'bg-yellow-50 text-yellow-700',
-  sold: 'bg-blue-50 text-blue-700',
-  rented: 'bg-blue-50 text-blue-700',
-  withdrawn: 'bg-red-50 text-red-700',
+  draft: 'text-gray-2 border-onyx-line bg-transparent',
+  live: 'text-status-green border-status-green/40 bg-status-green/10',
+  under_offer: 'text-status-amber border-status-amber/40 bg-status-amber/10',
+  sold: 'text-aqua border-brand/50 bg-brand/[0.12]',
+  rented: 'text-aqua border-brand/50 bg-brand/[0.12]',
+  withdrawn: 'text-status-red border-status-red/40 bg-status-red/10',
 };
 
 function formatPrice(price: number | null): string {
   if (!price) return '—';
-  return `$${price.toLocaleString('en-SG')}`;
-}
-
-function daysOnMarket(createdAt: string): number {
-  const created = new Date(createdAt);
-  const now = new Date();
-  return Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+  return `S$${price.toLocaleString('en-SG')}`;
 }
 
 interface ListingDetailPageProps {
@@ -43,7 +38,6 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
     notFound();
   }
 
-  // Fetch performance metrics
   const [{ count: enquiryCount }, { count: viewingCount }, { count: matchedBuyersCount }] = await Promise.all([
     supabase
       .from('leads')
@@ -70,175 +64,99 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
   const psf = listing.asking_price && listing.floor_area_sqft
     ? Math.round(listing.asking_price / listing.floor_area_sqft)
     : null;
-  const days = daysOnMarket(listing.created_at);
+  const daysOnMarket = Math.floor(
+    (Date.now() - new Date(listing.created_at).getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   return (
-    <div className="p-4 lg:p-8 space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
+    <div className="p-4 lg:p-7 space-y-5">
+      {/* Page bar */}
+      <div className="flex items-end justify-between border-b border-onyx-line pb-5">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-gray-900">{listing.address}</h1>
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_STYLES[listing.listing_status as ListingStatus]}`}>
-              {listing.listing_status.replace('_', ' ')}
-            </span>
-          </div>
-          <p className="text-sm text-gray-600 mt-0.5">
-            {listing.district} · {listing.property_type.toUpperCase()}
-            {listing.hdb_type ? ` · ${listing.hdb_type}` : ''}
-            {' · '}
-            {listing.listing_type === 'sale' ? 'For Sale' : 'For Rent'}
+          <h1 className="font-display font-bold text-[26px] text-white tracking-tight">
+            {listing.address}
+          </h1>
+          <p className="text-[13px] text-gray-2 mt-1">
+            {listing.district} · {listing.property_type.toUpperCase()} ·{' '}
+            {listing.tenure} · {listing.floor_area_sqft} sqft
           </p>
         </div>
-        <Link
-          href={`/listings/${id}/edit`}
-          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
-        >
-          Edit
-        </Link>
+        <div className="flex gap-2">
+          <button className="btn-ghost text-xs">Share</button>
+          <Link href={`/listings/${id}/edit`} className="btn-ghost text-xs">
+            Edit
+          </Link>
+          <button className="btn-primary text-xs">Send to buyers</button>
+        </div>
       </div>
 
-      {/* Photo Gallery */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        {listing.media_urls && listing.media_urls.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-1">
-            {listing.media_urls.map((url: string, idx: number) => (
-              <div key={idx} className={`aspect-[4/3] ${idx === 0 ? 'col-span-2 row-span-2' : ''}`}>
-                <img
-                  src={url}
-                  alt={`${listing.address} photo ${idx + 1}`}
-                  className="w-full h-full object-cover"
-                />
+      <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-5">
+        {/* Left column */}
+        <div className="space-y-5">
+          {/* Photo + price hero */}
+          <div className="relative rounded-2xl overflow-hidden h-[280px] bg-gradient-to-br from-[#2a3850] to-[#0e1a2c]">
+            {listing.media_urls && listing.media_urls.length > 0 ? (
+              <img
+                src={listing.media_urls[0]}
+                alt={listing.address}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <svg width="100%" height="100%" viewBox="0 0 100 60" preserveAspectRatio="none" className="absolute inset-0 opacity-30">
+                  <rect width="100" height="60" fill="#1a2540" />
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <rect key={i} x={5 + i * 13} y={20 + (i % 3) * 4} width="9" height="40" fill="#1a2540" stroke="#2a3a5a" strokeWidth="0.2" />
+                  ))}
+                </svg>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center py-16 text-gray-400">
-            <div className="text-center">
-              <svg className="w-12 h-12 mx-auto text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
-              </svg>
-              <p className="text-sm mt-2">No photos uploaded</p>
+            )}
+            {/* Status chips */}
+            <div className="absolute top-4 left-4 flex gap-2">
+              <span className={`chip ${STATUS_STYLES[listing.listing_status as ListingStatus]}`}>
+                {listing.listing_status.replace('_', ' ')}
+              </span>
+              <span className="chip text-gray-2 border-onyx-line bg-onyx-card/80">
+                {listing.listing_type}
+              </span>
             </div>
-          </div>
-        )}
-      </div>
-
-      {/* Key Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-xs text-gray-500">
-            {listing.listing_type === 'sale' ? 'Asking Price' : 'Asking Rental'}
-          </p>
-          <p className="text-lg font-semibold text-gray-900 mt-1">
-            {formatPrice(price)}
-            {listing.listing_type === 'rental' && price ? '/mo' : ''}
-          </p>
-        </div>
-        {listing.listing_type === 'sale' && (
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <p className="text-xs text-gray-500">PSF</p>
-            <p className="text-lg font-semibold text-gray-900 mt-1">
-              {psf ? `$${psf.toLocaleString('en-SG')}` : '—'}
-            </p>
-          </div>
-        )}
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-xs text-gray-500">Floor Area</p>
-          <p className="text-lg font-semibold text-gray-900 mt-1">
-            {listing.floor_area_sqft.toLocaleString('en-SG')} sqft
-          </p>
-        </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-xs text-gray-500">Tenure</p>
-          <p className="text-lg font-semibold text-gray-900 mt-1 capitalize">
-            {listing.tenure}
-          </p>
-        </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-xs text-gray-500">District</p>
-          <p className="text-lg font-semibold text-gray-900 mt-1">
-            {listing.district}
-          </p>
-        </div>
-      </div>
-
-      {/* Performance */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
-        <h2 className="text-sm font-semibold text-gray-900">Performance</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div>
-            <p className="text-2xl font-bold text-gray-900">{enquiryCount ?? 0}</p>
-            <p className="text-xs text-gray-500">Total Enquiries</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-900">{viewingCount ?? 0}</p>
-            <p className="text-xs text-gray-500">Viewings Scheduled</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-900">{days}</p>
-            <p className="text-xs text-gray-500">Days on Market</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-brand-600">{matchedBuyersCount ?? 0}</p>
-            <p className="text-xs text-gray-500">Matched Buyers</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Property Details */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
-        <h2 className="text-sm font-semibold text-gray-900">Property Details</h2>
-        <dl className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 text-sm">
-          <div>
-            <dt className="text-gray-500">Postal Code</dt>
-            <dd className="font-medium text-gray-900">{listing.postal_code}</dd>
-          </div>
-          {listing.floor && (
-            <div>
-              <dt className="text-gray-500">Floor</dt>
-              <dd className="font-medium text-gray-900">{listing.floor}</dd>
-            </div>
-          )}
-          {listing.unit_number && (
-            <div>
-              <dt className="text-gray-500">Unit</dt>
-              <dd className="font-medium text-gray-900">{listing.unit_number}</dd>
-            </div>
-          )}
-          {listing.completion_year && (
-            <div>
-              <dt className="text-gray-500">Completion Year</dt>
-              <dd className="font-medium text-gray-900">{listing.completion_year}</dd>
-            </div>
-          )}
-          <div>
-            <dt className="text-gray-500">Exclusive</dt>
-            <dd className="font-medium text-gray-900">
-              {listing.is_exclusive ? 'Yes' : 'No'}
-              {listing.is_exclusive && listing.exclusivity_expiry && (
-                <span className="text-gray-500 ml-1">
-                  (until {new Date(listing.exclusivity_expiry).toLocaleDateString('en-SG')})
-                </span>
+            {/* Price overlay */}
+            <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+              <div>
+                <div className="font-display font-bold text-4xl text-white tracking-tight">
+                  {formatPrice(price)}
+                </div>
+                <div className="text-[13px] text-white/70">
+                  {psf ? `S$${psf.toLocaleString('en-SG')} psf` : ''} · {listing.floor_area_sqft} sqft
+                </div>
+              </div>
+              {listing.media_urls && listing.media_urls.length > 1 && (
+                <button className="btn-primary text-xs">
+                  +{listing.media_urls.length} photos
+                </button>
               )}
-            </dd>
+            </div>
           </div>
-        </dl>
-      </div>
 
-      {/* Description */}
-      {listing.description && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
-          <h2 className="text-sm font-semibold text-gray-900">Description</h2>
-          <p className="text-sm text-gray-700 whitespace-pre-wrap">{listing.description}</p>
+          {/* Area Insight — hero, not buried (distinctive moment #2) */}
+          <AreaInsightHero
+            listingId={listing.id}
+            insights={listing.area_insights}
+            district={listing.district}
+            askingPsf={psf}
+          />
         </div>
-      )}
 
-      {/* Area Insight */}
-      <AreaInsightCard listingId={listing.id} insights={listing.area_insights} />
-
-      {/* Seller Pitch */}
-      <SellerPitchCard insights={listing.area_insights} />
+        {/* Right column */}
+        <div className="space-y-5">
+          <MatchedBuyersCard count={matchedBuyersCount ?? 0} />
+          <PerformanceCard
+            daysOnMarket={daysOnMarket}
+            enquiries={enquiryCount ?? 0}
+            viewings={viewingCount ?? 0}
+          />
+        </div>
+      </div>
     </div>
   );
 }

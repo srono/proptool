@@ -31,7 +31,6 @@ export function SearchBar() {
     const supabase = createClient();
     const searchResults: SearchResult[] = [];
 
-    // Search contacts (and their leads)
     const { data: contacts } = await supabase
       .from('contacts')
       .select('id, full_name, phone, leads(id)')
@@ -51,7 +50,6 @@ export function SearchBar() {
       }
     }
 
-    // Search listings
     const { data: listings } = await supabase
       .from('listings')
       .select('id, address, district, listing_type')
@@ -83,7 +81,6 @@ export function SearchBar() {
     };
   }, [query, search]);
 
-  // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -101,7 +98,7 @@ export function SearchBar() {
     <div ref={containerRef} className="relative w-full max-w-md">
       <div className="relative">
         <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-2"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -119,21 +116,20 @@ export function SearchBar() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length > 0 && setIsOpen(true)}
           placeholder="Search contacts, listings..."
-          className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          className="w-full rounded-pill border border-onyx-line bg-onyx-card py-2 pl-10 pr-4 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         />
         {loading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-brand-600" />
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-onyx-line border-t-aqua" />
           </div>
         )}
       </div>
 
-      {/* Results dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-onyx-card rounded-2xl shadow-lg border border-onyx-line z-50 overflow-hidden">
           {contactResults.length > 0 && (
             <div>
-              <p className="px-3 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+              <p className="px-3 py-1.5 text-[11px] font-semibold text-gray-2 font-display uppercase tracking-wider bg-onyx-raised">
                 Contacts
               </p>
               {contactResults.map((result) => (
@@ -141,12 +137,12 @@ export function SearchBar() {
                   key={result.id}
                   href={result.href}
                   onClick={() => { setIsOpen(false); setQuery(''); }}
-                  className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 hover:bg-onyx-raised transition-colors"
                 >
-                  <span className="text-base">👤</span>
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand to-aqua flex-shrink-0" />
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{result.title}</p>
-                    <p className="text-xs text-gray-500 truncate">{result.subtitle}</p>
+                    <p className="text-sm font-medium text-white truncate">{result.title}</p>
+                    <p className="text-xs text-gray-2 truncate">{result.subtitle}</p>
                   </div>
                 </Link>
               ))}
@@ -154,7 +150,7 @@ export function SearchBar() {
           )}
           {listingResults.length > 0 && (
             <div>
-              <p className="px-3 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+              <p className="px-3 py-1.5 text-[11px] font-semibold text-gray-2 font-display uppercase tracking-wider bg-onyx-raised">
                 Listings
               </p>
               {listingResults.map((result) => (
@@ -162,12 +158,12 @@ export function SearchBar() {
                   key={result.id}
                   href={result.href}
                   onClick={() => { setIsOpen(false); setQuery(''); }}
-                  className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 hover:bg-onyx-raised transition-colors"
                 >
-                  <span className="text-base">🏠</span>
+                  <div className="w-7 h-7 rounded-md bg-onyx-raised border border-onyx-line flex-shrink-0" />
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{result.title}</p>
-                    <p className="text-xs text-gray-500 truncate">{result.subtitle}</p>
+                    <p className="text-sm font-medium text-white truncate">{result.title}</p>
+                    <p className="text-xs text-gray-2 truncate">{result.subtitle}</p>
                   </div>
                 </Link>
               ))}

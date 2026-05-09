@@ -38,42 +38,55 @@ interface PipelineBoardProps {
   stages: PipelineStageConfig[];
 }
 
+const stageColors: Record<number, string> = {
+  0: 'bg-aqua',
+  1: 'bg-aqua',
+  2: 'bg-aqua',
+  3: 'bg-brand',
+  4: 'bg-brand',
+  5: 'bg-status-green',
+  6: 'bg-status-green',
+};
+
 export function PipelineBoard({ leads, stages }: PipelineBoardProps) {
-  // Filter out closed stages for the main board view
   const visibleStages = stages.filter(
     (s) => s.key !== 'closed_won' && s.key !== 'closed_lost'
   );
 
   return (
     <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]">
-      <div className="flex gap-4 h-full min-w-max">
-        {visibleStages.map((stage) => {
+      <div className="flex gap-3.5 h-full min-w-max">
+        {visibleStages.map((stage, idx) => {
           const stageLeads = leads.filter((l) => l.status === stage.key);
           return (
             <div
               key={stage.key}
-              className="flex flex-col min-w-[280px] lg:w-72 bg-gray-100 rounded-xl"
+              className="flex flex-col min-w-[270px] lg:w-[270px]"
             >
               {/* Stage header */}
-              <div className="p-3 flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-gray-700">
-                  {stage.label}
-                </h3>
-                <span className="text-xs font-medium text-gray-500 bg-gray-200 rounded-full px-2 py-0.5">
+              <div className="flex items-center justify-between px-1 pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${stageColors[idx] ?? 'bg-brand'}`}
+                  />
+                  <span className="font-display font-bold text-xs tracking-[1.2px] text-white uppercase">
+                    {stage.label}
+                  </span>
+                </div>
+                <span className="text-[11px] text-gray-2 font-semibold">
                   {stageLeads.length}
                 </span>
               </div>
 
               {/* Cards */}
-              <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-2">
+              <div className="flex-1 space-y-2.5">
                 {stageLeads.map((lead) => (
                   <LeadCard key={lead.id} lead={lead} />
                 ))}
-                {stageLeads.length === 0 && (
-                  <p className="text-xs text-gray-400 text-center py-8">
-                    No leads in this stage
-                  </p>
-                )}
+                {/* Drop zone */}
+                <div className="border border-dashed border-onyx-line rounded-[14px] p-3 text-center text-gray-2 text-[11px]">
+                  + drag here
+                </div>
               </div>
             </div>
           );

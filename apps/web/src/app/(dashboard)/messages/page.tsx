@@ -1,11 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { MessageSquare, Search } from 'lucide-react';
 
 export default async function MessagesPage() {
   const supabase = await createClient();
 
-  // Fetch the most recent message per contact, along with contact info
   const { data: conversations } = await supabase
     .from('messages')
     .select(`
@@ -43,7 +41,7 @@ export default async function MessagesPage() {
         contact_id: msg.contact_id,
         contact_name: contact?.full_name ?? 'Unknown',
         contact_phone: contact?.phone ?? '',
-        last_message: msg.body || (msg.media_url ? '📎 Media' : ''),
+        last_message: msg.body || (msg.media_url ? 'Media' : ''),
         last_message_direction: msg.direction,
         last_message_status: msg.status,
         last_message_at: msg.sent_at,
@@ -53,7 +51,6 @@ export default async function MessagesPage() {
     }
   }
 
-  // Count unread messages (inbound messages with status != 'read')
   if (conversations) {
     for (const msg of conversations) {
       if (msg.direction === 'inbound' && msg.status !== 'read') {
@@ -68,17 +65,18 @@ export default async function MessagesPage() {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="p-4 lg:p-6 border-b border-gray-200 bg-white">
-        <h1 className="text-xl font-bold text-gray-900">Messages</h1>
-        <p className="text-sm text-gray-500 mt-0.5">WhatsApp conversations</p>
+      <div className="p-5 lg:px-8 border-b border-onyx-line">
+        <h1 className="font-display font-bold text-[22px] text-white tracking-tight">
+          Messages
+        </h1>
+        <p className="text-xs text-gray-2 mt-0.5">WhatsApp · 1 number</p>
 
-        {/* Search bar */}
-        <div className="relative mt-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        {/* Search */}
+        <div className="mt-3">
           <input
             type="search"
             placeholder="Search contacts..."
-            className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-4 text-sm placeholder:text-gray-400 focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-pill border border-onyx-line bg-onyx-card py-2.5 px-4 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </div>
       </div>
@@ -86,41 +84,37 @@ export default async function MessagesPage() {
       {/* Conversation list */}
       <div className="flex-1 overflow-y-auto">
         {contactList.length > 0 ? (
-          <div className="divide-y divide-gray-100">
+          <div>
             {contactList.map((convo) => (
               <Link
                 key={convo.contact_id}
                 href={`/messages/${convo.contact_id}`}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 px-5 py-3.5 border-b border-onyx-line hover:bg-onyx-card transition-colors"
               >
                 {/* Avatar */}
-                <div className="flex-shrink-0 h-11 w-11 rounded-full bg-brand-100 flex items-center justify-center">
-                  <span className="text-sm font-semibold text-brand-700">
-                    {convo.contact_name.charAt(0).toUpperCase()}
-                  </span>
-                </div>
+                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-br from-brand to-aqua" />
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <span className="text-[13px] font-semibold text-white truncate">
                       {convo.contact_name}
-                    </p>
-                    <span className="text-xs text-gray-400 flex-shrink-0 ml-2">
+                    </span>
+                    <span className="text-[10px] text-gray-2 flex-shrink-0 ml-2">
                       {formatTime(convo.last_message_at)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between mt-0.5">
-                    <p className="text-xs text-gray-500 truncate">
+                    <span className="text-xs text-gray-2 truncate max-w-[200px]">
                       {convo.last_message_direction === 'outbound' && (
-                        <span className="text-gray-400 mr-1">
-                          {convo.last_message_status === 'read' ? '✓✓' : convo.last_message_status === 'delivered' ? '✓✓' : '✓'}
+                        <span className="text-gray-2 mr-1">
+                          {convo.last_message_status === 'read' ? '✓✓' : '✓'}
                         </span>
                       )}
                       {convo.last_message || 'No messages'}
-                    </p>
+                    </span>
                     {convo.unread_count > 0 && (
-                      <span className="flex-shrink-0 ml-2 inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-brand-600 px-1.5 text-xs font-medium text-white">
+                      <span className="flex-shrink-0 ml-2 bg-aqua text-onyx rounded-pill px-2 py-px text-[10px] font-bold">
                         {convo.unread_count}
                       </span>
                     )}
@@ -131,11 +125,13 @@ export default async function MessagesPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-16 px-4">
-            <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              <MessageSquare className="h-6 w-6 text-gray-400" />
+            <div className="h-12 w-12 rounded-full bg-onyx-card border border-onyx-line flex items-center justify-center mb-3">
+              <svg className="h-5 w-5 text-gray-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
             </div>
-            <p className="text-sm text-gray-500">No conversations yet</p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-sm text-gray-2">No conversations yet</p>
+            <p className="text-xs text-gray-2/60 mt-1">
               Messages from WhatsApp will appear here
             </p>
           </div>
