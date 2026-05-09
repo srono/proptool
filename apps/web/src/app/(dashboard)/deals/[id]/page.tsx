@@ -8,12 +8,12 @@ interface Props {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  negotiating: 'bg-yellow-50 text-yellow-700',
-  otp_issued: 'bg-blue-50 text-blue-700',
-  otp_signed: 'bg-blue-50 text-blue-700',
-  exercised: 'bg-purple-50 text-purple-700',
-  completed: 'bg-green-50 text-green-700',
-  fallen_through: 'bg-red-50 text-red-700',
+  negotiating: 'text-status-amber border-status-amber/40 bg-status-amber/10',
+  otp_issued: 'text-aqua border-brand/50 bg-brand/[0.12]',
+  otp_signed: 'text-aqua border-brand/50 bg-brand/[0.12]',
+  exercised: 'text-brand border-brand/50 bg-brand/[0.12]',
+  completed: 'text-status-green border-status-green/40 bg-status-green/10',
+  fallen_through: 'text-status-red border-status-red/40 bg-status-red/10',
 };
 
 function formatCurrency(amount: number | null) {
@@ -63,23 +63,23 @@ export default async function DealDetailPage({ params }: Props) {
   const netCommission = grossCommission - coBrokeDeduction;
 
   return (
-    <div className="p-4 lg:p-8 max-w-4xl mx-auto space-y-6">
+    <div className="p-4 lg:p-7 max-w-4xl mx-auto space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 border-b border-onyx-line pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-gray-900">
+            <h1 className="font-display font-bold text-[26px] text-white tracking-tight">
               {contact?.full_name ?? 'Unknown Contact'}
             </h1>
             <span
-              className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                STATUS_COLORS[deal.status] ?? 'bg-gray-100 text-gray-600'
+              className={`text-xs px-2 py-0.5 rounded-full font-medium border ${
+                STATUS_COLORS[deal.status] ?? 'text-gray-2 border-onyx-line bg-transparent'
               }`}
             >
               {formatStatus(deal.status)}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="text-[13px] text-gray-2 mt-0.5">
             {deal.deal_type?.replace(/_/g, ' ')} ·{' '}
             {deal.listing?.address ?? 'No listing linked'}
           </p>
@@ -88,41 +88,41 @@ export default async function DealDetailPage({ params }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-5">
           {/* Deal Summary */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Deal Summary</h2>
+          <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
+            <h2 className="text-sm font-display font-bold text-white mb-3">Deal Summary</h2>
             <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
               <div>
-                <dt className="text-gray-500">Contact</dt>
-                <dd className="text-gray-900 font-medium">{contact?.full_name ?? '—'}</dd>
+                <dt className="text-gray-2">Contact</dt>
+                <dd className="text-white font-medium">{contact?.full_name ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-gray-500">Phone</dt>
-                <dd className="text-gray-900">{contact?.phone ?? '—'}</dd>
+                <dt className="text-gray-2">Phone</dt>
+                <dd className="text-white">{contact?.phone ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-gray-500">Property</dt>
-                <dd className="text-gray-900">
+                <dt className="text-gray-2">Property</dt>
+                <dd className="text-white">
                   {deal.listing ? `${deal.listing.address}, D${deal.listing.district}` : '—'}
                 </dd>
               </div>
               <div>
-                <dt className="text-gray-500">Property Type</dt>
-                <dd className="text-gray-900">{deal.listing?.property_type ?? '—'}</dd>
+                <dt className="text-gray-2">Property Type</dt>
+                <dd className="text-white">{deal.listing?.property_type ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-gray-500">Offer Price</dt>
-                <dd className="text-gray-900">{formatCurrency(deal.offer_price)}</dd>
+                <dt className="text-gray-2">Offer Price</dt>
+                <dd className="text-white">{formatCurrency(deal.offer_price)}</dd>
               </div>
               <div>
-                <dt className="text-gray-500">Agreed Price</dt>
-                <dd className="text-gray-900 font-medium">{formatCurrency(deal.agreed_price)}</dd>
+                <dt className="text-gray-2">Agreed Price</dt>
+                <dd className="text-white font-medium">{formatCurrency(deal.agreed_price)}</dd>
               </div>
               {deal.otp_date && (
                 <div>
-                  <dt className="text-gray-500">OTP / LOI Date</dt>
-                  <dd className="text-gray-900">
+                  <dt className="text-gray-2">OTP / LOI Date</dt>
+                  <dd className="text-white">
                     {new Date(deal.otp_date).toLocaleDateString('en-SG', {
                       day: 'numeric',
                       month: 'short',
@@ -133,8 +133,8 @@ export default async function DealDetailPage({ params }: Props) {
               )}
               {deal.exercise_deadline && (
                 <div>
-                  <dt className="text-gray-500">Exercise Deadline</dt>
-                  <dd className="text-gray-900">
+                  <dt className="text-gray-2">Exercise Deadline</dt>
+                  <dd className="text-white">
                     {new Date(deal.exercise_deadline).toLocaleDateString('en-SG', {
                       day: 'numeric',
                       month: 'short',
@@ -145,8 +145,8 @@ export default async function DealDetailPage({ params }: Props) {
               )}
               {deal.completion_date && (
                 <div>
-                  <dt className="text-gray-500">Completion Date</dt>
-                  <dd className="text-gray-900">
+                  <dt className="text-gray-2">Completion Date</dt>
+                  <dd className="text-white">
                     {new Date(deal.completion_date).toLocaleDateString('en-SG', {
                       day: 'numeric',
                       month: 'short',
@@ -157,16 +157,16 @@ export default async function DealDetailPage({ params }: Props) {
               )}
             </dl>
             {deal.notes && (
-              <div className="mt-4 pt-3 border-t border-gray-100">
-                <p className="text-xs text-gray-500 mb-1">Notes</p>
-                <p className="text-sm text-gray-700">{deal.notes}</p>
+              <div className="mt-4 pt-3 border-t border-onyx-line">
+                <p className="text-xs text-gray-2 mb-1">Notes</p>
+                <p className="text-sm text-gray-2">{deal.notes}</p>
               </div>
             )}
           </div>
 
           {/* Milestone Tracker */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h2 className="text-sm font-semibold text-gray-900 mb-4">Milestone Tracker</h2>
+          <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
+            <h2 className="text-sm font-display font-bold text-white mb-4">Milestone Tracker</h2>
             <MilestoneTracker
               dealId={deal.id}
               dealType={deal.deal_type ?? deal.lead?.deal_type ?? 'sale'}
@@ -175,20 +175,19 @@ export default async function DealDetailPage({ params }: Props) {
           </div>
 
           {/* Documents */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Documents</h2>
+          <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
+            <h2 className="text-sm font-display font-bold text-white mb-3">Documents</h2>
             {deal.documents && Array.isArray(deal.documents) && deal.documents.length > 0 ? (
               <div className="space-y-2">
                 {(deal.documents as Array<{ url: string; type: string; name: string }>).map(
                   (doc, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between rounded-lg border border-gray-100 p-3"
+                      className="flex items-center justify-between rounded-2xl border border-onyx-line p-3"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-gray-400">📄</span>
-                        <span className="text-sm text-gray-700 truncate">{doc.name}</span>
-                        <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded shrink-0">
+                        <span className="text-sm text-gray-2 truncate">{doc.name}</span>
+                        <span className="text-xs bg-onyx-raised text-gray-2 px-1.5 py-0.5 rounded shrink-0">
                           {doc.type}
                         </span>
                       </div>
@@ -205,7 +204,7 @@ export default async function DealDetailPage({ params }: Props) {
                 )}
               </div>
             ) : (
-              <p className="text-sm text-gray-400">No documents uploaded yet</p>
+              <p className="text-sm text-gray-2">No documents uploaded yet</p>
             )}
           </div>
         </div>
@@ -213,47 +212,47 @@ export default async function DealDetailPage({ params }: Props) {
         {/* Right column */}
         <div className="space-y-4">
           {/* Commission Summary */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Commission</h3>
+          <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
+            <h3 className="text-sm font-display font-bold text-white mb-3">Commission</h3>
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <dt className="text-gray-500">Gross Commission</dt>
-                <dd className="text-gray-900 font-medium">{formatCurrency(grossCommission)}</dd>
+                <dt className="text-gray-2">Gross Commission</dt>
+                <dd className="text-white font-medium">{formatCurrency(grossCommission)}</dd>
               </div>
               {deal.commission_pct && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Rate</dt>
-                  <dd className="text-gray-900">{deal.commission_pct}%</dd>
+                  <dt className="text-gray-2">Rate</dt>
+                  <dd className="text-white">{deal.commission_pct}%</dd>
                 </div>
               )}
               {deal.co_broke_split_pct > 0 && (
                 <>
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">
+                    <dt className="text-gray-2">
                       Co-broke ({deal.co_broke_split_pct}%)
                     </dt>
-                    <dd className="text-red-600">-{formatCurrency(coBrokeDeduction)}</dd>
+                    <dd className="text-status-red">-{formatCurrency(coBrokeDeduction)}</dd>
                   </div>
                   {deal.co_broke_agent_name && (
                     <div className="flex justify-between">
-                      <dt className="text-gray-500">Co-broke Agent</dt>
-                      <dd className="text-gray-900">{deal.co_broke_agent_name}</dd>
+                      <dt className="text-gray-2">Co-broke Agent</dt>
+                      <dd className="text-white">{deal.co_broke_agent_name}</dd>
                     </div>
                   )}
                 </>
               )}
-              <div className="flex justify-between border-t border-gray-100 pt-2">
-                <dt className="text-gray-900 font-semibold">Net Commission</dt>
-                <dd className="text-green-700 font-bold">{formatCurrency(netCommission)}</dd>
+              <div className="flex justify-between border-t border-onyx-line pt-2">
+                <dt className="text-white font-semibold">Net Commission</dt>
+                <dd className="text-status-green font-bold">{formatCurrency(netCommission)}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-gray-500">Payment Status</dt>
+                <dt className="text-gray-2">Payment Status</dt>
                 <dd>
                   <span
-                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                    className={`text-xs px-2 py-0.5 rounded-full font-medium border ${
                       deal.commission_paid
-                        ? 'bg-green-50 text-green-700'
-                        : 'bg-yellow-50 text-yellow-700'
+                        ? 'text-status-green border-status-green/40 bg-status-green/10'
+                        : 'text-status-amber border-status-amber/40 bg-status-amber/10'
                     }`}
                   >
                     {deal.commission_paid ? 'Paid' : 'Pending'}
@@ -264,13 +263,13 @@ export default async function DealDetailPage({ params }: Props) {
           </div>
 
           {/* Key Dates */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Key Dates</h3>
+          <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
+            <h3 className="text-sm font-display font-bold text-white mb-3">Key Dates</h3>
             <dl className="space-y-2 text-sm">
               {deal.otp_date && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">OTP / LOI</dt>
-                  <dd className="text-gray-900">
+                  <dt className="text-gray-2">OTP / LOI</dt>
+                  <dd className="text-white">
                     {new Date(deal.otp_date).toLocaleDateString('en-SG', {
                       day: 'numeric',
                       month: 'short',
@@ -280,8 +279,8 @@ export default async function DealDetailPage({ params }: Props) {
               )}
               {deal.exercise_deadline && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Exercise By</dt>
-                  <dd className="text-gray-900">
+                  <dt className="text-gray-2">Exercise By</dt>
+                  <dd className="text-white">
                     {new Date(deal.exercise_deadline).toLocaleDateString('en-SG', {
                       day: 'numeric',
                       month: 'short',
@@ -291,8 +290,8 @@ export default async function DealDetailPage({ params }: Props) {
               )}
               {deal.completion_date && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Completion</dt>
-                  <dd className="text-gray-900">
+                  <dt className="text-gray-2">Completion</dt>
+                  <dd className="text-white">
                     {new Date(deal.completion_date).toLocaleDateString('en-SG', {
                       day: 'numeric',
                       month: 'short',
@@ -301,8 +300,8 @@ export default async function DealDetailPage({ params }: Props) {
                 </div>
               )}
               <div className="flex justify-between">
-                <dt className="text-gray-500">Created</dt>
-                <dd className="text-gray-900">
+                <dt className="text-gray-2">Created</dt>
+                <dd className="text-white">
                   {new Date(deal.created_at).toLocaleDateString('en-SG', {
                     day: 'numeric',
                     month: 'short',

@@ -107,17 +107,17 @@ export function MilestoneTracker({ dealId, dealType, milestones: initialMileston
     <div className="space-y-4">
       {/* Progress bar */}
       <div className="flex items-center gap-3">
-        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-onyx-raised rounded-full overflow-hidden">
           <div
-            className="h-full bg-green-500 rounded-full transition-all duration-300"
+            className="h-full bg-status-green rounded-full transition-all duration-300"
             style={{ width: `${progressPct}%` }}
           />
         </div>
-        <span className="text-xs text-gray-500 shrink-0">
+        <span className="text-xs text-gray-2 shrink-0">
           {completedCount}/{totalCount}
         </span>
         {isSaving && (
-          <span className="text-xs text-gray-400">Saving...</span>
+          <span className="text-xs text-gray-2">Saving...</span>
         )}
       </div>
 
@@ -134,7 +134,7 @@ export function MilestoneTracker({ dealId, dealType, milestones: initialMileston
               {index < milestones.length - 1 && (
                 <div
                   className={`absolute left-[11px] top-6 w-0.5 h-[calc(100%-12px)] ${
-                    isCompleted ? 'bg-green-300' : 'bg-gray-200'
+                    isCompleted ? 'bg-status-green/40' : 'bg-onyx-line'
                   }`}
                 />
               )}
@@ -145,10 +145,10 @@ export function MilestoneTracker({ dealId, dealType, milestones: initialMileston
                 onClick={() => toggleMilestone(index)}
                 className={`relative z-10 shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
                   isCompleted
-                    ? 'bg-green-500 border-green-500 text-white'
+                    ? 'bg-status-green border-status-green text-white'
                     : isCurrent
-                    ? 'bg-white border-brand-500 text-brand-500'
-                    : 'bg-white border-gray-300 text-gray-300'
+                    ? 'bg-onyx-card border-brand text-brand'
+                    : 'bg-onyx-card border-onyx-line text-gray-2'
                 }`}
                 aria-label={`${isCompleted ? 'Unmark' : 'Mark'} ${milestone.label} as complete`}
               >
@@ -170,10 +170,10 @@ export function MilestoneTracker({ dealId, dealType, milestones: initialMileston
                 <p
                   className={`text-sm font-medium ${
                     isCompleted
-                      ? 'text-green-700'
+                      ? 'text-status-green'
                       : isCurrent
-                      ? 'text-gray-900'
-                      : 'text-gray-500'
+                      ? 'text-white'
+                      : 'text-gray-2'
                   }`}
                 >
                   {milestone.label}
@@ -186,7 +186,7 @@ export function MilestoneTracker({ dealId, dealType, milestones: initialMileston
                       type="date"
                       value={milestone.date ?? ''}
                       onChange={(e) => updateDate(index, e.target.value)}
-                      className="rounded border-gray-300 text-xs px-2 py-1 focus:border-brand-500 focus:ring-brand-500 w-36"
+                      className="bg-onyx-raised border border-onyx-line rounded-xl px-2 py-1 text-xs text-white focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand w-36"
                       aria-label={`Date for ${milestone.label}`}
                     />
                     <input
@@ -195,7 +195,7 @@ export function MilestoneTracker({ dealId, dealType, milestones: initialMileston
                       onChange={(e) => updateNotes(index, e.target.value)}
                       onBlur={() => saveNotes(index)}
                       placeholder="Notes..."
-                      className="flex-1 rounded border-gray-300 text-xs px-2 py-1 focus:border-brand-500 focus:ring-brand-500"
+                      className="flex-1 bg-onyx-raised border border-onyx-line rounded-xl px-2 py-1 text-xs text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
                       aria-label={`Notes for ${milestone.label}`}
                     />
                   </div>

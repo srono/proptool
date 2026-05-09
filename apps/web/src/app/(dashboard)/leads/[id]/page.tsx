@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import { PIPELINE_STAGES } from '@propagent/shared';
 import { LeadStageSelector } from './lead-stage-selector';
 import { ActionButtons } from './action-buttons';
 import { Timeline } from './timeline';
@@ -17,7 +16,6 @@ export default async function LeadDetailPage({ params }: Props) {
   const { id } = await params;
   const supabase = await createClient();
 
-  // Fetch lead with related data
   const { data: lead, error } = await supabase
     .from('leads')
     .select(`
@@ -41,7 +39,6 @@ export default async function LeadDetailPage({ params }: Props) {
   const viewings = lead.viewings ?? [];
   const buyerRequirements = lead.buyer_requirements?.[0] ?? null;
 
-  // Fetch listing insights for viewing prep (if there's a scheduled viewing)
   const scheduledViewing = viewings.find((v: { status: string; listing_id: string }) => v.status === 'scheduled');
   let viewingListingInsights = null;
   let viewingListingAddress = '';
@@ -57,7 +54,6 @@ export default async function LeadDetailPage({ params }: Props) {
     }
   }
 
-  // Compute buyer fit signals if buyer requirements exist
   let buyerFit = { fit_signals: [] as string[], watchouts: [] as string[] };
   if (buyerRequirements && scheduledViewing) {
     const { data: fitListing } = await supabase
@@ -80,71 +76,58 @@ export default async function LeadDetailPage({ params }: Props) {
     }
   }
 
-  // Build timeline items from messages and notes
   const timelineItems = buildTimeline(messages);
 
   return (
-    <div className="p-4 lg:p-8 space-y-6 max-w-4xl mx-auto">
+    <div className="p-4 lg:p-7 space-y-5 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 border-b border-onyx-line pb-5">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">
+          <h1 className="font-display font-bold text-[26px] text-white tracking-tight">
             {contact?.full_name ?? 'Unknown Contact'}
           </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="text-[13px] text-gray-2 mt-1">
             {contact?.phone} {contact?.email ? `· ${contact.email}` : ''}
           </p>
 
-          {/* Badges */}
-          <div className="flex flex-wrap items-center gap-2 mt-2">
-            {/* Verification score badge */}
+          {/* Chips */}
+          <div className="flex flex-wrap items-center gap-2 mt-3">
             {lead.verification_score && (
-              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+              <span className={`chip ${
                 lead.verification_score === 3
-                  ? 'bg-green-50 text-green-700'
+                  ? 'text-status-green border-status-green/40 bg-status-green/10'
                   : lead.verification_score === 2
-                  ? 'bg-yellow-50 text-yellow-700'
-                  : 'bg-red-50 text-red-700'
+                  ? 'text-status-amber border-status-amber/40 bg-status-amber/10'
+                  : 'text-status-red border-status-red/40 bg-status-red/10'
               }`}>
-                {lead.verification_score === 3 ? '🟢' : lead.verification_score === 2 ? '🟡' : '🔴'}{' '}
-                Verified ({lead.verification_score}/3)
+                VERIFIED {lead.verification_score}/3
               </span>
             )}
-
-            {/* Eligibility risk badge */}
             {lead.eligibility_risk && (
-              <span className="text-xs bg-red-50 text-red-700 px-2 py-0.5 rounded-full font-medium">
-                🔴 Eligibility
+              <span className="chip text-status-red border-status-red/40 bg-status-red/10">
+                ELIG RISK
               </span>
             )}
-
-            {/* Intent score */}
             {lead.intent_score && (
-              <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-                Intent: {lead.intent_score}/5
+              <span className="chip text-aqua border-brand/50 bg-brand/[0.12]">
+                INTENT {lead.intent_score}/5
               </span>
             )}
-
-            {/* Urgency */}
-            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+            <span className={`chip ${
               lead.urgency === 'hot'
-                ? 'bg-red-50 text-red-700'
+                ? 'text-status-red border-status-red/40 bg-status-red/10'
                 : lead.urgency === 'warm'
-                ? 'bg-yellow-50 text-yellow-700'
-                : 'bg-blue-50 text-blue-700'
+                ? 'text-status-amber border-status-amber/40 bg-status-amber/10'
+                : 'text-aqua border-brand/50 bg-brand/[0.12]'
             }`}>
-              {lead.urgency === 'hot' ? '🔴' : lead.urgency === 'warm' ? '🟡' : '🔵'}{' '}
-              {lead.urgency.charAt(0).toUpperCase() + lead.urgency.slice(1)}
+              {lead.urgency.toUpperCase()}
             </span>
-
-            {/* Source */}
-            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-              {lead.source.replace(/_/g, ' ')}
+            <span className="chip text-gray-2 border-onyx-line bg-transparent">
+              {lead.source.replace(/_/g, ' ').toUpperCase()}
             </span>
           </div>
         </div>
 
-        {/* Stage selector */}
         <LeadStageSelector leadId={lead.id} currentStage={lead.status} />
       </div>
 
@@ -157,7 +140,7 @@ export default async function LeadDetailPage({ params }: Props) {
       />
 
       {/* Main content grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Left column: Timeline */}
         <div className="lg:col-span-2 space-y-4">
           <Timeline items={timelineItems} />
@@ -166,21 +149,21 @@ export default async function LeadDetailPage({ params }: Props) {
         {/* Right column: Details */}
         <div className="space-y-4">
           {/* Lead details card */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Lead Details</h3>
+          <div className="bg-onyx-card border border-onyx-line rounded-2xl p-4">
+            <h3 className="text-sm font-display font-bold text-white mb-3">Lead Details</h3>
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <dt className="text-gray-500">Deal Type</dt>
-                <dd className="text-gray-900 font-medium">{lead.deal_type}</dd>
+                <dt className="text-gray-2">Deal Type</dt>
+                <dd className="text-white font-medium">{lead.deal_type}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-gray-500">Residency</dt>
-                <dd className="text-gray-900 font-medium">{lead.residency_status ?? '—'}</dd>
+                <dt className="text-gray-2">Residency</dt>
+                <dd className="text-white font-medium">{lead.residency_status ?? '—'}</dd>
               </div>
               {(lead.budget_min || lead.budget_max) && (
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Budget</dt>
-                  <dd className="text-gray-900 font-medium">
+                  <dt className="text-gray-2">Budget</dt>
+                  <dd className="text-white font-medium">
                     {lead.budget_min ? `$${(lead.budget_min / 1000).toFixed(0)}K` : '—'}
                     {' – '}
                     {lead.budget_max ? `$${(lead.budget_max / 1000000).toFixed(1)}M` : '—'}
@@ -188,14 +171,14 @@ export default async function LeadDetailPage({ params }: Props) {
                 </div>
               )}
               <div className="flex justify-between">
-                <dt className="text-gray-500">Timeline</dt>
-                <dd className="text-gray-900 font-medium">
+                <dt className="text-gray-2">Timeline</dt>
+                <dd className="text-white font-medium">
                   {lead.timeline_declared?.replace(/_/g, ' ') ?? '—'}
                 </dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-gray-500">Created</dt>
-                <dd className="text-gray-900">
+                <dt className="text-gray-2">Created</dt>
+                <dd className="text-white">
                   {new Date(lead.created_at).toLocaleDateString('en-SG', {
                     day: 'numeric',
                     month: 'short',
@@ -208,64 +191,51 @@ export default async function LeadDetailPage({ params }: Props) {
 
           {/* Buyer requirements */}
           {buyerRequirements && (
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Buyer Requirements</h3>
+            <div className="bg-onyx-card border border-onyx-line rounded-2xl p-4">
+              <h3 className="text-sm font-display font-bold text-white mb-3">Buyer Requirements</h3>
               <dl className="space-y-2 text-sm">
                 {buyerRequirements.districts?.length > 0 && (
                   <div>
-                    <dt className="text-gray-500">Districts</dt>
-                    <dd className="text-gray-900 mt-0.5">
-                      {buyerRequirements.districts.join(', ')}
-                    </dd>
+                    <dt className="text-gray-2">Districts</dt>
+                    <dd className="text-white mt-0.5">{buyerRequirements.districts.join(', ')}</dd>
                   </div>
                 )}
                 {buyerRequirements.property_types?.length > 0 && (
                   <div>
-                    <dt className="text-gray-500">Property Types</dt>
-                    <dd className="text-gray-900 mt-0.5">
-                      {buyerRequirements.property_types.join(', ')}
-                    </dd>
+                    <dt className="text-gray-2">Property Types</dt>
+                    <dd className="text-white mt-0.5">{buyerRequirements.property_types.join(', ')}</dd>
                   </div>
                 )}
                 {buyerRequirements.bedrooms_min && (
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Min Bedrooms</dt>
-                    <dd className="text-gray-900">{buyerRequirements.bedrooms_min}</dd>
-                  </div>
-                )}
-                {buyerRequirements.min_sqft && (
-                  <div className="flex justify-between">
-                    <dt className="text-gray-500">Min Size</dt>
-                    <dd className="text-gray-900">{buyerRequirements.min_sqft} sqft</dd>
+                    <dt className="text-gray-2">Min Bedrooms</dt>
+                    <dd className="text-white">{buyerRequirements.bedrooms_min}</dd>
                   </div>
                 )}
               </dl>
             </div>
           )}
 
-          {/* Pre-viewing qualification checklist */}
           {lead.pre_viewing_checklist && (
             <QualificationChecklist checklist={lead.pre_viewing_checklist} />
           )}
 
-          {/* Viewing Prep (from listing insights) */}
           {scheduledViewing && (
             <ViewingPrepCard insights={viewingListingInsights} listingAddress={viewingListingAddress} />
           )}
 
-          {/* Buyer Fit */}
           {(buyerFit.fit_signals.length > 0 || buyerFit.watchouts.length > 0) && (
             <BuyerFitPanel fitSignals={buyerFit.fit_signals} watchouts={buyerFit.watchouts} />
           )}
 
-          {/* Upcoming viewings */}
+          {/* Viewings */}
           {viewings.length > 0 && (
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Viewings</h3>
+            <div className="bg-onyx-card border border-onyx-line rounded-2xl p-4">
+              <h3 className="text-sm font-display font-bold text-white mb-3">Viewings</h3>
               <div className="space-y-2">
                 {viewings.map((v: { id: string; scheduled_at: string; status: string }) => (
                   <div key={v.id} className="flex items-center justify-between text-sm">
-                    <span className="text-gray-700">
+                    <span className="text-white">
                       {new Date(v.scheduled_at).toLocaleDateString('en-SG', {
                         day: 'numeric',
                         month: 'short',
@@ -273,12 +243,12 @@ export default async function LeadDetailPage({ params }: Props) {
                         minute: '2-digit',
                       })}
                     </span>
-                    <span className={`text-xs px-1.5 py-0.5 rounded ${
+                    <span className={`chip ${
                       v.status === 'scheduled'
-                        ? 'bg-blue-50 text-blue-700'
+                        ? 'text-aqua border-brand/50 bg-brand/[0.12]'
                         : v.status === 'completed'
-                        ? 'bg-green-50 text-green-700'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'text-status-green border-status-green/40 bg-status-green/10'
+                        : 'text-gray-2 border-onyx-line bg-transparent'
                     }`}>
                       {v.status}
                     </span>
@@ -290,19 +260,19 @@ export default async function LeadDetailPage({ params }: Props) {
 
           {/* Tasks */}
           {tasks.length > 0 && (
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Tasks</h3>
+            <div className="bg-onyx-card border border-onyx-line rounded-2xl p-4">
+              <h3 className="text-sm font-display font-bold text-white mb-3">Tasks</h3>
               <div className="space-y-2">
                 {tasks.map((t: { id: string; title: string; due_at: string; completed_at: string | null; priority: string }) => (
                   <div key={t.id} className="flex items-start gap-2 text-sm">
-                    <span className={`mt-0.5 ${t.completed_at ? 'text-green-500' : 'text-gray-300'}`}>
+                    <span className={`mt-0.5 ${t.completed_at ? 'text-status-green' : 'text-gray-2/40'}`}>
                       {t.completed_at ? '✓' : '○'}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className={`truncate ${t.completed_at ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                      <p className={`truncate ${t.completed_at ? 'line-through text-gray-2/60' : 'text-white'}`}>
                         {t.title}
                       </p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-[11px] text-gray-2">
                         Due {new Date(t.due_at).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })}
                       </p>
                     </div>
@@ -316,8 +286,6 @@ export default async function LeadDetailPage({ params }: Props) {
     </div>
   );
 }
-
-// --- Helper ---
 
 function buildTimeline(messages: Array<Record<string, unknown>>) {
   return messages

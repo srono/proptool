@@ -77,18 +77,18 @@ export default function StampDutyCalculatorPage() {
   };
 
   return (
-    <div className="p-4 lg:p-8 max-w-2xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Stamp Duty Calculator</h1>
-        <p className="text-sm text-gray-600 mt-1">
+    <div className="p-4 lg:p-7 max-w-2xl mx-auto space-y-6">
+      <div className="border-b border-onyx-line pb-5">
+        <h1 className="font-display font-bold text-[26px] text-white tracking-tight">Stamp Duty Calculator</h1>
+        <p className="text-[13px] text-gray-2 mt-1">
           Estimate BSD and ABSD for Singapore property purchases
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-6 space-y-4">
         {/* Purchase Price */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Purchase Price (S$)
           </label>
           <input
@@ -96,19 +96,19 @@ export default function StampDutyCalculatorPage() {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="1,500,000"
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </div>
 
         {/* Buyer Profile */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Buyer Profile
           </label>
           <select
             value={buyerProfile}
             onChange={(e) => setBuyerProfile(e.target.value as BuyerProfile)}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           >
             <option value="citizen">Singapore Citizen</option>
             <option value="pr">Permanent Resident (PR)</option>
@@ -120,13 +120,13 @@ export default function StampDutyCalculatorPage() {
 
         {/* Property Count */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Property Number
           </label>
           <select
             value={propertyCount}
             onChange={(e) => setPropertyCount(e.target.value as PropertyCount)}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           >
             <option value="1st">1st Property</option>
             <option value="2nd">2nd Property</option>
@@ -136,7 +136,7 @@ export default function StampDutyCalculatorPage() {
 
         <button
           onClick={handleCalculate}
-          className="w-full rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700"
+          className="btn-primary w-full"
         >
           Calculate
         </button>
@@ -144,25 +144,25 @@ export default function StampDutyCalculatorPage() {
 
       {/* Results */}
       {result && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Results</h2>
+        <div className="bg-onyx-card rounded-2xl border border-onyx-line p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-white">Results</h2>
 
           <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <p className="text-xs text-gray-500">BSD</p>
-              <p className="text-lg font-bold text-gray-900">
+            <div className="text-center p-3 bg-onyx-raised rounded-xl">
+              <p className="text-xs text-gray-2">BSD</p>
+              <p className="text-lg font-bold text-white">
                 ${result.bsd.toLocaleString('en-SG', { maximumFractionDigits: 0 })}
               </p>
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <p className="text-xs text-gray-500">ABSD ({result.absdRate}%)</p>
-              <p className="text-lg font-bold text-gray-900">
+            <div className="text-center p-3 bg-onyx-raised rounded-xl">
+              <p className="text-xs text-gray-2">ABSD ({result.absdRate}%)</p>
+              <p className="text-lg font-bold text-white">
                 ${result.absd.toLocaleString('en-SG', { maximumFractionDigits: 0 })}
               </p>
             </div>
-            <div className="text-center p-3 bg-brand-50 rounded-lg">
-              <p className="text-xs text-brand-600">Total</p>
-              <p className="text-lg font-bold text-brand-700">
+            <div className="text-center p-3 bg-brand/[0.12] rounded-xl border border-brand/50">
+              <p className="text-xs text-aqua">Total</p>
+              <p className="text-lg font-bold text-aqua">
                 ${result.total.toLocaleString('en-SG', { maximumFractionDigits: 0 })}
               </p>
             </div>
@@ -170,10 +170,10 @@ export default function StampDutyCalculatorPage() {
 
           {/* BSD Breakdown */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">BSD Breakdown</h3>
+            <h3 className="text-sm font-medium text-gray-2 mb-2">BSD Breakdown</h3>
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-gray-500">
+                <tr className="text-gray-2">
                   <th className="text-left py-1">Band</th>
                   <th className="text-right py-1">Rate</th>
                   <th className="text-right py-1">Taxable</th>
@@ -182,13 +182,13 @@ export default function StampDutyCalculatorPage() {
               </thead>
               <tbody>
                 {result.breakdown.map((band, i) => (
-                  <tr key={i} className="border-t border-gray-100">
-                    <td className="py-1.5">
+                  <tr key={i} className="border-t border-onyx-line">
+                    <td className="py-1.5 text-white">
                       ${band.band_min.toLocaleString()} – {band.band_max ? `$${band.band_max.toLocaleString()}` : '∞'}
                     </td>
-                    <td className="text-right">{band.rate_pct}%</td>
-                    <td className="text-right">${band.taxable_amount.toLocaleString()}</td>
-                    <td className="text-right font-medium">${band.duty_amount.toLocaleString()}</td>
+                    <td className="text-right text-white">{band.rate_pct}%</td>
+                    <td className="text-right text-white">${band.taxable_amount.toLocaleString()}</td>
+                    <td className="text-right font-medium text-white">${band.duty_amount.toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -196,7 +196,7 @@ export default function StampDutyCalculatorPage() {
           </div>
 
           {/* Disclaimer */}
-          <p className="text-xs text-gray-400 italic border-t border-gray-100 pt-3">
+          <p className="text-xs text-gray-2 italic border-t border-onyx-line pt-3">
             {STAMP_DUTY_DISCLAIMER}
           </p>
         </div>

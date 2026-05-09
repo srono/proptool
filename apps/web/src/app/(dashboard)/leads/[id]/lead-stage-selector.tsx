@@ -27,7 +27,7 @@ export function LeadStageSelector({ leadId, currentStage }: Props) {
 
     if (error) {
       console.error('Failed to update stage:', error);
-      setStage(currentStage); // Revert on error
+      setStage(currentStage);
       return;
     }
 
@@ -42,7 +42,7 @@ export function LeadStageSelector({ leadId, currentStage }: Props) {
         value={stage}
         onChange={(e) => handleChange(e.target.value as PipelineStage)}
         disabled={isPending}
-        className="text-sm rounded-lg border-gray-300 bg-white px-3 py-2 font-medium text-gray-700 shadow-sm focus:border-brand-500 focus:ring-brand-500 disabled:opacity-50"
+        className="text-sm rounded-pill border border-onyx-line bg-onyx-card px-4 py-2 font-medium text-white focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-50"
       >
         {PIPELINE_STAGES.map((s) => (
           <option key={s.key} value={s.key}>

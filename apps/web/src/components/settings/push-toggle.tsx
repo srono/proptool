@@ -60,10 +60,10 @@ export function PushToggle() {
     return (
       <div className="flex items-center justify-between py-3">
         <div>
-          <p className="text-sm font-medium text-gray-900">Browser Push Notifications</p>
-          <p className="text-xs text-gray-500">Not supported in this browser</p>
+          <p className="text-sm font-medium text-white">Browser Push Notifications</p>
+          <p className="text-xs text-gray-2">Not supported in this browser</p>
         </div>
-        <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">
+        <span className="text-xs bg-onyx-raised text-gray-2 px-2 py-0.5 rounded-full font-medium">
           Unavailable
         </span>
       </div>
@@ -74,8 +74,8 @@ export function PushToggle() {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-900">Browser Push Notifications</p>
-          <p className="text-xs text-gray-500">
+          <p className="text-sm font-medium text-white">Browser Push Notifications</p>
+          <p className="text-xs text-gray-2">
             {isSubscribed
               ? 'You will receive push notifications for new leads and upcoming viewings'
               : 'Enable to get notified about new leads and viewing reminders'}
@@ -88,7 +88,7 @@ export function PushToggle() {
           onClick={handleToggle}
           disabled={isLoading || isToggling}
           className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-            isSubscribed ? 'bg-brand-600' : 'bg-gray-200'
+            isSubscribed ? 'bg-brand' : 'bg-onyx-raised'
           }`}
         >
           <span
@@ -100,11 +100,11 @@ export function PushToggle() {
       </div>
 
       {error && (
-        <p className="text-xs text-red-600">{error}</p>
+        <p className="text-xs text-status-red">{error}</p>
       )}
 
       {isSubscribed && (
-        <p className="text-xs text-green-600">✓ Push notifications enabled</p>
+        <p className="text-xs text-status-green">Push notifications enabled</p>
       )}
     </div>
   );

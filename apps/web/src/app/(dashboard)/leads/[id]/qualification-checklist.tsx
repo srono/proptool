@@ -20,13 +20,13 @@ export function QualificationChecklist({ checklist }: Props) {
   const allComplete = completedCount === totalCount;
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-onyx-card border border-onyx-line rounded-2xl p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-gray-900">Pre-Viewing Checklist</h3>
-        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+        <h3 className="text-sm font-display font-bold text-white">Pre-Viewing Checklist</h3>
+        <span className={`chip ${
           allComplete
-            ? 'bg-green-50 text-green-700'
-            : 'bg-yellow-50 text-yellow-700'
+            ? 'text-status-green border-status-green/40 bg-status-green/10'
+            : 'text-status-amber border-status-amber/40 bg-status-amber/10'
         }`}>
           {completedCount}/{totalCount}
         </span>
@@ -34,10 +34,10 @@ export function QualificationChecklist({ checklist }: Props) {
       <ul className="space-y-1.5">
         {CHECKLIST_ITEMS.map((item) => (
           <li key={item.key} className="flex items-center gap-2 text-sm">
-            <span className={checklist[item.key] ? 'text-green-500' : 'text-gray-300'}>
+            <span className={checklist[item.key] ? 'text-status-green' : 'text-gray-2/40'}>
               {checklist[item.key] ? '✓' : '○'}
             </span>
-            <span className={checklist[item.key] ? 'text-gray-700' : 'text-gray-400'}>
+            <span className={checklist[item.key] ? 'text-white' : 'text-gray-2'}>
               {item.label}
             </span>
           </li>

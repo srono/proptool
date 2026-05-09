@@ -135,18 +135,18 @@ export function ListingForm({ initialData }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {/* Listing Type */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Listing Type</h2>
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+        <h2 className="text-sm font-display font-bold text-white">Listing Type</h2>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => setListingType('sale')}
             className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               listingType === 'sale'
-                ? 'bg-brand-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-aqua text-onyx'
+                : 'bg-onyx-raised text-gray-2 hover:text-white'
             }`}
           >
             Sale
@@ -156,8 +156,8 @@ export function ListingForm({ initialData }: Props) {
             onClick={() => setListingType('rental')}
             className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               listingType === 'rental'
-                ? 'bg-brand-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-aqua text-onyx'
+                : 'bg-onyx-raised text-gray-2 hover:text-white'
             }`}
           >
             Rental
@@ -166,11 +166,11 @@ export function ListingForm({ initialData }: Props) {
       </div>
 
       {/* Property Details */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Property Details</h2>
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+        <h2 className="text-sm font-display font-bold text-white">Property Details</h2>
 
         <div>
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="address" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
             Address *
           </label>
           <input
@@ -179,14 +179,14 @@ export function ListingForm({ initialData }: Props) {
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="e.g. 123 Orchard Road #12-34"
-            className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
-          {errors.address && <p className="text-xs text-red-600 mt-1">{errors.address}</p>}
+          {errors.address && <p className="text-xs text-status-red mt-1">{errors.address}</p>}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="postalCode" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Postal Code *
             </label>
             <input
@@ -196,20 +196,20 @@ export function ListingForm({ initialData }: Props) {
               onChange={(e) => setPostalCode(e.target.value)}
               placeholder="e.g. 238858"
               maxLength={6}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
-            {errors.postalCode && <p className="text-xs text-red-600 mt-1">{errors.postalCode}</p>}
+            {errors.postalCode && <p className="text-xs text-status-red mt-1">{errors.postalCode}</p>}
           </div>
 
           <div>
-            <label htmlFor="district" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="district" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               District
             </label>
             <select
               id="district"
               value={district}
               onChange={(e) => setDistrict(e.target.value)}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             >
               <option value="">Select district...</option>
               {SINGAPORE_DISTRICTS.map((d) => (
@@ -223,14 +223,14 @@ export function ListingForm({ initialData }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="propertyType" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Property Type *
             </label>
             <select
               id="propertyType"
               value={propertyType}
               onChange={(e) => setPropertyType(e.target.value as PropertyType)}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             >
               <option value="">Select type...</option>
               {PROPERTY_TYPES.map((pt) => (
@@ -239,19 +239,19 @@ export function ListingForm({ initialData }: Props) {
                 </option>
               ))}
             </select>
-            {errors.propertyType && <p className="text-xs text-red-600 mt-1">{errors.propertyType}</p>}
+            {errors.propertyType && <p className="text-xs text-status-red mt-1">{errors.propertyType}</p>}
           </div>
 
           {propertyType === 'hdb' && (
             <div>
-              <label htmlFor="hdbType" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="hdbType" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
                 HDB Type
               </label>
               <select
                 id="hdbType"
                 value={hdbType}
                 onChange={(e) => setHdbType(e.target.value as HdbType)}
-                className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+                className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
               >
                 <option value="">Select HDB type...</option>
                 {HDB_TYPES.map((ht) => (
@@ -266,14 +266,14 @@ export function ListingForm({ initialData }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="tenure" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="tenure" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Tenure *
             </label>
             <select
               id="tenure"
               value={tenure}
               onChange={(e) => setTenure(e.target.value as Tenure)}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             >
               <option value="">Select tenure...</option>
               {TENURE_OPTIONS.map((t) => (
@@ -282,11 +282,11 @@ export function ListingForm({ initialData }: Props) {
                 </option>
               ))}
             </select>
-            {errors.tenure && <p className="text-xs text-red-600 mt-1">{errors.tenure}</p>}
+            {errors.tenure && <p className="text-xs text-status-red mt-1">{errors.tenure}</p>}
           </div>
 
           <div>
-            <label htmlFor="floorAreaSqft" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="floorAreaSqft" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Floor Area (sqft) *
             </label>
             <input
@@ -296,15 +296,15 @@ export function ListingForm({ initialData }: Props) {
               onChange={(e) => setFloorAreaSqft(e.target.value)}
               placeholder="e.g. 1200"
               min={0}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
-            {errors.floorAreaSqft && <p className="text-xs text-red-600 mt-1">{errors.floorAreaSqft}</p>}
+            {errors.floorAreaSqft && <p className="text-xs text-status-red mt-1">{errors.floorAreaSqft}</p>}
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label htmlFor="floor" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="floor" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Floor
             </label>
             <input
@@ -313,12 +313,12 @@ export function ListingForm({ initialData }: Props) {
               value={floor}
               onChange={(e) => setFloor(e.target.value)}
               placeholder="e.g. 12"
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
 
           <div>
-            <label htmlFor="unitNumber" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="unitNumber" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Unit Number
             </label>
             <input
@@ -327,12 +327,12 @@ export function ListingForm({ initialData }: Props) {
               value={unitNumber}
               onChange={(e) => setUnitNumber(e.target.value)}
               placeholder="e.g. #12-34"
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
 
           <div>
-            <label htmlFor="completionYear" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="completionYear" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Completion Year
             </label>
             <input
@@ -343,19 +343,19 @@ export function ListingForm({ initialData }: Props) {
               placeholder="e.g. 2020"
               min={1960}
               max={2035}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
         </div>
       </div>
 
       {/* Pricing */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Pricing</h2>
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+        <h2 className="text-sm font-display font-bold text-white">Pricing</h2>
 
         {listingType === 'sale' ? (
           <div>
-            <label htmlFor="askingPrice" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="askingPrice" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Asking Price ($)
             </label>
             <input
@@ -365,17 +365,17 @@ export function ListingForm({ initialData }: Props) {
               onChange={(e) => setAskingPrice(e.target.value)}
               placeholder="e.g. 1500000"
               min={0}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
             {psf && (
-              <p className="text-xs text-brand-600 mt-1 font-medium">
+              <p className="text-xs text-brand mt-1 font-medium">
                 ${psf.toLocaleString('en-SG')} psf
               </p>
             )}
           </div>
         ) : (
           <div>
-            <label htmlFor="askingRental" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="askingRental" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Asking Rental ($/month)
             </label>
             <input
@@ -385,42 +385,42 @@ export function ListingForm({ initialData }: Props) {
               onChange={(e) => setAskingRental(e.target.value)}
               placeholder="e.g. 3500"
               min={0}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
         )}
       </div>
 
       {/* Description */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Description</h2>
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+        <h2 className="text-sm font-display font-bold text-white">Description</h2>
         <textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
           placeholder="Describe the property features, nearby amenities, etc."
-          className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+          className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         />
       </div>
 
       {/* Exclusivity */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Exclusivity</h2>
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+        <h2 className="text-sm font-display font-bold text-white">Exclusivity</h2>
 
         <label className="flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={isExclusive}
             onChange={(e) => setIsExclusive(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+            className="h-4 w-4 rounded border-onyx-line bg-onyx-raised text-brand focus:ring-brand"
           />
-          <span className="text-sm text-gray-700">This is an exclusive listing</span>
+          <span className="text-sm text-gray-2">This is an exclusive listing</span>
         </label>
 
         {isExclusive && (
           <div>
-            <label htmlFor="exclusivityExpiry" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="exclusivityExpiry" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
               Exclusivity Expiry Date
             </label>
             <input
@@ -428,7 +428,7 @@ export function ListingForm({ initialData }: Props) {
               id="exclusivityExpiry"
               value={exclusivityExpiry}
               onChange={(e) => setExclusivityExpiry(e.target.value)}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
         )}
@@ -439,7 +439,7 @@ export function ListingForm({ initialData }: Props) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex-1 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn-primary flex-1"
         >
           {isSubmitting
             ? isEdit ? 'Saving...' : 'Creating...'
@@ -448,7 +448,7 @@ export function ListingForm({ initialData }: Props) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          className="btn-ghost"
         >
           Cancel
         </button>

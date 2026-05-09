@@ -64,15 +64,15 @@ export function SettingsTabs({ profile, tenant, userEmail }: Props) {
   return (
     <div className="space-y-6">
       {/* Tab navigation */}
-      <div className="flex gap-1 bg-gray-100 rounded-lg p-1 overflow-x-auto">
+      <div className="flex gap-1 bg-onyx-card border border-onyx-line rounded-pill p-1 overflow-x-auto">
         {TABS.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`flex-1 text-center rounded-md px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap ${
+            className={`flex-1 text-center rounded-pill px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === tab.key
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-aqua text-onyx'
+                : 'text-gray-2 hover:text-white'
             }`}
           >
             {tab.label}
@@ -140,23 +140,23 @@ function ProfileTab({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-      <h2 className="text-sm font-semibold text-gray-900">Profile Information</h2>
+    <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+      <h2 className="text-sm font-semibold text-white">Profile Information</h2>
 
       {/* Avatar placeholder */}
       <div className="flex items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 text-xl font-bold">
+        <div className="w-16 h-16 rounded-full bg-brand/[0.12] flex items-center justify-center text-aqua text-xl font-bold">
           {fullName ? fullName.charAt(0).toUpperCase() : '?'}
         </div>
         <div>
-          <p className="text-sm font-medium text-gray-900">{fullName || 'Your Name'}</p>
-          <p className="text-xs text-gray-500">{userEmail}</p>
+          <p className="text-sm font-medium text-white">{fullName || 'Your Name'}</p>
+          <p className="text-xs text-gray-2">{userEmail}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="fullName" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Full Name
           </label>
           <input
@@ -164,11 +164,11 @@ function ProfileTab({
             id="fullName"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="email" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Email
           </label>
           <input
@@ -176,11 +176,11 @@ function ProfileTab({
             id="email"
             value={userEmail}
             disabled
-            className="w-full rounded-lg border-gray-200 bg-gray-50 text-sm text-gray-500 cursor-not-allowed"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-gray-2 cursor-not-allowed opacity-60"
           />
         </div>
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="phone" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Phone
           </label>
           <input
@@ -189,11 +189,11 @@ function ProfileTab({
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="+65 9XXX XXXX"
-            className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </div>
         <div>
-          <label htmlFor="agencyName" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="agencyName" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Agency Name
           </label>
           <input
@@ -202,11 +202,11 @@ function ProfileTab({
             value={agencyName}
             onChange={(e) => setAgencyName(e.target.value)}
             placeholder="e.g. ERA, PropNex"
-            className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </div>
         <div>
-          <label htmlFor="ceaLicence" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="ceaLicence" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             CEA Licence Number
           </label>
           <input
@@ -215,11 +215,11 @@ function ProfileTab({
             value={ceaLicence}
             onChange={(e) => setCeaLicence(e.target.value)}
             placeholder="R0XXXXX"
-            className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </div>
         <div>
-          <label htmlFor="ceaExpiry" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="ceaExpiry" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             CEA Expiry Date
           </label>
           <input
@@ -227,7 +227,7 @@ function ProfileTab({
             id="ceaExpiry"
             value={ceaExpiry}
             onChange={(e) => setCeaExpiry(e.target.value)}
-            className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </div>
       </div>
@@ -237,11 +237,11 @@ function ProfileTab({
           type="button"
           onClick={handleSave}
           disabled={isSaving}
-          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
+          className="btn-primary disabled:opacity-50"
         >
           {isSaving ? 'Saving...' : 'Save Profile'}
         </button>
-        {saved && <span className="text-sm text-green-600">✓ Saved</span>}
+        {saved && <span className="text-sm text-status-green">Saved</span>}
       </div>
     </div>
   );
@@ -253,26 +253,25 @@ function IntegrationsTab({ tenant }: { tenant: Tenant | null }) {
   return (
     <div className="space-y-4">
       {/* Facebook */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">📘</span>
             <div>
-              <p className="text-sm font-medium text-gray-900">Facebook Page</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm font-medium text-white">Facebook Page</p>
+              <p className="text-xs text-gray-2">
                 Connect to receive leads from Facebook Lead Ads
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {tenant?.facebook_page_connected ? (
-              <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-medium">
+              <span className="chip text-status-green border-status-green/40 bg-status-green/10">
                 Connected
               </span>
             ) : (
               <button
                 type="button"
-                className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700 transition-colors"
+                className="btn-primary text-xs px-3 py-1.5"
               >
                 Connect
               </button>
@@ -282,13 +281,12 @@ function IntegrationsTab({ tenant }: { tenant: Tenant | null }) {
       </div>
 
       {/* WhatsApp */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">💬</span>
             <div>
-              <p className="text-sm font-medium text-gray-900">WhatsApp Business</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm font-medium text-white">WhatsApp Business</p>
+              <p className="text-xs text-gray-2">
                 {tenant?.whatsapp_number
                   ? `Connected: ${tenant.whatsapp_number}`
                   : 'Send and receive messages via WhatsApp'}
@@ -296,10 +294,10 @@ function IntegrationsTab({ tenant }: { tenant: Tenant | null }) {
             </div>
           </div>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+            className={`chip ${
               tenant?.whatsapp_number
-                ? 'bg-green-50 text-green-700'
-                : 'bg-gray-100 text-gray-600'
+                ? 'text-status-green border-status-green/40 bg-status-green/10'
+                : 'text-gray-2 border-onyx-line bg-onyx-card'
             }`}
           >
             {tenant?.whatsapp_number ? 'Active' : 'Not Connected'}
@@ -308,26 +306,25 @@ function IntegrationsTab({ tenant }: { tenant: Tenant | null }) {
       </div>
 
       {/* Google Calendar */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">📅</span>
             <div>
-              <p className="text-sm font-medium text-gray-900">Google Calendar</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm font-medium text-white">Google Calendar</p>
+              <p className="text-xs text-gray-2">
                 Sync viewings and tasks to your calendar
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {tenant?.google_calendar_connected ? (
-              <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-medium">
+              <span className="chip text-status-green border-status-green/40 bg-status-green/10">
                 Connected
               </span>
             ) : (
               <a
                 href="/api/auth/google"
-                className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                className="btn-ghost text-xs px-3 py-1.5"
               >
                 Connect
               </a>
@@ -337,16 +334,15 @@ function IntegrationsTab({ tenant }: { tenant: Tenant | null }) {
       </div>
 
       {/* Portal Email Forwarding */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">📧</span>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900">Portal Email Forwarding</p>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-sm font-medium text-white">Portal Email Forwarding</p>
+            <p className="text-xs text-gray-2 mb-2">
               Forward portal enquiry emails to this address to auto-create leads
             </p>
-            <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
-              <code className="text-xs text-gray-700 break-all">
+            <div className="rounded-xl border border-onyx-line bg-onyx-raised px-3 py-2">
+              <code className="text-xs text-gray-2 break-all">
                 leads+{tenant?.id ?? 'your-tenant-id'}@cinvea.com
               </code>
             </div>
@@ -408,11 +404,11 @@ function NotificationsTab({
   ];
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-      <h2 className="text-sm font-semibold text-gray-900">Push Notifications</h2>
+    <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+      <h2 className="text-sm font-semibold text-white">Push Notifications</h2>
 
       {/* Browser push toggle */}
-      <div className="border-b border-gray-100 pb-4">
+      <div className="border-b border-onyx-line pb-4">
         <PushToggle />
       </div>
 
@@ -420,8 +416,8 @@ function NotificationsTab({
         {toggleItems.map((item) => (
           <div key={item.key} className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-900">{item.label}</p>
-              <p className="text-xs text-gray-500">{item.description}</p>
+              <p className="text-sm font-medium text-white">{item.label}</p>
+              <p className="text-xs text-gray-2">{item.description}</p>
             </div>
             <button
               type="button"
@@ -429,7 +425,7 @@ function NotificationsTab({
               aria-checked={prefs[item.key]}
               onClick={() => togglePref(item.key)}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
-                prefs[item.key] ? 'bg-brand-600' : 'bg-gray-200'
+                prefs[item.key] ? 'bg-brand-600' : 'bg-onyx-raised'
               }`}
             >
               <span
@@ -443,17 +439,17 @@ function NotificationsTab({
       </div>
 
       {/* Daily digest time */}
-      <div className="border-t border-gray-100 pt-4">
+      <div className="border-t border-onyx-line pt-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-900">Daily Digest</p>
-            <p className="text-xs text-gray-500">Receive a summary of the day&apos;s activities</p>
+            <p className="text-sm font-medium text-white">Daily Digest</p>
+            <p className="text-xs text-gray-2">Receive a summary of the day&apos;s activities</p>
           </div>
           <input
             type="time"
             value={prefs.daily_digest_time}
             onChange={(e) => setPrefs((prev) => ({ ...prev, daily_digest_time: e.target.value }))}
-            className="rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500 w-28"
+            className="bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand w-28"
             aria-label="Daily digest time"
           />
         </div>
@@ -464,11 +460,11 @@ function NotificationsTab({
           type="button"
           onClick={handleSave}
           disabled={isSaving}
-          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
+          className="btn-primary disabled:opacity-50"
         >
           {isSaving ? 'Saving...' : 'Save Notifications'}
         </button>
-        {saved && <span className="text-sm text-green-600">✓ Saved</span>}
+        {saved && <span className="text-sm text-status-green">Saved</span>}
       </div>
     </div>
   );
@@ -482,13 +478,13 @@ function BillingTab({ tenant }: { tenant: Tenant | null }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Current Plan</h2>
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+        <h2 className="text-sm font-semibold text-white">Current Plan</h2>
 
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-lg font-bold text-gray-900 capitalize">{plan}</p>
-            <p className="text-xs text-gray-500">
+            <p className="text-lg font-bold text-white capitalize">{plan}</p>
+            <p className="text-xs text-gray-2">
               {plan === 'free'
                 ? 'Limited features — upgrade for full access'
                 : 'Full access to all features'}
@@ -497,7 +493,7 @@ function BillingTab({ tenant }: { tenant: Tenant | null }) {
           {plan === 'free' && (
             <button
               type="button"
-              className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+              className="btn-primary"
             >
               Upgrade
             </button>
@@ -505,9 +501,9 @@ function BillingTab({ tenant }: { tenant: Tenant | null }) {
         </div>
 
         {nextBilling && (
-          <div className="flex justify-between text-sm border-t border-gray-100 pt-3">
-            <span className="text-gray-500">Next billing date</span>
-            <span className="text-gray-900">
+          <div className="flex justify-between text-sm border-t border-onyx-line pt-3">
+            <span className="text-gray-2">Next billing date</span>
+            <span className="text-white">
               {new Date(nextBilling).toLocaleDateString('en-SG', {
                 day: 'numeric',
                 month: 'long',
@@ -519,15 +515,15 @@ function BillingTab({ tenant }: { tenant: Tenant | null }) {
       </div>
 
       {plan !== 'free' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Manage Subscription</h2>
+        <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
+          <h2 className="text-sm font-semibold text-white mb-3">Manage Subscription</h2>
           <button
             type="button"
-            className="text-sm text-red-600 hover:text-red-700 font-medium"
+            className="text-sm text-status-red hover:text-status-red/80 font-medium"
           >
             Cancel Subscription
           </button>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-gray-2 mt-1">
             Your access will continue until the end of the current billing period.
           </p>
         </div>

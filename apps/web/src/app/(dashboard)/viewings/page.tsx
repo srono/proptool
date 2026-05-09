@@ -20,15 +20,15 @@ export default async function ViewingsPage() {
     .order('scheduled_at', { ascending: true });
 
   return (
-    <div className="p-4 lg:p-8 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="p-4 lg:p-7 space-y-5">
+      <div className="flex items-end justify-between border-b border-onyx-line pb-5">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Viewings</h1>
-          <p className="text-sm text-gray-600">Upcoming property viewings</p>
+          <h1 className="font-display font-bold text-[26px] text-white tracking-tight">Viewings</h1>
+          <p className="text-[13px] text-gray-2">Upcoming property viewings</p>
         </div>
         <Link
           href="/viewings/new"
-          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+          className="btn-primary"
         >
           + Schedule Viewing
         </Link>
@@ -50,39 +50,39 @@ export default async function ViewingsPage() {
             return (
               <div
                 key={viewing.id}
-                className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-shadow"
+                className="bg-onyx-card rounded-2xl border border-onyx-line p-4 hover:shadow-sm transition-shadow"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   {/* Left: Lead & listing info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-white truncate">
                         {viewing.lead?.contact?.full_name ?? 'Unknown'}
                       </p>
-                      <span className={`text-xs px-1.5 py-0.5 rounded ${
+                      <span className={`chip ${
                         viewing.status === 'scheduled'
-                          ? 'bg-blue-50 text-blue-700'
-                          : 'bg-yellow-50 text-yellow-700'
+                          ? 'text-aqua border-brand/50 bg-brand/[0.12]'
+                          : 'text-status-amber border-status-amber/40 bg-status-amber/10'
                       }`}>
                         {viewing.status}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5 truncate">
+                    <p className="text-xs text-gray-2 mt-0.5 truncate">
                       {viewing.listing?.address ?? 'No address'}
                       {viewing.listing?.district ? ` · ${viewing.listing.district}` : ''}
                     </p>
                   </div>
 
                   {/* Center: Date/time */}
-                  <div className="text-sm text-gray-700">
-                    <p className="font-medium">
+                  <div className="text-sm text-gray-2">
+                    <p className="font-medium text-white">
                       {new Date(viewing.scheduled_at).toLocaleDateString('en-SG', {
                         weekday: 'short',
                         day: 'numeric',
                         month: 'short',
                       })}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-2">
                       {new Date(viewing.scheduled_at).toLocaleTimeString('en-SG', {
                         hour: '2-digit',
                         minute: '2-digit',
@@ -94,15 +94,15 @@ export default async function ViewingsPage() {
 
                   {/* Right: Checklist status */}
                   <div className="flex items-center gap-2">
-                    <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                    <span className={`chip ${
                       checklistComplete
-                        ? 'bg-green-50 text-green-700'
+                        ? 'text-status-green border-status-green/40 bg-status-green/10'
                         : checklist
-                        ? 'bg-yellow-50 text-yellow-700'
-                        : 'bg-gray-100 text-gray-500'
+                        ? 'text-status-amber border-status-amber/40 bg-status-amber/10'
+                        : 'text-gray-2 border-onyx-line bg-onyx-card'
                     }`}>
                       {checklistComplete
-                        ? '✓ Qualified'
+                        ? 'Qualified'
                         : checklist
                         ? `${checklistCount}/${checklistTotal}`
                         : 'No checklist'}
@@ -119,9 +119,9 @@ export default async function ViewingsPage() {
             );
           })
         ) : (
-          <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-            <p className="text-gray-500 text-sm">No upcoming viewings</p>
-            <p className="text-gray-400 text-xs mt-1">
+          <div className="text-center py-12 bg-onyx-card rounded-2xl border border-onyx-line">
+            <p className="text-gray-2 text-sm">No upcoming viewings</p>
+            <p className="text-gray-2 text-xs mt-1">
               Schedule a viewing from a lead&apos;s detail page or click the button above
             </p>
           </div>

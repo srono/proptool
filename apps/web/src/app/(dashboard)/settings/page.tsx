@@ -29,10 +29,10 @@ export default async function SettingsPage() {
     : { data: null };
 
   return (
-    <div className="p-4 lg:p-8 max-w-3xl mx-auto space-y-4">
-      <div>
-        <h1 className="text-xl font-bold text-gray-900">Settings</h1>
-        <p className="text-sm text-gray-600">Manage your account and preferences</p>
+    <div className="p-4 lg:p-7 max-w-3xl mx-auto space-y-5">
+      <div className="border-b border-onyx-line pb-5">
+        <h1 className="font-display font-bold text-[26px] text-white tracking-tight">Settings</h1>
+        <p className="text-[13px] text-gray-2">Manage your account and preferences</p>
       </div>
 
       <SettingsTabs

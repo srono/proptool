@@ -47,10 +47,10 @@ export default async function NewViewingPage({ searchParams }: Props) {
     .limit(100);
 
   return (
-    <div className="p-4 lg:p-8 max-w-2xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-gray-900">Schedule Viewing</h1>
-        <p className="text-sm text-gray-600 mt-0.5">
+    <div className="p-4 lg:p-7 max-w-2xl mx-auto">
+      <div className="mb-6 border-b border-onyx-line pb-5">
+        <h1 className="font-display font-bold text-[26px] text-white tracking-tight">Schedule Viewing</h1>
+        <p className="text-[13px] text-gray-2 mt-0.5">
           Book a property viewing for a lead
         </p>
       </div>

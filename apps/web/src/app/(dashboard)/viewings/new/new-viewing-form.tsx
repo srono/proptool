@@ -155,18 +155,18 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
   return (
     <div className="space-y-6">
       {/* Lead selection */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900">Viewing Details</h2>
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+        <h2 className="text-sm font-semibold text-white">Viewing Details</h2>
 
         <div>
-          <label htmlFor="lead" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="lead" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Lead *
           </label>
           <select
             id="lead"
             value={selectedLeadId}
             onChange={(e) => handleLeadChange(e.target.value)}
-            className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           >
             <option value="">Select a lead...</option>
             {leads.map((lead) => {
@@ -181,14 +181,14 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
         </div>
 
         <div>
-          <label htmlFor="listing" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="listing" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
             Listing *
           </label>
           <select
             id="listing"
             value={selectedListingId}
             onChange={(e) => setSelectedListingId(e.target.value)}
-            className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+            className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           >
             <option value="">Select a listing...</option>
             {listings.map((listing) => (
@@ -202,7 +202,7 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="date" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
               Date *
             </label>
             <input
@@ -211,11 +211,11 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
               value={date}
               onChange={(e) => setDate(e.target.value)}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
           <div>
-            <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="time" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
               Time *
             </label>
             <input
@@ -223,18 +223,18 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
               id="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
           <div>
-            <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="duration" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
               Duration (min)
             </label>
             <select
               id="duration"
               value={duration}
               onChange={(e) => setDuration(Number(e.target.value))}
-              className="w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="w-full bg-onyx-raised border border-onyx-line rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             >
               <option value={30}>30 min</option>
               <option value={45}>45 min</option>
@@ -248,21 +248,21 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
 
       {/* Pre-viewing qualification checklist */}
       {selectedLeadId && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
+        <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-gray-900">
+            <h2 className="text-sm font-semibold text-white">
               Pre-Viewing Qualification Checklist
             </h2>
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+            <span className={`chip ${
               checklistComplete
-                ? 'bg-green-50 text-green-700'
-                : 'bg-yellow-50 text-yellow-700'
+                ? 'text-status-green border-status-green/40 bg-status-green/10'
+                : 'text-status-amber border-status-amber/40 bg-status-amber/10'
             }`}>
               {completedCount}/{CHECKLIST_ITEMS.length}
             </span>
           </div>
 
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-2">
             Complete these items before the viewing to ensure the lead is qualified.
             You can skip and book anyway if needed.
           </p>
@@ -275,9 +275,9 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
                     type="checkbox"
                     checked={checklist[item.key]}
                     onChange={() => toggleChecklistItem(item.key)}
-                    className="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                    className="h-4 w-4 rounded border-onyx-line text-brand-600 focus:ring-brand"
                   />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                  <span className="text-sm text-gray-2 group-hover:text-white">
                     {item.label}
                   </span>
                 </label>
@@ -287,11 +287,11 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
 
           {/* Checklist warning */}
           {showChecklistWarning && (
-            <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-3">
-              <p className="text-sm text-yellow-800 font-medium">
-                ⚠️ Qualification checklist is incomplete ({completedCount}/{CHECKLIST_ITEMS.length})
+            <div className="rounded-xl bg-status-amber/10 border border-status-amber/40 p-3">
+              <p className="text-sm text-status-amber font-medium">
+                Qualification checklist is incomplete ({completedCount}/{CHECKLIST_ITEMS.length})
               </p>
-              <p className="text-xs text-yellow-700 mt-1">
+              <p className="text-xs text-status-amber/80 mt-1">
                 It&apos;s recommended to complete all items before booking a viewing.
                 You can still proceed if needed.
               </p>
@@ -300,14 +300,14 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
                   type="button"
                   onClick={() => handleSubmit(true)}
                   disabled={isSubmitting}
-                  className="text-xs rounded-lg bg-yellow-600 px-3 py-1.5 font-medium text-white hover:bg-yellow-700 disabled:opacity-50"
+                  className="btn-primary text-xs px-3 py-1.5 disabled:opacity-50"
                 >
                   Skip and Book Anyway
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowChecklistWarning(false)}
-                  className="text-xs rounded-lg border border-yellow-300 px-3 py-1.5 font-medium text-yellow-700 hover:bg-yellow-100"
+                  className="btn-ghost text-xs px-3 py-1.5"
                 >
                   Go Back
                 </button>
@@ -318,21 +318,21 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
       )}
 
       {/* Google Calendar sync */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
         <label className="flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={syncToCalendar}
             onChange={(e) => setSyncToCalendar(e.target.checked)}
             disabled={!googleCalendarConnected}
-            className="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 disabled:opacity-50"
+            className="h-4 w-4 rounded border-onyx-line text-brand-600 focus:ring-brand disabled:opacity-50"
           />
           <div>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium text-white">
               Sync to Google Calendar
             </span>
             {!googleCalendarConnected && (
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-gray-2 mt-0.5">
                 Connect Google Calendar in{' '}
                 <a href="/settings?tab=integrations" className="text-brand-600 hover:underline">
                   Settings
@@ -350,14 +350,14 @@ export function NewViewingForm({ leads, listings, preselectedLeadId, googleCalen
           type="button"
           onClick={() => handleSubmit(false)}
           disabled={isSubmitting || !selectedLeadId || !selectedListingId || !date || !time}
-          className="flex-1 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Scheduling...' : 'Schedule Viewing'}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          className="btn-ghost"
         >
           Cancel
         </button>
