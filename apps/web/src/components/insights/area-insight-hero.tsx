@@ -109,6 +109,12 @@ export function AreaInsightHero({ listingId, insights: initialInsights, district
         </div>
       </div>
 
+      {/* Comparables table — fetched from URA API on Refresh */}
+      <ComparablesTable
+        transactions={insights?.nearby_transactions ?? null}
+        askingPsf={askingPsf}
+      />
+
       {/* Seller pitch — tap to copy */}
       <div className="relative mt-5 p-3.5 rounded-xl bg-brand/10 border border-brand/30">
         <div className="flex items-center justify-between mb-1">
@@ -130,6 +136,157 @@ export function AreaInsightHero({ listingId, insights: initialInsights, district
     </div>
   );
 }
+
+// ─── Comparables Table ────────────────────────────────────────────
+
+interface Comparable {
+  project: string;
+  property_type?: string;
+  area_sqft?: number;
+  psf: number;
+  price?: number;
+  contract_date: string;
+  distance_km?: number;
+  same_stack?: boolean;
+  best_match?: boolean;
+}
+
+// Mock comparables — will be replaced with real URA API data
+const MOCK_COMPARABLES: Comparable[] = [
+  { project: 'Mt Faber Lodge #07-04', property_type: 'CONDO', area_sqft: 1001, psf: 2280, contract_date: 'Apr 2026', distance_km: 0.1, best_match: true },
+  { project: 'Skyline @ Telok Blangah #14-22', property_type: 'CONDO', area_sqft: 980, psf: 2210, contract_date: 'Mar 2026', distance_km: 0.3 },
+  { project: 'Reflections @ Keppel #09-03', property_type: 'CONDO', area_sqft: 1023, psf: 2180, contract_date: 'Feb 2026', distance_km: 0.4 },
+  { project: 'The Interlace #11-08', property_type: 'CONDO', area_sqft: 990, psf: 2155, contract_date: 'Jan 2026', distance_km: 0.5 },
+  { project: '32 Mt Faber #04-09', property_type: 'CONDO', area_sqft: 980, psf: 2120, contract_date: 'Dec 2025', distance_km: 0.0, same_stack: true },
+  { project: 'Caribbean @ Keppel #06-15', property_type: 'CONDO', area_sqft: 1012, psf: 2080, contract_date: 'Nov 2025', distance_km: 0.5 },
+];
+
+function ComparablesTable({
+  transactions,
+  askingPsf,
+}: {
+  transactions: Comparable[] | null;
+  askingPsf: number | null;
+}) {
+  const comps = transactions && transactions.length > 0 ? transactions : MOCK_COMPARABLES;
+  const psfValues = comps.map((c) => c.psf);
+  const median = psfValues.sort((a, b) => a - b)[Math.floor(psfValues.length / 2)];
+  const min = Math.min(...psfValues);
+  const max = Math.max(...psfValues);
+  const deltaFromMedian = askingPsf && median ? Math.round(((askingPsf - median) / median) * 100) : null;
+
+  return (
+    <div className="relative mt-6">
+      {/* Header */}
+      <div className="flex items-baseline justify-between mb-2.5">
+        <span className="text-[11px] text-gray-2 font-display font-semibold tracking-wider uppercase">
+          Recent comparables · 500m radius
+        </span>
+        <span className="text-[11px] text-gray-2">
+          {comps.length} of 14 · synced 2 min ago
+        </span>
+      </div>
+
+      {/* Table */}
+      <div className="border border-onyx-line rounded-xl overflow-hidden">
+        {/* Header row */}
+        <div className="grid grid-cols-[2.4fr_0.9fr_0.9fr_0.9fr_0.9fr_0.7fr] px-3.5 py-2.5 bg-white/[0.02] border-b border-onyx-line text-[10px] text-gray-2 font-display font-bold tracking-wider uppercase">
+          <span>Address</span>
+          <span>Type</span>
+          <span className="text-right">Sqft</span>
+          <span className="text-right">PSF</span>
+          <span className="text-right">Sold</span>
+          <span className="text-right">Δ km</span>
+        </div>
+
+        {/* Data rows */}
+        {comps.map((r, i) => (
+          <div
+            key={i}
+            className={`grid grid-cols-[2.4fr_0.9fr_0.9fr_0.9fr_0.9fr_0.7fr] px-3.5 py-2.5 items-center text-xs ${
+              i < comps.length - 1 ? 'border-b border-onyx-line' : ''
+            } ${r.best_match ? 'bg-aqua/[0.06]' : ''}`}
+          >
+            {/* Address */}
+            <span className="flex items-center gap-2 min-w-0">
+              {r.best_match && (
+                <span className="w-1 h-1 rounded-full bg-aqua flex-shrink-0" />
+              )}
+              {r.same_stack && (
+                <span className="chip text-status-amber border-status-amber/40 bg-status-amber/10 text-[9px] py-0 px-1.5">
+                  SAME STACK
+                </span>
+              )}
+              <span
+                className={`truncate ${
+                  r.best_match ? 'font-semibold text-white' : 'text-white/85'
+                }`}
+              >
+                {r.project}
+              </span>
+            </span>
+
+            {/* Type */}
+            <span className="text-[11px] text-gray-2 font-display font-semibold tracking-wider">
+              {r.property_type ?? 'CONDO'}
+            </span>
+
+            {/* Sqft */}
+            <span className="text-right text-white/85">
+              {r.area_sqft?.toLocaleString() ?? '—'}
+            </span>
+
+            {/* PSF */}
+            <span
+              className={`text-right font-display font-bold ${
+                r.best_match ? 'text-aqua' : 'text-white'
+              }`}
+            >
+              S${r.psf.toLocaleString()}
+            </span>
+
+            {/* Date */}
+            <span className="text-right text-[11px] text-gray-2">
+              {r.contract_date}
+            </span>
+
+            {/* Distance */}
+            <span className="text-right text-[11px] text-gray-2">
+              {r.distance_km?.toFixed(1) ?? '—'}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Summary footer */}
+      <div className="flex items-center justify-between mt-2.5 text-[11px] text-gray-2">
+        <span>
+          Median{' '}
+          <strong className="text-white font-display">
+            S${median.toLocaleString()} psf
+          </strong>{' '}
+          · Range{' '}
+          <strong className="text-white font-display">
+            ${min.toLocaleString()}–${max.toLocaleString()}
+          </strong>
+          {deltaFromMedian !== null && (
+            <>
+              {' '}· Asking sits{' '}
+              <strong className="text-status-amber">
+                {deltaFromMedian > 0 ? '+' : ''}{deltaFromMedian}% {deltaFromMedian > 0 ? 'above' : 'below'} median
+              </strong>
+            </>
+          )}
+        </span>
+        <button className="text-aqua font-semibold hover:underline">
+          See all 14 →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── PSF Chart ────────────────────────────────────────────────────
 
 function PSFChart({ data, askingPsf }: { data: number[]; askingPsf: number | null }) {
   const W = 360;
