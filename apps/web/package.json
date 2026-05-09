@@ -10,6 +10,7 @@
     "test": "vitest --run"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
     "@propagent/shared": "*",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.1",

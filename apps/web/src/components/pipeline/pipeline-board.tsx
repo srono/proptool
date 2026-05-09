@@ -1,6 +1,25 @@
 'use client';
 
+import { useState, useEffect, useCallback, useMemo, useId } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+} from '@dnd-kit/core';
+import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
+import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/components/ui/toast';
+import { DroppableColumn } from './droppable-column';
+import { DraggableLeadCard } from './draggable-lead-card';
 import { LeadCard } from './lead-card';
+import { columnKeyboardCoordinates } from './keyboard-coordinates';
+import { createAnnouncements } from './announcements';
 import type { PipelineStage } from '@propagent/shared';
 
 interface PipelineStageConfig {
@@ -38,60 +57,169 @@ interface PipelineBoardProps {
   stages: PipelineStageConfig[];
 }
 
-const stageColors: Record<number, string> = {
-  0: 'bg-aqua',
-  1: 'bg-aqua',
-  2: 'bg-aqua',
-  3: 'bg-brand',
-  4: 'bg-brand',
-  5: 'bg-status-green',
-  6: 'bg-status-green',
-};
-
 export function PipelineBoard({ leads, stages }: PipelineBoardProps) {
-  const visibleStages = stages.filter(
-    (s) => s.key !== 'closed_won' && s.key !== 'closed_lost'
+  const router = useRouter();
+  const { addToast } = useToast();
+  const dndContextId = useId();
+
+  // Local optimistic state, synced from props
+  const [localLeads, setLocalLeads] = useState<LeadWithRelations[]>(leads);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  // Sync local state when props change (e.g., after router.refresh())
+  useEffect(() => {
+    setLocalLeads(leads);
+  }, [leads]);
+
+  // Configure sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { delay: 150, tolerance: 5 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 200, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: columnKeyboardCoordinates,
+    })
   );
 
-  return (
-    <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]">
-      <div className="flex gap-3.5 h-full min-w-max">
-        {visibleStages.map((stage, idx) => {
-          const stageLeads = leads.filter((l) => l.status === stage.key);
-          return (
-            <div
-              key={stage.key}
-              className="flex flex-col min-w-[270px] lg:w-[270px]"
-            >
-              {/* Stage header */}
-              <div className="flex items-center justify-between px-1 pb-3">
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${stageColors[idx] ?? 'bg-brand'}`}
-                  />
-                  <span className="font-display font-bold text-xs tracking-[1.2px] text-white uppercase">
-                    {stage.label}
-                  </span>
-                </div>
-                <span className="text-[11px] text-gray-2 font-semibold">
-                  {stageLeads.length}
-                </span>
-              </div>
+  // Filter visible stages (exclude closed_won and closed_lost)
+  const visibleStages = useMemo(
+    () => stages.filter((s) => s.key !== 'closed_won' && s.key !== 'closed_lost'),
+    [stages]
+  );
 
-              {/* Cards */}
-              <div className="flex-1 space-y-2.5">
+  // Screen reader announcements
+  const announcements = useMemo(
+    () => createAnnouncements(localLeads, visibleStages),
+    [localLeads, visibleStages]
+  );
+
+  // Find the active lead for DragOverlay
+  const activeLead = useMemo(
+    () => (activeId ? localLeads.find((l) => l.id === activeId) ?? null : null),
+    [activeId, localLeads]
+  );
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  }, []);
+
+  const handleDragEnd = useCallback(
+    async (event: DragEndEvent) => {
+      const { active, over } = event;
+
+      // Guard against concurrent drops
+      if (isUpdating) {
+        setActiveId(null);
+        return;
+      }
+
+      // No valid drop target
+      if (!over) {
+        setActiveId(null);
+        return;
+      }
+
+      const leadId = active.id as string;
+      const newStage = over.id as PipelineStage;
+
+      // Find the lead's current status
+      const lead = localLeads.find((l) => l.id === leadId);
+      if (!lead) {
+        setActiveId(null);
+        return;
+      }
+
+      // Guard against same-column drops (no-op)
+      if (lead.status === newStage) {
+        setActiveId(null);
+        return;
+      }
+
+      // Optimistic update
+      const previousLeads = localLeads;
+      setIsUpdating(true);
+      setLocalLeads((prev) =>
+        prev.map((l) => (l.id === leadId ? { ...l, status: newStage } : l))
+      );
+      setActiveId(null);
+
+      // Persist to Supabase
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('leads')
+        .update({ status: newStage, last_activity_at: new Date().toISOString() })
+        .eq('id', leadId);
+
+      if (error) {
+        // Revert on error
+        setLocalLeads(previousLeads);
+        addToast('Failed to update lead stage. Please try again.', 'error');
+      } else {
+        router.refresh();
+      }
+
+      setIsUpdating(false);
+    },
+    [isUpdating, localLeads, addToast, router]
+  );
+
+  const handleDragCancel = useCallback(() => {
+    setActiveId(null);
+  }, []);
+
+  return (
+    <DndContext
+      id={dndContextId}
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+      accessibility={{ announcements }}
+    >
+      <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]">
+        <div className="flex gap-3.5 h-full min-w-max">
+          {visibleStages.map((stage, idx) => {
+            const stageLeads = localLeads.filter((l) => l.status === stage.key);
+            return (
+              <DroppableColumn
+                key={stage.key}
+                stageKey={stage.key}
+                label={stage.label}
+                count={stageLeads.length}
+                colorIndex={idx}
+                isOver={false}
+                isDragging={activeId !== null}
+              >
                 {stageLeads.map((lead) => (
-                  <LeadCard key={lead.id} lead={lead} />
+                  <DraggableLeadCard
+                    key={lead.id}
+                    lead={lead}
+                    isDragging={activeId === lead.id}
+                  />
                 ))}
-                {/* Drop zone */}
+                {/* Drop zone hint */}
                 <div className="border border-dashed border-onyx-line rounded-[14px] p-3 text-center text-gray-2 text-[11px]">
                   + drag here
                 </div>
-              </div>
-            </div>
-          );
-        })}
+              </DroppableColumn>
+            );
+          })}
+        </div>
       </div>
-    </div>
+
+      {/* Drag overlay: styled clone of the active card */}
+      <DragOverlay>
+        {activeLead ? (
+          <div className="shadow-xl rotate-2">
+            <LeadCard lead={activeLead} />
+          </div>
+        ) : null}
+      </DragOverlay>
+    </DndContext>
   );
 }
