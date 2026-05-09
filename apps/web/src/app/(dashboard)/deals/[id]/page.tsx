@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import { MilestoneTracker, getMilestoneTemplate } from '@/components/deals/milestone-tracker';
-import type { Milestone } from '@/components/deals/milestone-tracker';
+import { MilestoneTracker } from '@/components/deals/milestone-tracker';
+import { getMilestoneTemplate } from '@/lib/deals/milestone-templates';
+import type { Milestone } from '@/lib/deals/milestone-templates';
 
 interface Props {
   params: Promise<{ id: string }>;
