@@ -1,0 +1,25 @@
+{
+  "name": "propagent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PropAgent SG — Singapore Property Agent Operating System",
+  "workspaces": [
+    "apps/web",
+    "packages/db",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "lint": "npm run lint --workspace=apps/web",
+    "db:migrate": "npm run migrate --workspace=packages/db",
+    "db:seed": "npm run seed --workspace=packages/db",
+    "db:reset": "npm run reset --workspace=packages/db",
+    "supabase:start": "npx supabase start",
+    "supabase:stop": "npx supabase stop",
+    "supabase:status": "npx supabase status"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

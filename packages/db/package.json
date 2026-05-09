@@ -1,0 +1,11 @@
+{
+  "name": "@propagent/db",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "migrate": "supabase db push",
+    "seed": "supabase db seed",
+    "reset": "supabase db reset",
+    "gen-types": "supabase gen types typescript --local > ./src/database.types.ts"
+  }
+}
