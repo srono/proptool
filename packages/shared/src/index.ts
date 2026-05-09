@@ -9,5 +9,6 @@ export * from './types/message';
 export * from './types/task';
 export * from './types/campaign';
 export * from './types/stamp-duty';
+export * from './types/suggestion';
 export * from './constants/pipeline';
 export * from './constants/eligibility';

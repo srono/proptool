@@ -3,6 +3,11 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import type { Message, Contact } from '@propagent/shared';
+import { SuggestionPanel } from './suggestion-panel';
+import { ListingSearchModal } from './listing-search-modal';
+import { insertSnippetIntoComposer } from '@/lib/ai/composer-utils';
+import { createClient } from '@/lib/supabase/client';
+import { upsertFollowUpContext } from '@/lib/ai/follow-up-context';
 
 interface ChatThreadProps {
   contact: Contact;
@@ -14,6 +19,7 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [showListingSearch, setShowListingSearch] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -87,9 +93,35 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
     }
   }
 
-  // Mock smart reply suggestion
-  const suggestedReply =
-    'Confirmed — Saturday 4pm at 32 Mt Faber. I\'ll send the lobby code Friday evening. Last unit in the stack closed at $2,180 psf, so we\'re well-positioned to discuss pricing.';
+  function handleInsertText(text: string) {
+    setInputValue(text);
+    // Place cursor at end after React re-renders
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.setSelectionRange(text.length, text.length);
+      }
+    }, 0);
+  }
+
+  async function handleListingSelect(snippet: string, listingId: string) {
+    const newValue = insertSnippetIntoComposer(inputValue, snippet);
+    setInputValue(newValue);
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.setSelectionRange(newValue.length, newValue.length);
+      }
+    }, 0);
+
+    // Persist follow-up context
+    try {
+      const supabase = createClient();
+      await upsertFollowUpContext(supabase, tenantId, contact.id, listingId);
+    } catch (err) {
+      console.error('[ChatThread] Failed to persist follow-up context:', err);
+    }
+  }
 
   return (
     <div className="flex flex-col h-full bg-onyx">
@@ -124,35 +156,37 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
         {messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />
         ))}
-
-        {/* Smart suggestion */}
-        {messages.length > 0 && (
-          <div className="border border-aqua/40 rounded-[14px] p-3.5 bg-brand/10 max-w-[460px]">
-            <div className="text-[11px] font-display font-bold tracking-wider text-aqua">
-              SUGGESTED REPLY · BASED ON HER BRIEF
-            </div>
-            <p className="text-[13px] text-white mt-1.5 leading-relaxed">
-              {suggestedReply}
-            </p>
-            <div className="flex gap-2 mt-3">
-              <button
-                onClick={() => handleSend(suggestedReply)}
-                className="btn-primary text-xs py-1.5 px-3"
-              >
-                Send
-              </button>
-              <button
-                onClick={() => setInputValue(suggestedReply)}
-                className="btn-ghost text-xs py-1.5 px-3"
-              >
-                Edit
-              </button>
-            </div>
-          </div>
-        )}
-
         <div ref={messagesEndRef} />
       </div>
+
+      {/* AI Suggestion Panel */}
+      <SuggestionPanel
+        contactId={contact.id}
+        messages={messages}
+        onInsertText={handleInsertText}
+        onSendMessage={handleSend}
+      />
+
+      {/* Insert Listing button */}
+      <div className="px-5 lg:px-7 pt-2 pb-0 flex items-center">
+        <button
+          onClick={() => setShowListingSearch(true)}
+          className="text-[11px] font-display font-bold tracking-wider text-aqua hover:text-white transition-colors flex items-center gap-1.5"
+        >
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Insert Listing
+        </button>
+      </div>
+
+      {/* Listing Search Modal */}
+      <ListingSearchModal
+        isOpen={showListingSearch}
+        onClose={() => setShowListingSearch(false)}
+        onSelectListing={handleListingSelect}
+        tenantId={tenantId}
+      />
 
       {/* Composer */}
       <div className="px-5 lg:px-7 py-4 border-t border-onyx-line flex items-center gap-3">
