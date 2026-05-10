@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { RefreshCw, X } from 'lucide-react';
-import type { Message } from '@propagent/shared';
-import type { Suggestion } from '@propagent/shared';
+import type { Message } from '@agentos/shared';
+import type { Suggestion } from '@agentos/shared';
 import { truncateChipText } from '@/lib/ai/truncate';
 
 interface SuggestionPanelProps {

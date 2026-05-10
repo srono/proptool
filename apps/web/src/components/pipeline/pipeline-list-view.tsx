@@ -3,8 +3,8 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import { PIPELINE_STAGES } from '@propagent/shared';
-import type { PipelineStage } from '@propagent/shared';
+import { PIPELINE_STAGES } from '@agentos/shared';
+import type { PipelineStage } from '@agentos/shared';
 import type { Breakpoint } from '@/components/listings/hooks/use-breakpoint';
 import {
   formatRelativeActivity,

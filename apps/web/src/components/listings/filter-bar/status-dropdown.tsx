@@ -1,6 +1,6 @@
 'use client';
 
-import type { ListingStatus } from '@propagent/shared';
+import type { ListingStatus } from '@agentos/shared';
 
 interface StatusDropdownProps {
   value: ListingStatus | null;

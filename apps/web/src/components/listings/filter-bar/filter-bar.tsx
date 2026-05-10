@@ -1,6 +1,6 @@
 'use client';
 
-import type { PropertyType, ListingStatus } from '@propagent/shared';
+import type { PropertyType, ListingStatus } from '@agentos/shared';
 import { SearchInput } from './search-input';
 import { DistrictMultiSelect } from './district-multi-select';
 import { PropertyTypeDropdown } from './property-type-dropdown';

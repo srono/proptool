@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { SINGAPORE_DISTRICTS } from '@propagent/shared';
+import { SINGAPORE_DISTRICTS } from '@agentos/shared';
 
 interface DistrictMultiSelectProps {
   selected: string[];

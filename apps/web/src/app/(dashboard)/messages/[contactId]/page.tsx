@@ -1,10 +1,22 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { ChatThread } from '@/components/messages/chat-thread';
-import type { Message, Contact } from '@propagent/shared';
+import type { Message, Contact } from '@agentos/shared';
+import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ contactId: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { contactId } = await params;
+  const supabase = await createClient();
+  const { data: contact } = await supabase
+    .from('contacts')
+    .select('full_name')
+    .eq('id', contactId)
+    .single();
+  return { title: contact?.full_name ? `${contact.full_name} – Chat` : 'Chat' };
 }
 
 export default async function ChatPage({ params }: PageProps) {
@@ -23,10 +35,12 @@ export default async function ChatPage({ params }: PageProps) {
   }
 
   // Fetch all messages for this contact, ordered chronologically
+  // Exclude internal notes (channel='note') which belong only in the lead timeline
   const { data: messages } = await supabase
     .from('messages')
     .select('*')
     .eq('contact_id', contactId)
+    .neq('channel', 'note')
     .order('sent_at', { ascending: true });
 
   // Get current user's tenant_id

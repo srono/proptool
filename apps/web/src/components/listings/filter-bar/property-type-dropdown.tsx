@@ -1,6 +1,6 @@
 'use client';
 
-import type { PropertyType } from '@propagent/shared';
+import type { PropertyType } from '@agentos/shared';
 
 interface PropertyTypeDropdownProps {
   value: PropertyType | null;

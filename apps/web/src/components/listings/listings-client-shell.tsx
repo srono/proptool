@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { Listing } from '@propagent/shared';
+import type { Listing } from '@agentos/shared';
 import { useViewMode } from './hooks/use-view-mode';
 import { useBreakpoint } from './hooks/use-breakpoint';
 import { useListingsFilter } from './hooks/use-listings-filter';

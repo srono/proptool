@@ -1,5 +1,7 @@
 import { ListingForm } from '@/components/listings/listing-form';
 
+export const metadata = { title: 'New Listing' };
+
 export default function NewListingPage() {
   return (
     <div className="p-4 lg:p-7 space-y-5">

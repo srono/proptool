@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import type { PreViewingChecklist } from '@propagent/shared';
+import type { PreViewingChecklist } from '@agentos/shared';
 
 interface LeadOption {
   id: string;

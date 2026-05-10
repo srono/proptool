@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { SettingsTabs } from '@/components/settings/settings-tabs';
 
+export const metadata = { title: 'Settings' };
+
 export default async function SettingsPage() {
   const supabase = await createClient();
   const {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
 import { formatListingSnippet } from '../listing-snippet';
-import type { Listing, PropertyType, Tenure, ListingType, ListingStatus, HdbType } from '@propagent/shared';
+import type { Listing, PropertyType, Tenure, ListingType, ListingStatus, HdbType } from '@agentos/shared';
 
 // --- Generators ---
 

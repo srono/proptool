@@ -15,7 +15,10 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: 'PropAgent SG',
+  title: {
+    default: 'AgentOS',
+    template: '%s · AgentOS',
+  },
   description: 'Singapore Property Agent Operating System',
   manifest: '/manifest.json',
 };

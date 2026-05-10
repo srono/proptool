@@ -1,9 +1,21 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { ListingForm } from '@/components/listings/listing-form';
+import type { Metadata } from 'next';
 
 interface EditListingPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: EditListingPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: listing } = await supabase
+    .from('listings')
+    .select('title')
+    .eq('id', id)
+    .single();
+  return { title: listing?.title ? `Edit ${listing.title}` : 'Edit Listing' };
 }
 
 export default async function EditListingPage({ params }: EditListingPageProps) {

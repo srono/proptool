@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import * as fc from 'fast-check';
-import { PIPELINE_STAGES, LEAD_SOURCES } from '@propagent/shared';
+import { PIPELINE_STAGES, LEAD_SOURCES } from '@agentos/shared';
 import {
   formatRelativeActivity,
   formatCreatedDate,
@@ -369,7 +369,7 @@ import {
   type SortDirection,
   type PipelineFilters,
 } from '../hooks/use-pipeline-filter';
-import type { PipelineStage, Urgency, DealType, LeadSource } from '@propagent/shared';
+import type { PipelineStage, Urgency, DealType, LeadSource } from '@agentos/shared';
 
 // --- Generators for filter/sort tests ---
 

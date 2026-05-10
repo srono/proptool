@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { Listing, ListingStatus } from '@propagent/shared';
+import type { Listing, ListingStatus } from '@agentos/shared';
 
 const STATUS_STYLES: Record<ListingStatus, string> = {
   draft: 'text-gray-2 border-onyx-line bg-transparent',

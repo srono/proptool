@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { formatListingPrice, formatListingPsf, isExclusivityActive } from './format-listing';
-import type { Listing } from '@propagent/shared';
+import type { Listing } from '@agentos/shared';
 
 function makeListing(overrides: Partial<Listing> = {}): Listing {
   return {

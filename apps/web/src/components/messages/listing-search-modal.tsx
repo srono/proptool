@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Listing } from '@propagent/shared';
+import type { Listing } from '@agentos/shared';
 import { createClient } from '@/lib/supabase/client';
 import { filterListings } from '@/lib/ai/listing-search';
 import { formatListingSnippet } from '@/lib/ai/listing-snippet';

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', badgeKey: 'overdue_tasks_count' },
-  { href: '/leads', label: 'Leads', badgeKey: 'new_leads_count' },
+  { href: '/leads', label: 'Lead Inbox', badgeKey: 'new_leads_count' },
   { href: '/pipeline', label: 'Pipeline', badgeKey: null },
   { href: '/listings', label: 'Listings', badgeKey: null },
   { href: '/viewings', label: 'Viewings', badgeKey: null },
@@ -45,7 +45,7 @@ export function Sidebar({ className }: { className?: string }) {
       <div className="px-[22px] pt-[22px] pb-[18px] flex items-center gap-3">
         <LogoMark />
         <div className="leading-tight">
-          <div className="font-display font-bold text-base">PropAgent</div>
+          <div className="font-display font-bold text-base">AgentOS</div>
           <div className="text-[11px] text-gray-2 mt-0.5">SG · Singapore</div>
         </div>
       </div>

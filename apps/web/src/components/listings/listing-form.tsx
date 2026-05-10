@@ -3,8 +3,8 @@
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { SINGAPORE_DISTRICTS } from '@propagent/shared';
-import type { Listing, PropertyType, HdbType, Tenure, ListingType } from '@propagent/shared';
+import { SINGAPORE_DISTRICTS } from '@agentos/shared';
+import type { Listing, PropertyType, HdbType, Tenure, ListingType } from '@agentos/shared';
 
 interface Props {
   initialData?: Partial<Listing>;

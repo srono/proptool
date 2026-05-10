@@ -5,7 +5,7 @@ import {
   getNextSortState,
 } from './use-listings-filter';
 import type { SortState } from './use-listings-filter';
-import type { Listing } from '@propagent/shared';
+import type { Listing } from '@agentos/shared';
 
 function makeListing(overrides: Partial<Listing> = {}): Listing {
   return {

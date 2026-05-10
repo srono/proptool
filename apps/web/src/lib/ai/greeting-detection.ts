@@ -1,4 +1,4 @@
-import type { Message } from '@propagent/shared';
+import type { Message } from '@agentos/shared';
 
 const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 

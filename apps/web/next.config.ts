@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@propagent/shared'],
+  transpilePackages: ['@agentos/shared'],
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',

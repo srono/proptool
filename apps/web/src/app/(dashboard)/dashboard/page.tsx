@@ -5,6 +5,8 @@ import { KPIStrip } from '@/components/dashboard/kpi-strip';
 import { PipelineFunnel } from '@/components/dashboard/pipeline-funnel';
 import { ScheduleCard } from '@/components/dashboard/schedule-card';
 
+export const metadata = { title: 'Dashboard' };
+
 export default async function DashboardPage() {
   const supabase = await createClient();
 

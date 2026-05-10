@@ -1,4 +1,4 @@
-project_id = "propagent-local"
+project_id = "agentos-local"
 
 [api]
 enabled = true

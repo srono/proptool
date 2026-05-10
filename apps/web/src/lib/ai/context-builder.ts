@@ -1,4 +1,4 @@
-import type { Message } from '@propagent/shared';
+import type { Message } from '@agentos/shared';
 
 export interface ConversationContextMessage {
   direction: 'inbound' | 'outbound';

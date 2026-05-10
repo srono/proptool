@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { NewViewingForm } from './new-viewing-form';
 
+export const metadata = { title: 'Schedule Viewing' };
+
 interface Props {
   searchParams: Promise<{ lead_id?: string }>;
 }

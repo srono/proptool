@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import type { Message, Contact } from '@propagent/shared';
+import type { Message, Contact } from '@agentos/shared';
 import { SuggestionPanel } from './suggestion-panel';
 import { ListingSearchModal } from './listing-search-modal';
 import { insertSnippetIntoComposer } from '@/lib/ai/composer-utils';

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
-import type { PipelineStage } from '@propagent/shared';
+import type { PipelineStage } from '@agentos/shared';
 
 /**
  * Feature: pipeline-dnd

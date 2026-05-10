@@ -20,7 +20,7 @@ import { DraggableLeadCard } from './draggable-lead-card';
 import { LeadCard } from './lead-card';
 import { columnKeyboardCoordinates } from './keyboard-coordinates';
 import { createAnnouncements } from './announcements';
-import type { PipelineStage } from '@propagent/shared';
+import type { PipelineStage } from '@agentos/shared';
 
 interface PipelineStageConfig {
   key: PipelineStage;

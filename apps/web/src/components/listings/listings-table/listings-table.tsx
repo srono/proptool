@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import type { Listing } from '@propagent/shared';
+import type { Listing } from '@agentos/shared';
 import type { Breakpoint } from '../hooks/use-breakpoint';
 import type { SortField, SortState } from '../hooks/use-listings-filter';
 import { ListingRow } from './listing-row';

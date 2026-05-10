@@ -38,8 +38,8 @@ const arbContact = fc.record({
 });
 
 const arbTimeSlot: fc.Arbitrary<TimeSlot> = fc.record({
-  start: fc.date({ min: new Date('2024-01-01'), max: new Date('2025-12-31') }).map((d) => d.toISOString()),
-  end: fc.date({ min: new Date('2024-01-01'), max: new Date('2025-12-31') }).map((d) => d.toISOString()),
+  start: fc.integer({ min: new Date('2024-01-01').getTime(), max: new Date('2025-12-31').getTime() }).map((t) => new Date(t).toISOString()),
+  end: fc.integer({ min: new Date('2024-01-01').getTime(), max: new Date('2025-12-31').getTime() }).map((t) => new Date(t).toISOString()),
   formatted: fc.string({ minLength: 5, maxLength: 50 }),
 });
 

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+export const metadata = { title: 'Tools' };
+
 export default function ToolsPage() {
   return (
     <div className="p-4 lg:p-7 space-y-5">
@@ -25,6 +27,13 @@ export default function ToolsPage() {
           <h3 className="text-sm font-semibold text-white mt-3">Market Comps</h3>
           <p className="text-xs text-gray-2 mt-1">Compare asking vs transacted PSF — coming soon</p>
         </div>
+
+        <Link href="/tools/ad-copy">
+          <div className="bg-onyx-card rounded-2xl border border-onyx-line p-6 hover:shadow-md transition-shadow">
+            <h3 className="text-sm font-semibold text-white mt-3">Ad Copy Assistant</h3>
+            <p className="text-xs text-gray-2 mt-1">Generate compliance-aware social media ad copy</p>
+          </div>
+        </Link>
       </div>
     </div>
   );

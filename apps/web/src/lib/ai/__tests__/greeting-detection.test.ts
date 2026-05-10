@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { shouldUseFirstName } from '../greeting-detection';
-import type { Message } from '@propagent/shared';
+import type { Message } from '@agentos/shared';
 
 function makeMessage(
   overrides: Partial<Message> & { direction: Message['direction']; sent_at: string }

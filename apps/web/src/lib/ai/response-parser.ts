@@ -1,4 +1,4 @@
-import type { Suggestion, SuggestionCategory } from '@propagent/shared';
+import type { Suggestion, SuggestionCategory } from '@agentos/shared';
 
 const VALID_CATEGORIES: SuggestionCategory[] = [
   'greeting',

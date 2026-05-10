@@ -1,7 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { PipelineClientShell } from '@/components/pipeline/pipeline-client-shell';
-import { PIPELINE_STAGES } from '@propagent/shared';
+import { PIPELINE_STAGES } from '@agentos/shared';
 import Link from 'next/link';
+
+export const metadata = { title: 'Pipeline' };
 
 export default async function PipelinePage() {
   const supabase = await createClient();

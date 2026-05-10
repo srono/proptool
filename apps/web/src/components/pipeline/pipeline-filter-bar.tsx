@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { PIPELINE_STAGES, LEAD_SOURCES } from '@propagent/shared';
-import type { PipelineStage, Urgency, DealType, LeadSource } from '@propagent/shared';
+import { PIPELINE_STAGES, LEAD_SOURCES } from '@agentos/shared';
+import type { PipelineStage, Urgency, DealType, LeadSource } from '@agentos/shared';
 import type { PipelineFilters } from './hooks/use-pipeline-filter';
 
 // --- Types ---

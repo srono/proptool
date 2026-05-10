@@ -1,15 +1,27 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { LeadStageSelector } from './lead-stage-selector';
-import { ActionButtons } from './action-buttons';
-import { Timeline } from './timeline';
+import { LeadClientSection } from './lead-client-section';
 import { QualificationChecklist } from './qualification-checklist';
 import { ViewingPrepCard } from '@/components/insights/viewing-prep-card';
 import { BuyerFitPanel } from '@/components/insights/buyer-fit-panel';
 import { generateBuyerFitSignals } from '@/lib/insights/generate';
+import type { Metadata } from 'next';
 
 interface Props {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: lead } = await supabase
+    .from('leads')
+    .select('contact:contacts(full_name)')
+    .eq('id', id)
+    .single();
+  const contact = lead?.contact as { full_name: string } | null;
+  return { title: contact?.full_name ? `${contact.full_name} – Lead` : 'Lead Detail' };
 }
 
 export default async function LeadDetailPage({ params }: Props) {
@@ -131,20 +143,17 @@ export default async function LeadDetailPage({ params }: Props) {
         <LeadStageSelector leadId={lead.id} currentStage={lead.status} />
       </div>
 
-      {/* Action buttons */}
-      <ActionButtons
-        phone={contact?.phone}
-        contactName={contact?.full_name}
-        leadId={lead.id}
-        linkedinUrl={contact?.linkedin_url}
-      />
-
       {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Left column: Timeline */}
-        <div className="lg:col-span-2 space-y-4">
-          <Timeline items={timelineItems} />
-        </div>
+        {/* Action buttons + Timeline (client section) */}
+        <LeadClientSection
+          leadId={lead.id}
+          contactId={contact?.id}
+          phone={contact?.phone}
+          contactName={contact?.full_name}
+          linkedinUrl={contact?.linkedin_url}
+          timelineItems={timelineItems}
+        />
 
         {/* Right column: Details */}
         <div className="space-y-4">

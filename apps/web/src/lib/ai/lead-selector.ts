@@ -1,4 +1,4 @@
-import type { Lead, PipelineStage } from '@propagent/shared';
+import type { Lead, PipelineStage } from '@agentos/shared';
 
 const EXCLUDED_STATUSES: PipelineStage[] = ['closed_won', 'closed_lost', 'nurture'];
 

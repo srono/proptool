@@ -1,4 +1,4 @@
-import { LEAD_SOURCES } from '@propagent/shared';
+import { LEAD_SOURCES } from '@agentos/shared';
 
 const DEAL_TYPE_LABELS: Record<string, string> = {
   sale: 'Sale',

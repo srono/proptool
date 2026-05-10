@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
+export const metadata = { title: 'Deals' };
+
 const STATUS_COLORS: Record<string, string> = {
   negotiating: 'text-status-amber border-status-amber/40 bg-status-amber/10',
   otp_issued: 'text-aqua border-brand/50 bg-brand/[0.12]',

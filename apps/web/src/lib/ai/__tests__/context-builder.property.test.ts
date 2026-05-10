@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
 import { buildConversationContext } from '../context-builder';
-import type { Message } from '@propagent/shared';
+import type { Message } from '@agentos/shared';
 
 /**
  * Feature: ai-reply-suggestions, Property 12: Conversation Context Message Limit

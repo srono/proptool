@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { buildConversationContext } from '../context-builder';
-import type { Message } from '@propagent/shared';
+import type { Message } from '@agentos/shared';
 
 function makeMessage(overrides: Partial<Message> = {}): Message {
   return {

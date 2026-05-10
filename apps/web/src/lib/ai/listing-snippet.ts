@@ -1,4 +1,4 @@
-import type { Listing } from '@propagent/shared';
+import type { Listing } from '@agentos/shared';
 import { formatPrice } from './format-price';
 
 /**

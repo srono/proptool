@@ -24,7 +24,7 @@ self.addEventListener('push', (event) => {
 
   event.waitUntil(
     // eslint-disable-next-line no-undef
-    self.registration.showNotification(title || 'PropAgent', options)
+    self.registration.showNotification(title || 'AgentOS', options)
   );
 });
 

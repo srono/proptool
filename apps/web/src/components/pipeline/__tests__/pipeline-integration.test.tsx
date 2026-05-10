@@ -4,7 +4,7 @@ import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PipelineClientShell } from '../pipeline-client-shell';
 import { PIPELINE_VIEW_MODE_STORAGE_KEY } from '../hooks/use-pipeline-view-mode';
-import type { PipelineStage } from '@propagent/shared';
+import type { PipelineStage } from '@agentos/shared';
 import type { Breakpoint } from '@/components/listings/hooks/use-breakpoint';
 
 // --- Mocks ---

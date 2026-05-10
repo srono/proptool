@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { URGENCY_CONFIG, PIPELINE_STAGES } from '@propagent/shared';
-import type { PipelineStage } from '@propagent/shared';
+import { URGENCY_CONFIG, PIPELINE_STAGES } from '@agentos/shared';
+import type { PipelineStage } from '@agentos/shared';
 import { createClient } from '@/lib/supabase/client';
 
 interface LeadCardProps {

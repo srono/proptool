@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import type { Listing, ListingStatus } from '@propagent/shared';
+import type { Listing, ListingStatus } from '@agentos/shared';
 import type { SortField } from '../hooks/use-listings-filter';
 import {
   formatListingPrice,

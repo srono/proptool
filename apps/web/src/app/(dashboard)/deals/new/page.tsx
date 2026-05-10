@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { DealForm } from '@/components/deals/deal-form';
 
+export const metadata = { title: 'New Deal' };
+
 export default async function NewDealPage() {
   const supabase = await createClient();
 

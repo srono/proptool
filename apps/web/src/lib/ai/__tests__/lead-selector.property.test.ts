@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
 import { selectActiveLead } from '../lead-selector';
-import type { Lead, PipelineStage } from '@propagent/shared';
+import type { Lead, PipelineStage } from '@agentos/shared';
 
 /**
  * Feature: ai-reply-suggestions, Property 9: Active Lead Selection

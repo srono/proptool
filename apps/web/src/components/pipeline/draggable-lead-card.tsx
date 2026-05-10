@@ -2,7 +2,7 @@
 
 import { useDraggable } from '@dnd-kit/core';
 import { LeadCard } from './lead-card';
-import type { PipelineStage } from '@propagent/shared';
+import type { PipelineStage } from '@agentos/shared';
 
 interface LeadWithRelations {
   id: string;

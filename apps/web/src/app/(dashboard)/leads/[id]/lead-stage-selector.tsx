@@ -3,8 +3,8 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { PIPELINE_STAGES } from '@propagent/shared';
-import type { PipelineStage } from '@propagent/shared';
+import { PIPELINE_STAGES } from '@agentos/shared';
+import type { PipelineStage } from '@agentos/shared';
 
 interface Props {
   leadId: string;

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { STAMP_DUTY_DISCLAIMER } from '@propagent/shared';
-import type { BuyerProfile, PropertyCount, StampDutyBand } from '@propagent/shared';
+import { STAMP_DUTY_DISCLAIMER } from '@agentos/shared';
+import type { BuyerProfile, PropertyCount, StampDutyBand } from '@agentos/shared';
 
 // BSD bands (effective 15 Feb 2023)
 const BSD_BANDS = [

@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
+export const metadata = { title: 'Viewings' };
+
 export default async function ViewingsPage() {
   const supabase = await createClient();
 

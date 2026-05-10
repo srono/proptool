@@ -1,8 +1,8 @@
 {
-  "name": "propagent",
+  "name": "agentos",
   "version": "0.1.0",
   "private": true,
-  "description": "PropAgent SG — Singapore Property Agent Operating System",
+  "description": "AgentOS — Singapore Property Agent Operating System",
   "workspaces": [
     "apps/web",
     "packages/db",

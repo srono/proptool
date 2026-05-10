@@ -1,4 +1,4 @@
-import type { PreViewingChecklist } from '@propagent/shared';
+import type { PreViewingChecklist } from '@agentos/shared';
 
 interface Props {
   checklist: PreViewingChecklist;

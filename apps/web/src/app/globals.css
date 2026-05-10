@@ -35,6 +35,16 @@
   }
 }
 
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer components {
   .btn-primary {
     @apply rounded-pill bg-aqua text-onyx font-medium text-sm px-[18px] py-[10px] cursor-pointer transition-opacity hover:opacity-90;

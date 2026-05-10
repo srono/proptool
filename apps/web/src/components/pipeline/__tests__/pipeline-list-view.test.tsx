@@ -5,7 +5,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PipelineListView } from '../pipeline-list-view';
 import { PipelineClientShell } from '../pipeline-client-shell';
 import { PipelineViewToggle } from '../pipeline-view-toggle';
-import type { PipelineStage } from '@propagent/shared';
+import type { PipelineStage } from '@agentos/shared';
 import type { Breakpoint } from '@/components/listings/hooks/use-breakpoint';
 
 // --- Mocks ---

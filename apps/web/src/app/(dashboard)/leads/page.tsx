@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
+export const metadata = { title: 'Lead Inbox' };
+
 export default async function LeadsPage() {
   const supabase = await createClient();
 

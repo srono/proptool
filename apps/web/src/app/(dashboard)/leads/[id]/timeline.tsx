@@ -1,11 +1,6 @@
-interface TimelineItem {
-  id: string;
-  type: string;
-  direction: string;
-  body: string;
-  media_url: string | null;
-  timestamp: string;
-}
+'use client';
+
+import { formatTimelineLabel, type TimelineItem } from './note-utils';
 
 interface Props {
   items: TimelineItem[];
@@ -39,7 +34,7 @@ export function Timeline({ items }: Props) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] font-display font-semibold text-gray-2 uppercase tracking-wider">
-                    {item.type} · {item.direction}
+                    {formatTimelineLabel(item.type, item.direction)}
                   </span>
                   <span className="text-[11px] text-gray-2/60">
                     {new Date(item.timestamp).toLocaleDateString('en-SG', {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { selectActiveLead } from '../lead-selector';
-import type { Lead } from '@propagent/shared';
+import type { Lead } from '@agentos/shared';
 
 function makeLead(overrides: Partial<Lead> = {}): Lead {
   return {

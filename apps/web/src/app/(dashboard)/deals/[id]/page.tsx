@@ -3,9 +3,23 @@ import { notFound } from 'next/navigation';
 import { MilestoneTracker } from '@/components/deals/milestone-tracker';
 import { getMilestoneTemplate } from '@/lib/deals/milestone-templates';
 import type { Milestone } from '@/lib/deals/milestone-templates';
+import type { Metadata } from 'next';
 
 interface Props {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: deal } = await supabase
+    .from('deals')
+    .select('lead:leads(contact:contacts(full_name))')
+    .eq('id', id)
+    .single();
+  const lead = deal?.lead as { contact: { full_name: string } | null } | null;
+  const name = lead?.contact?.full_name;
+  return { title: name ? `${name} – Deal` : 'Deal Detail' };
 }
 
 const STATUS_COLORS: Record<string, string> = {

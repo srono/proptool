@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
+export const metadata = { title: 'Messages' };
+
 export default async function MessagesPage() {
   const supabase = await createClient();
 
@@ -16,6 +18,7 @@ export default async function MessagesPage() {
       media_url,
       contact:contacts(id, full_name, phone)
     `)
+    .neq('channel', 'note')
     .order('sent_at', { ascending: false });
 
   // Group by contact_id and keep only the latest message per contact

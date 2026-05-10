@@ -1,10 +1,28 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import type { ListingStatus } from '@propagent/shared';
+import type { ListingStatus } from '@agentos/shared';
+import type { Metadata } from 'next';
 import { AreaInsightHero } from '@/components/insights/area-insight-hero';
 import { MatchedBuyersCard } from '@/components/insights/matched-buyers-card';
 import { PerformanceCard } from '@/components/insights/performance-card';
+import { MarketingSection } from '@/components/listings/marketing-section';
+import { MapNavigationLinks } from '@/components/listings/map-navigation-links';
+
+interface ListingDetailPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: ListingDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: listing } = await supabase
+    .from('listings')
+    .select('title')
+    .eq('id', id)
+    .single();
+  return { title: listing?.title ? `${listing.title} – Listing` : 'Listing Detail' };
+}
 
 const STATUS_STYLES: Record<ListingStatus, string> = {
   draft: 'text-gray-2 border-onyx-line bg-transparent',
@@ -38,7 +56,7 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
     notFound();
   }
 
-  const [{ count: enquiryCount }, { count: viewingCount }, { count: matchedBuyersCount }] = await Promise.all([
+  const [{ count: enquiryCount }, { count: viewingCount }, { count: matchedBuyersCount }, { count: marketingAssetsCount }] = await Promise.all([
     supabase
       .from('leads')
       .select('*', { count: 'exact', head: true })
@@ -58,6 +76,10 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
           ? `budget_min.lte.${listing.asking_price},budget_max.gte.${listing.asking_price}`
           : `budget_min.lte.${listing.asking_rental},budget_max.gte.${listing.asking_rental}`
       ),
+    supabase
+      .from('listing_marketing_assets')
+      .select('*', { count: 'exact', head: true })
+      .eq('listing_id', id),
   ]);
 
   const price = listing.listing_type === 'sale' ? listing.asking_price : listing.asking_rental;
@@ -73,9 +95,15 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
       {/* Page bar */}
       <div className="flex items-end justify-between border-b border-onyx-line pb-5">
         <div>
-          <h1 className="font-display font-bold text-[26px] text-white tracking-tight">
-            {listing.address}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="font-display font-bold text-[26px] text-white tracking-tight">
+              {listing.address}
+            </h1>
+            <MapNavigationLinks
+              address={listing.address}
+              postalCode={listing.postal_code}
+            />
+          </div>
           <p className="text-[13px] text-gray-2 mt-1">
             {listing.district} · {listing.property_type.toUpperCase()} ·{' '}
             {listing.tenure} · {listing.floor_area_sqft} sqft
@@ -149,6 +177,11 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
 
         {/* Right column */}
         <div className="space-y-5">
+          <MarketingSection
+            listingId={listing.id}
+            listingStatus={listing.listing_status}
+            savedAssetsCount={marketingAssetsCount ?? 0}
+          />
           <MatchedBuyersCard count={matchedBuyersCount ?? 0} />
           <PerformanceCard
             daysOnMarket={daysOnMarket}

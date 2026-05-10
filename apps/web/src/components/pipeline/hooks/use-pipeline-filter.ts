@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { PIPELINE_STAGES } from '@propagent/shared';
-import type { PipelineStage, Urgency, DealType, LeadSource } from '@propagent/shared';
+import { PIPELINE_STAGES } from '@agentos/shared';
+import type { PipelineStage, Urgency, DealType, LeadSource } from '@agentos/shared';
 
 // --- Types ---
 

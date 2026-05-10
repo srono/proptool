@@ -5,6 +5,8 @@
 
 import { fetchNearbyTransactions, generateTransactionSummary, type NearbyTransaction } from '@/lib/ura/client';
 
+const DEFAULT_MODEL = 'gpt-4o-mini';
+
 export interface AreaInsights {
   area_summary: string;
   planning_context: string | null;
@@ -174,6 +176,7 @@ async function generateLLMContent(
   }
 
   try {
+    const model = (process.env.INSIGHTS_MODEL ?? '').trim() || DEFAULT_MODEL;
     const prompt = buildPrompt(listing, transactions, transactionSummary);
 
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -183,7 +186,7 @@ async function generateLLMContent(
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model,
         messages: [
           {
             role: 'system',
@@ -197,7 +200,7 @@ async function generateLLMContent(
     });
 
     if (!res.ok) {
-      console.error('[Insights] OpenAI error:', res.status);
+      console.error('[Insights] OpenAI error:', res.status, 'model:', model);
       return generateTemplateFallback(listing, transactions, transactionSummary);
     }
 

@@ -6,7 +6,7 @@ export default function HomePage() {
       <div className="max-w-md w-full text-center space-y-8">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            PropAgent SG
+            AgentOS
           </h1>
           <p className="text-gray-600">
             Your property business, one app.

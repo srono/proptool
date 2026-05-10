@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { ConversationListingContext } from '@propagent/shared';
+import type { ConversationListingContext } from '@agentos/shared';
 
 /**
  * Inserts or replaces the follow-up listing context for a conversation.

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import type { Listing, PropertyType, ListingStatus } from '@propagent/shared';
+import type { Listing, PropertyType, ListingStatus } from '@agentos/shared';
 
 // --- Types ---
 

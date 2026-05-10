@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { filterListings } from '../listing-search';
-import type { Listing } from '@propagent/shared';
+import type { Listing } from '@agentos/shared';
 
 function makeListing(overrides: Partial<Listing> = {}): Listing {
   return {

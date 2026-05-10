@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
 import { shouldUseFirstName } from '../greeting-detection';
-import type { Message } from '@propagent/shared';
+import type { Message } from '@agentos/shared';
 
 /**
  * Feature: ai-reply-suggestions, Property 11: First-Name Greeting Detection

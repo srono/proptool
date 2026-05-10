@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Suggestion } from '@propagent/shared';
+import type { Suggestion } from '@agentos/shared';
 import OpenAI from 'openai';
 
 import { buildConversationContext } from './context-builder';
@@ -22,6 +22,12 @@ export interface SuggestionEngineInput {
 
 /** LLM call timeout in milliseconds */
 const LLM_TIMEOUT_MS = 10_000;
+
+/** Default OpenAI model used when SUGGESTION_MODEL env var is not set */
+const DEFAULT_MODEL = 'gpt-4o-mini';
+
+/** Resolved model identifier — read once at module load */
+const SUGGESTION_MODEL = (process.env.SUGGESTION_MODEL ?? '').trim() || DEFAULT_MODEL;
 
 // --- Main Engine ---
 
@@ -346,7 +352,7 @@ async function callOpenAI(
 
     const response = await openai.chat.completions.create(
       {
-        model: 'gpt-4o-mini',
+        model: SUGGESTION_MODEL,
         temperature: 0.7,
         messages: [
           { role: 'system', content: systemPrompt },
@@ -364,9 +370,9 @@ async function callOpenAI(
     return content ?? null;
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
-      console.error('[SuggestionEngine] OpenAI call timed out after 10s');
+      console.error('[SuggestionEngine] OpenAI call timed out after 10s, model:', SUGGESTION_MODEL);
     } else {
-      console.error('[SuggestionEngine] OpenAI call error:', error);
+      console.error('[SuggestionEngine] OpenAI call error:', error, 'model:', SUGGESTION_MODEL);
     }
     return null;
   }

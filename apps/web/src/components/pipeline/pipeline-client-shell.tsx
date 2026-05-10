@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { PipelineStage } from '@propagent/shared';
+import type { PipelineStage } from '@agentos/shared';
 import { usePipelineViewMode } from './hooks/use-pipeline-view-mode';
 import type { PipelineViewMode } from './hooks/use-pipeline-view-mode';
 import { usePipelineFilter } from './hooks/use-pipeline-filter';

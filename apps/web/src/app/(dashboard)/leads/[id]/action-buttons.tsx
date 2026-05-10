@@ -1,15 +1,22 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
+import { NoteDialog } from './note-dialog';
+import { TimelineItem } from './note-utils';
 
 interface Props {
   phone?: string;
   contactName?: string;
   leadId: string;
+  contactId: string;
   linkedinUrl?: string | null;
+  onNoteSaved?: (note: TimelineItem) => void;
 }
 
-export function ActionButtons({ phone, contactName, leadId, linkedinUrl }: Props) {
+export function ActionButtons({ phone, contactName, leadId, contactId, linkedinUrl, onNoteSaved }: Props) {
+  const [noteDialogOpen, setNoteDialogOpen] = useState(false);
+
   const whatsappUrl = phone
     ? `https://wa.me/${phone.replace(/\+/g, '')}?text=${encodeURIComponent(`Hi ${contactName ?? ''}, `)}`
     : null;
@@ -26,7 +33,7 @@ export function ActionButtons({ phone, contactName, leadId, linkedinUrl }: Props
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-primary text-xs py-2 px-3"
+          className="inline-flex items-center justify-center h-9 px-4 rounded-pill bg-aqua text-onyx text-xs font-medium hover:opacity-90 transition-opacity"
         >
           WhatsApp
         </a>
@@ -35,7 +42,7 @@ export function ActionButtons({ phone, contactName, leadId, linkedinUrl }: Props
       {phone && (
         <a
           href={`tel:${phone}`}
-          className="inline-flex items-center rounded-pill bg-brand px-3 py-2 text-xs font-medium text-white hover:opacity-90 transition-opacity"
+          className="inline-flex items-center justify-center h-9 px-4 rounded-pill bg-brand text-white text-xs font-medium hover:opacity-90 transition-opacity"
         >
           Call
         </a>
@@ -46,7 +53,7 @@ export function ActionButtons({ phone, contactName, leadId, linkedinUrl }: Props
           href={linkedinSearchUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-ghost text-xs py-2 px-3"
+          className="inline-flex items-center justify-center h-9 px-4 rounded-pill border border-onyx-line bg-transparent text-white text-xs font-medium hover:bg-onyx-card transition-colors"
         >
           LinkedIn
         </a>
@@ -54,18 +61,28 @@ export function ActionButtons({ phone, contactName, leadId, linkedinUrl }: Props
 
       <Link
         href={`/viewings/new?lead_id=${leadId}`}
-        className="btn-ghost text-xs py-2 px-3"
+        className="inline-flex items-center justify-center h-9 px-4 rounded-pill border border-onyx-line bg-transparent text-white text-xs font-medium hover:bg-onyx-card transition-colors"
       >
         Book viewing
       </Link>
 
       <button
         type="button"
-        className="btn-ghost text-xs py-2 px-3"
-        onClick={() => alert('Add Note — coming soon')}
+        className="inline-flex items-center justify-center h-9 px-4 rounded-pill border border-onyx-line bg-transparent text-white text-xs font-medium hover:bg-onyx-card transition-colors"
+        onClick={() => setNoteDialogOpen(true)}
       >
         Add note
       </button>
+
+      <NoteDialog
+        open={noteDialogOpen}
+        onClose={() => setNoteDialogOpen(false)}
+        leadId={leadId}
+        contactId={contactId}
+        onSaved={(note) => {
+          onNoteSaved?.(note);
+        }}
+      />
     </div>
   );
 }

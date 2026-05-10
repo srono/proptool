@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { ListingsClientShell } from '@/components/listings/listings-client-shell';
 
+export const metadata = { title: 'Listings' };
+
 interface ListingsPageProps {
   searchParams: Promise<{ tab?: string }>;
 }

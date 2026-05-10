@@ -1,7 +1,7 @@
 {
-  "name": "PropAgent SG",
-  "short_name": "PropAgent",
-  "description": "Singapore Property Agent Operating System — by 10thirtyLabs",
+  "name": "AgentOS",
+  "short_name": "AgentOS",
+  "description": "Singapore Property Agent Operating System",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#121212",
