@@ -9,7 +9,7 @@ interface Profile {
   full_name: string | null;
   phone: string | null;
   cea_licence_number: string | null;
-  cea_expiry_date: string | null;
+  cea_licence_expiry: string | null;
   agency_name: string | null;
   tenant_id: string | null;
   notification_preferences: NotificationPreferences | null;
@@ -110,7 +110,7 @@ function ProfileTab({
   const [fullName, setFullName] = useState(profile?.full_name ?? '');
   const [phone, setPhone] = useState(profile?.phone ?? '');
   const [ceaLicence, setCeaLicence] = useState(profile?.cea_licence_number ?? '');
-  const [ceaExpiry, setCeaExpiry] = useState(profile?.cea_expiry_date ?? '');
+  const [ceaExpiry, setCeaExpiry] = useState(profile?.cea_licence_expiry ?? '');
   const [agencyName, setAgencyName] = useState(profile?.agency_name ?? '');
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -123,12 +123,12 @@ function ProfileTab({
     try {
       const supabase = createClient();
       await supabase
-        .from('profiles')
+        .from('users')
         .update({
           full_name: fullName || null,
           phone: phone || null,
           cea_licence_number: ceaLicence || null,
-          cea_expiry_date: ceaExpiry || null,
+          cea_licence_expiry: ceaExpiry || null,
           agency_name: agencyName || null,
         })
         .eq('id', profile.id);
@@ -378,7 +378,7 @@ function NotificationsTab({
     try {
       const supabase = createClient();
       await supabase
-        .from('profiles')
+        .from('users')
         .update({ notification_preferences: prefs })
         .eq('id', profileId);
       setSaved(true);

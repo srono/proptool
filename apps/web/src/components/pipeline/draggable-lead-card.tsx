@@ -13,7 +13,7 @@ interface LeadWithRelations {
   intent_score: number | null;
   verification_score: number | null;
   eligibility_risk: boolean;
-  last_activity_at: string;
+  last_activity_at: string | null;
   created_at: string;
   contact: {
     full_name: string;

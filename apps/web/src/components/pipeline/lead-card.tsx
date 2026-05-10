@@ -17,7 +17,7 @@ interface LeadCardProps {
     intent_score: number | null;
     verification_score: number | null;
     eligibility_risk: boolean;
-    last_activity_at: string;
+    last_activity_at: string | null;
     contact: {
       full_name: string;
       phone: string;
@@ -36,9 +36,11 @@ export function LeadCard({ lead }: LeadCardProps) {
   const router = useRouter();
   const [updating, setUpdating] = useState(false);
 
-  const daysSinceActivity = Math.floor(
-    (Date.now() - new Date(lead.last_activity_at).getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const daysSinceActivity = lead.last_activity_at
+    ? Math.floor(
+        (Date.now() - new Date(lead.last_activity_at).getTime()) / (1000 * 60 * 60 * 24)
+      )
+    : null;
 
   const isHot = lead.urgency === 'hot' || (lead.intent_score && lead.intent_score >= 4);
 
@@ -107,7 +109,7 @@ export function LeadCard({ lead }: LeadCardProps) {
         {/* Footer */}
         <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-onyx-line">
           <span className="text-[11px] text-gray-2">
-            {daysSinceActivity === 0 ? 'Today' : `${daysSinceActivity}d ago`}
+            {daysSinceActivity === null ? '—' : daysSinceActivity === 0 ? 'Today' : `${daysSinceActivity}d ago`}
           </span>
           <div className="flex gap-1.5">
             <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-pill border border-onyx-line text-[10px] text-gray-2 font-semibold tracking-wide">

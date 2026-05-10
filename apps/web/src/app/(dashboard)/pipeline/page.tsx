@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { PipelineBoard } from '@/components/pipeline/pipeline-board';
+import { PipelineClientShell } from '@/components/pipeline/pipeline-client-shell';
 import { PIPELINE_STAGES } from '@propagent/shared';
 import Link from 'next/link';
 
@@ -28,8 +28,6 @@ export default async function PipelinePage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="btn-ghost text-xs">Filters</button>
-          <button className="btn-ghost text-xs">List view</button>
           <Link href="/leads/new" className="btn-primary text-xs">
             + New lead
           </Link>
@@ -37,7 +35,7 @@ export default async function PipelinePage() {
       </div>
 
       <div className="flex-1 overflow-x-auto p-5 lg:px-8">
-        <PipelineBoard leads={leads ?? []} stages={PIPELINE_STAGES} />
+        <PipelineClientShell leads={leads ?? []} stages={PIPELINE_STAGES} />
       </div>
     </div>
   );
