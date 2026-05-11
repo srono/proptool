@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { ViewingActions } from './viewing-actions';
 
 export const metadata = { title: 'Viewings' };
 
@@ -94,8 +95,8 @@ export default async function ViewingsPage() {
                     </p>
                   </div>
 
-                  {/* Right: Checklist status */}
-                  <div className="flex items-center gap-2">
+                  {/* Right: Checklist status & actions */}
+                  <div className="flex items-center gap-3">
                     <span className={`chip ${
                       checklistComplete
                         ? 'text-status-green border-status-green/40 bg-status-green/10'
@@ -109,12 +110,7 @@ export default async function ViewingsPage() {
                         ? `${checklistCount}/${checklistTotal}`
                         : 'No checklist'}
                     </span>
-                    <Link
-                      href={`/leads/${viewing.lead_id}`}
-                      className="text-xs text-brand-600 hover:text-brand-700 font-medium"
-                    >
-                      View Lead →
-                    </Link>
+                    <ViewingActions viewingId={viewing.id} leadId={viewing.lead_id} />
                   </div>
                 </div>
               </div>
