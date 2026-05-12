@@ -13,9 +13,10 @@ interface ChatThreadProps {
   contact: Contact;
   messages: Message[];
   tenantId: string;
+  leadId?: string | null;
 }
 
-export function ChatThread({ contact, messages: initialMessages, tenantId }: ChatThreadProps) {
+export function ChatThread({ contact, messages: initialMessages, tenantId, leadId }: ChatThreadProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -38,7 +39,7 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
       id: `temp-${Date.now()}`,
       tenant_id: tenantId,
       contact_id: contact.id,
-      lead_id: null,
+      lead_id: leadId ?? null,
       wa_number_id: null,
       direction: 'outbound',
       channel: 'whatsapp',
@@ -57,6 +58,7 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contact_id: contact.id,
+          lead_id: leadId ?? undefined,
           body: text,
           tenant_id: tenantId,
         }),

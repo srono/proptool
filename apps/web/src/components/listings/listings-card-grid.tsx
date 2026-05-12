@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import type { Listing, ListingStatus } from '@agentos/shared';
+import { useRouter } from 'next/navigation';
+import type { ListingWithSeller, ListingStatus } from '@agentos/shared';
 
 const STATUS_STYLES: Record<ListingStatus, string> = {
   draft: 'text-gray-2 border-onyx-line bg-transparent',
@@ -24,10 +25,12 @@ function formatPsf(price: number | null, area: number | null): string {
 }
 
 interface ListingsCardGridProps {
-  listings: Listing[];
+  listings: ListingWithSeller[];
 }
 
 export function ListingsCardGrid({ listings }: ListingsCardGridProps) {
+  const router = useRouter();
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
       {listings.map((listing) => {
@@ -35,7 +38,14 @@ export function ListingsCardGrid({ listings }: ListingsCardGridProps) {
         const price = listing.listing_type === 'sale' ? listing.asking_price : listing.asking_rental;
 
         return (
-          <Link key={listing.id} href={`/listings/${listing.id}`}>
+          <div
+            key={listing.id}
+            role="link"
+            tabIndex={0}
+            onClick={() => router.push(`/listings/${listing.id}`)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') router.push(`/listings/${listing.id}`); }}
+            className="cursor-pointer"
+          >
             <div className="bg-onyx-card border border-onyx-line rounded-2xl overflow-hidden hover:border-brand/50 transition-colors">
               {/* Photo */}
               <div className="aspect-[4/3] bg-onyx-raised relative border-b border-onyx-line">
@@ -70,6 +80,19 @@ export function ListingsCardGrid({ listings }: ListingsCardGridProps) {
                 <p className="text-[11px] text-gray-2 mt-0.5">
                   {listing.district} · {listing.property_type.toUpperCase()}
                 </p>
+                <p className="text-[11px] text-gray-2 mt-0.5">
+                  {listing.seller_contact ? (
+                    <Link
+                      href={`/contacts/${listing.seller_contact.id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-aqua hover:underline truncate inline-block max-w-full"
+                    >
+                      {listing.seller_contact.full_name}
+                    </Link>
+                  ) : (
+                    <span>—</span>
+                  )}
+                </p>
                 <div className="mt-2">
                   <span className="text-xs font-bold text-white">
                     {formatPrice(price)}
@@ -83,7 +106,7 @@ export function ListingsCardGrid({ listings }: ListingsCardGridProps) {
                 </div>
               </div>
             </div>
-          </Link>
+          </div>
         );
       })}
     </div>

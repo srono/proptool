@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import type { Listing } from '@agentos/shared';
+import type { ListingWithSeller } from '@agentos/shared';
 import type { Breakpoint } from '../hooks/use-breakpoint';
 import type { SortField, SortState } from '../hooks/use-listings-filter';
 import { ListingRow } from './listing-row';
@@ -17,6 +17,7 @@ export const COLUMNS: ColumnDef[] = [
   { key: 'district', label: 'District', sortable: true, minBreakpoint: 'tablet', align: 'left' },
   { key: 'property_type', label: 'Type', sortable: true, minBreakpoint: 'tablet', align: 'left' },
   { key: 'tenure', label: 'Tenure', sortable: false, minBreakpoint: 'desktop', align: 'left' },
+  { key: 'seller', label: 'Seller', sortable: false, minBreakpoint: 'tablet', align: 'left' },
   { key: 'floor_area_sqft', label: 'Area (sqft)', sortable: true, minBreakpoint: 'desktop', align: 'right' },
   { key: 'listing_type', label: 'Listing', sortable: false, minBreakpoint: 'tablet', align: 'left' },
   { key: 'listing_status', label: 'Status', sortable: true, minBreakpoint: 'tablet', align: 'left' },
@@ -45,7 +46,7 @@ function getVisibleColumns(breakpoint: Breakpoint): ColumnDef[] {
 // --- Props ---
 
 export interface ListingsTableProps {
-  listings: Listing[];
+  listings: ListingWithSeller[];
   sort: SortState;
   onSort: (field: SortField) => void;
   breakpoint: Breakpoint;

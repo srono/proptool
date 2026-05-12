@@ -63,9 +63,13 @@ export async function GET(request: NextRequest) {
         contacts!inner (
           id,
           full_name,
+          phone,
           owned_property_type,
           owned_property_label,
           owned_property_town,
+          owned_property_flat_type,
+          mop_date,
+          last_contacted_at,
           whatsapp_optin,
           channel_preference,
           data_retention_expiry
@@ -74,6 +78,10 @@ export async function GET(request: NextRequest) {
           id,
           name,
           target_ad_purpose
+        ),
+        playbook_steps (
+          id,
+          title
         )
       `,
         { count: 'exact' }
@@ -104,10 +112,61 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 });
     }
 
+    // Fetch all playbook steps for the playbooks referenced by these tasks
+    const playbookIds = [...new Set((tasks ?? []).map((t: Record<string, unknown>) => t.playbook_id as string))];
+    let allPlaybookSteps: Record<string, unknown>[] = [];
+    if (playbookIds.length > 0) {
+      const { data: stepsData } = await supabase
+        .from('playbook_steps')
+        .select('id, playbook_id, title, channel, sort_order')
+        .in('playbook_id', playbookIds)
+        .order('sort_order', { ascending: true });
+      allPlaybookSteps = stepsData ?? [];
+    }
+
+    // Fetch all nurture tasks for the same contact+playbook combos to determine step statuses
+    const contactPlaybookPairs = [...new Set(
+      (tasks ?? []).map((t: Record<string, unknown>) => `${t.contact_id}|${t.playbook_id}`)
+    )];
+    let allRelatedTasks: Record<string, unknown>[] = [];
+    if (contactPlaybookPairs.length > 0) {
+      const contactIds = [...new Set((tasks ?? []).map((t: Record<string, unknown>) => t.contact_id as string))];
+      const { data: relatedData } = await supabase
+        .from('nurture_tasks')
+        .select('contact_id, playbook_id, step_id, status')
+        .eq('tenant_id', profile.tenant_id)
+        .in('contact_id', contactIds)
+        .in('playbook_id', playbookIds);
+      allRelatedTasks = relatedData ?? [];
+    }
+
+    // Build a lookup: (contact_id, playbook_id) -> Map<step_id, task_status>
+    const taskStatusLookup = new Map<string, Map<string, string>>();
+    for (const rt of allRelatedTasks) {
+      const key = `${rt.contact_id}|${rt.playbook_id}`;
+      if (!taskStatusLookup.has(key)) {
+        taskStatusLookup.set(key, new Map());
+      }
+      if (rt.step_id) {
+        taskStatusLookup.get(key)!.set(rt.step_id as string, rt.status as string);
+      }
+    }
+
+    // Build a lookup: playbook_id -> sorted steps
+    const playbookStepsLookup = new Map<string, Record<string, unknown>[]>();
+    for (const s of allPlaybookSteps) {
+      const pbId = s.playbook_id as string;
+      if (!playbookStepsLookup.has(pbId)) {
+        playbookStepsLookup.set(pbId, []);
+      }
+      playbookStepsLookup.get(pbId)!.push(s);
+    }
+
     // Map tasks to response format with consent badge computation
     const mappedTasks = (tasks ?? []).map((task: Record<string, unknown>) => {
       const contact = task.contacts as Record<string, unknown>;
       const playbook = task.playbooks as Record<string, unknown>;
+      const step = task.playbook_steps as Record<string, unknown> | null;
 
       // Compute consent badge from contact fields
       const badge = computeConsentBadge({
@@ -128,18 +187,52 @@ export async function GET(request: NextRequest) {
       ].filter(Boolean);
       const ownedPropertySummary = propParts.join(', ') || '';
 
+      // Build playbook_steps with statuses
+      const pbId = task.playbook_id as string;
+      const contactId = task.contact_id as string;
+      const pbSteps = playbookStepsLookup.get(pbId) ?? [];
+      const statusMap = taskStatusLookup.get(`${contactId}|${pbId}`) ?? new Map();
+
+      const playbookStepsWithStatus = pbSteps.map((s, idx) => {
+        const stepId = s.id as string;
+        const taskStatus = statusMap.get(stepId);
+        let stepStatus: 'done' | 'pending' | 'upcoming';
+
+        if (taskStatus === 'done' || taskStatus === 'skipped') {
+          stepStatus = 'done';
+        } else if (taskStatus === 'pending' || taskStatus === 'snoozed') {
+          stepStatus = 'pending';
+        } else {
+          stepStatus = 'upcoming';
+        }
+
+        return {
+          step_number: idx + 1,
+          title: s.title as string,
+          channel: s.channel as string,
+          status: stepStatus,
+        };
+      });
+
       return {
         id: task.id,
         contact_id: task.contact_id,
         contact_name: contact.full_name ?? '',
+        contact_phone: (contact.phone as string) || null,
         owned_property_summary: ownedPropertySummary,
+        owned_property_type: (contact.owned_property_type as string) ?? 'none',
+        owned_property_label: (contact.owned_property_label as string) || null,
+        owned_property_town: (contact.owned_property_town as string) || null,
+        owned_property_flat_type: (contact.owned_property_flat_type as string) || null,
+        mop_date: (contact.mop_date as string) || null,
         segment_tags: [],
-        next_action_title: '', // populated from step title if available
+        next_action_title: (step?.title as string) || (task.notes as string) || '',
         due_at: task.due_at,
-        last_activity_date: null,
+        last_activity_date: (contact.last_contacted_at as string) || null,
         consent_badge: badge,
         channel: task.channel,
         playbook_name: playbook.name ?? '',
+        playbook_steps: playbookStepsWithStatus.length > 0 ? playbookStepsWithStatus : null,
         status: task.status,
       };
     });

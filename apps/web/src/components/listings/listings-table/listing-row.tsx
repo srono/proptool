@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import type { Listing, ListingStatus } from '@agentos/shared';
+import Link from 'next/link';
+import type { ListingWithSeller, ListingStatus } from '@agentos/shared';
 import type { SortField } from '../hooks/use-listings-filter';
 import {
   formatListingPrice,
@@ -12,7 +13,7 @@ import {
 // --- Types ---
 
 export interface ColumnDef {
-  key: SortField | 'tenure' | 'listing_type';
+  key: SortField | 'tenure' | 'listing_type' | 'seller';
   label: string;
   sortable: boolean;
   minBreakpoint: 'mobile' | 'tablet' | 'desktop';
@@ -20,7 +21,7 @@ export interface ColumnDef {
 }
 
 export interface ListingRowProps {
-  listing: Listing;
+  listing: ListingWithSeller;
   visibleColumns: ColumnDef[];
 }
 
@@ -60,7 +61,7 @@ function formatTenure(tenure: string): string {
 
 // --- Cell renderer ---
 
-function renderCell(listing: Listing, columnKey: string): React.ReactNode {
+function renderCell(listing: ListingWithSeller, columnKey: string): React.ReactNode {
   switch (columnKey) {
     case 'address':
       return (
@@ -76,6 +77,19 @@ function renderCell(listing: Listing, columnKey: string): React.ReactNode {
       return listing.floor_area_sqft
         ? listing.floor_area_sqft.toLocaleString('en-SG')
         : '—';
+    case 'seller':
+      if (!listing.seller_contact) {
+        return <span>—</span>;
+      }
+      return (
+        <Link
+          href={`/contacts/${listing.seller_contact.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="truncate block min-w-[12ch] max-w-[160px] text-aqua hover:underline"
+        >
+          {listing.seller_contact.full_name}
+        </Link>
+      );
     case 'listing_type':
       return (
         <span className="text-gray-2 text-[11px]">

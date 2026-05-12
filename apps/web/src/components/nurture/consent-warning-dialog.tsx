@@ -175,14 +175,14 @@ export function ConsentWarningDialog({
             ref={cancelButtonRef}
             type="button"
             onClick={handleCancel}
-            className="flex-1 py-2.5 text-sm font-semibold rounded-pill border border-onyx-line bg-transparent text-white hover:bg-onyx-card transition-colors"
+            className="flex-1 py-2.5 text-sm font-semibold rounded-[14px] border border-onyx-line bg-transparent text-white hover:bg-onyx-card transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleConfirm}
-            className="flex-1 py-2.5 text-sm font-semibold rounded-pill bg-status-yellow text-black hover:bg-status-yellow/90 transition-colors"
+            className="flex-1 py-2.5 text-sm font-semibold rounded-[14px] bg-status-amber text-black hover:bg-status-amber/90 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2"
           >
             Proceed Anyway
           </button>

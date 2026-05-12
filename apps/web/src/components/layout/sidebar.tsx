@@ -5,25 +5,174 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', badgeKey: 'overdue_tasks_count' },
-  { href: '/leads', label: 'Lead Inbox', badgeKey: 'new_leads_count' },
-  { href: '/pipeline', label: 'Pipeline', badgeKey: null },
-  { href: '/listings', label: 'Listings', badgeKey: null },
-  { href: '/viewings', label: 'Viewings', badgeKey: null },
-  { href: '/messages', label: 'Messages', badgeKey: 'unread_messages_count' },
-  { href: '/nurture', label: 'Nurture', badgeKey: null },
-  { href: '/deals', label: 'Deals', badgeKey: null },
-  { href: '/contacts', label: 'Contacts', badgeKey: null },
-  { href: '/tools', label: 'Insights', badgeKey: null },
-  { href: '/settings', label: 'Settings', badgeKey: null },
-] as const;
+// ─── Icon Components (15px SVG stroke) ───────────────────────────────────────
+
+function DashboardIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  );
+}
+
+function InboxIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+      <path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" />
+    </svg>
+  );
+}
+
+function MessageIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+    </svg>
+  );
+}
+
+function NurtureIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M12 22c4-4 8-7.5 8-12a8 8 0 10-16 0c0 4.5 4 8 8 12z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
+
+function PipelineIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="8" y1="6" x2="21" y2="6" />
+      <line x1="8" y1="12" x2="21" y2="12" />
+      <line x1="8" y1="18" x2="21" y2="18" />
+      <line x1="3" y1="6" x2="3.01" y2="6" />
+      <line x1="3" y1="12" x2="3.01" y2="12" />
+      <line x1="3" y1="18" x2="3.01" y2="18" />
+    </svg>
+  );
+}
+
+function ContactsIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 00-3-3.87" />
+      <path d="M16 3.13a4 4 0 010 7.75" />
+    </svg>
+  );
+}
+
+function DealsIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+      <path d="M2 17l10 5 10-5" />
+      <path d="M2 12l10 5 10-5" />
+    </svg>
+  );
+}
+
+function ListingsIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+
+function ViewingsIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
+}
+
+function InsightsIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="18" y1="20" x2="18" y2="10" />
+      <line x1="12" y1="20" x2="12" y2="4" />
+      <line x1="6" y1="20" x2="6" y2="14" />
+    </svg>
+  );
+}
+
+function SettingsGearIcon({ className }: { className?: string }) {
+  return (
+    <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001.08 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1.08z" />
+    </svg>
+  );
+}
+
+// ─── Navigation Data Structure ───────────────────────────────────────────────
+
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badgeKey: string | null;
+}
+
+interface NavGroup {
+  label: string;
+  items: NavItem[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: 'Daily',
+    items: [
+      { href: '/dashboard', label: 'Dashboard', icon: DashboardIcon, badgeKey: 'overdue_tasks_count' },
+      { href: '/leads', label: 'Lead Inbox', icon: InboxIcon, badgeKey: 'new_leads_count' },
+      { href: '/messages', label: 'Messages', icon: MessageIcon, badgeKey: 'unread_messages_count' },
+      { href: '/nurture', label: 'Nurture', icon: NurtureIcon, badgeKey: null },
+    ],
+  },
+  {
+    label: 'Clients',
+    items: [
+      { href: '/pipeline', label: 'Pipeline', icon: PipelineIcon, badgeKey: null },
+      { href: '/contacts', label: 'Contacts', icon: ContactsIcon, badgeKey: null },
+      { href: '/deals', label: 'Deals', icon: DealsIcon, badgeKey: null },
+    ],
+  },
+  {
+    label: 'Properties',
+    items: [
+      { href: '/listings', label: 'Listings', icon: ListingsIcon, badgeKey: null },
+      { href: '/viewings', label: 'Viewings', icon: ViewingsIcon, badgeKey: null },
+    ],
+  },
+  {
+    label: 'Tools',
+    items: [
+      { href: '/tools', label: 'Insights', icon: InsightsIcon, badgeKey: null },
+    ],
+  },
+];
+
+// ─── Badge Counts Interface ──────────────────────────────────────────────────
 
 interface BadgeCounts {
   new_leads_count: number;
   unread_messages_count: number;
   overdue_tasks_count: number;
 }
+
+// ─── Sidebar Component ───────────────────────────────────────────────────────
 
 export function Sidebar({ className }: { className?: string }) {
   const pathname = usePathname();
@@ -52,53 +201,71 @@ export function Sidebar({ className }: { className?: string }) {
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3">
-        {navItems.map((item) => {
-          const isActive = pathname.startsWith(item.href);
-          const badgeCount =
-            item.badgeKey && badges
-              ? badges[item.badgeKey as keyof BadgeCounts]
-              : 0;
+      {/* Grouped Navigation */}
+      <nav className="flex-1 px-3 overflow-y-auto">
+        {NAV_GROUPS.map((group, groupIndex) => (
+          <div
+            key={group.label}
+            className={cn(
+              groupIndex > 0 && 'border-t border-onyx-line mt-[2px] pt-[8px]'
+            )}
+          >
+            {/* Section Label */}
+            <div className="px-[14px] pb-[6px] pt-[4px] text-[10px] font-bold uppercase tracking-[0.09em] text-gray-1">
+              {group.label}
+            </div>
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center justify-between px-[14px] py-[10px] rounded-pill mb-0.5 text-[13px] font-medium transition-colors',
-                isActive
-                  ? 'bg-brand/[0.18] border border-brand/50 text-white'
-                  : 'border border-transparent text-gray-2 hover:text-white hover:bg-onyx-card'
-              )}
-            >
-              <span className="flex items-center gap-2.5">
-                <span
+            {/* Nav Items */}
+            {group.items.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname.startsWith(item.href);
+              const badgeCount =
+                item.badgeKey && badges
+                  ? badges[item.badgeKey as keyof BadgeCounts]
+                  : 0;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
                   className={cn(
-                    'w-1 h-1 rounded-full',
-                    isActive ? 'bg-aqua' : 'bg-gray-2'
-                  )}
-                />
-                {item.label}
-              </span>
-              {badgeCount > 0 && (
-                <span
-                  className={cn(
-                    'rounded-pill px-[7px] py-px text-[10px] font-bold',
+                    'group flex items-center justify-between px-[14px] py-[10px] rounded-[10px] mb-0.5 text-[13px] font-medium transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2',
                     isActive
-                      ? 'bg-aqua text-onyx'
-                      : 'bg-onyx-raised text-gray-2'
+                      ? 'bg-brand/[0.14] border border-brand/[0.38] text-white'
+                      : 'border border-transparent text-gray-2 hover:text-white hover:bg-onyx-card'
                   )}
                 >
-                  {badgeCount > 9 ? '9+' : badgeCount}
-                </span>
-              )}
-            </Link>
-          );
-        })}
+                  <span className="flex items-center gap-2.5">
+                    <Icon
+                      className={cn(
+                        'flex-shrink-0 transition-opacity duration-150',
+                        isActive
+                          ? 'opacity-100 text-aqua'
+                          : 'opacity-45 group-hover:opacity-75'
+                      )}
+                    />
+                    {item.label}
+                  </span>
+                  {badgeCount > 0 && (
+                    <span
+                      className={cn(
+                        'rounded-[10px] px-[7px] py-px text-[10px] font-bold',
+                        isActive
+                          ? 'bg-aqua/20 text-aqua'
+                          : 'bg-onyx-raised text-gray-2'
+                      )}
+                    >
+                      {badgeCount > 99 ? '99+' : badgeCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
-      {/* User footer */}
+      {/* User Footer */}
       <div className="p-4 border-t border-onyx-line">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand to-aqua flex-shrink-0" />
@@ -106,11 +273,20 @@ export function Sidebar({ className }: { className?: string }) {
             <div className="text-xs font-semibold truncate">Agent</div>
             <div className="text-[10px] text-gray-2">CEA R0000000</div>
           </div>
+          <Link
+            href="/settings"
+            className="p-[5px] rounded-[8px] text-gray-2 hover:text-white hover:bg-onyx-card transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2"
+            aria-label="Settings"
+          >
+            <SettingsGearIcon />
+          </Link>
         </div>
       </div>
     </aside>
   );
 }
+
+// ─── Logo Mark ───────────────────────────────────────────────────────────────
 
 function LogoMark() {
   return (

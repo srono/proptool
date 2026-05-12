@@ -77,6 +77,52 @@ export interface NurtureTaskRow {
   status: TaskStatus;
 }
 
+// ─── Playbook Step Status ────────────────────────────────────────────────────
+
+export interface PlaybookStepStatus {
+  step_number: number;
+  title: string;
+  channel: StepChannel;
+  status: 'done' | 'pending' | 'upcoming';
+}
+
+// ─── Enriched Nurture Task ───────────────────────────────────────────────────
+
+export interface EnrichedNurtureTask extends NurtureTaskRow {
+  contact_phone: string | null;
+  owned_property_label: string | null;
+  owned_property_town: string | null;
+  owned_property_type: string;
+  owned_property_flat_type: string | null;
+  mop_date: string | null;
+  playbook_steps: PlaybookStepStatus[] | null;
+}
+
+// ─── Nurture Preferences ────────────────────────────────────────────────────
+
+export interface NurturePreferences {
+  density: 'comfortable' | 'compact';
+  groupBy: 'urgency' | 'playbook';
+  showLastActivity: boolean;
+  tweaksPanelCollapsed: boolean;
+}
+
+export const DEFAULT_PREFERENCES: NurturePreferences = {
+  density: 'comfortable',
+  groupBy: 'urgency',
+  showLastActivity: true,
+  tweaksPanelCollapsed: false,
+};
+
+// ─── Filter State ────────────────────────────────────────────────────────────
+
+export interface FilterState {
+  activePill: 'all' | 'overdue' | 'today' | 'upcoming' | 'snoozed';
+  playbookFilter: string;
+  consentFilter: '' | 'green' | 'yellow' | 'red';
+  myTasksOnly: boolean;
+}
+
 // ─── Zod Schemas ─────────────────────────────────────────────────────────────
 
 export const filterConditionSchema = z.object({
@@ -132,4 +178,11 @@ export const taskStatusUpdateSchema = z.object({
   status: z.enum(['done', 'skipped', 'snoozed']),
   due_at: z.string().optional(),
   notes: z.string().max(2000).optional(),
+});
+
+export const nurturePreferencesSchema = z.object({
+  density: z.enum(['comfortable', 'compact']),
+  groupBy: z.enum(['urgency', 'playbook']),
+  showLastActivity: z.boolean(),
+  tweaksPanelCollapsed: z.boolean(),
 });

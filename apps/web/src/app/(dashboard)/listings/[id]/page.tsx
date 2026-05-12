@@ -8,6 +8,10 @@ import { MatchedBuyersCard } from '@/components/insights/matched-buyers-card';
 import { PerformanceCard } from '@/components/insights/performance-card';
 import { MarketingSection } from '@/components/listings/marketing-section';
 import { MapNavigationLinks } from '@/components/listings/map-navigation-links';
+import { SellerCard } from '@/components/listings/seller-card';
+import { SellerUpdateReminder } from '@/components/listings/seller-update-reminder';
+import { ViewingSellerStatusWrapper } from '@/components/viewings/viewing-seller-status-wrapper';
+import { getPendingSellerUpdateCount } from '@/lib/services/seller-service';
 
 interface ListingDetailPageProps {
   params: Promise<{ id: string }>;
@@ -46,11 +50,24 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: listing } = await supabase
+  let { data: listing, error: listingError } = await supabase
     .from('listings')
-    .select('*')
+    .select('*, seller_contact:contacts!seller_contact_id(id, full_name, phone, email)')
     .eq('id', id)
     .single();
+
+  // Fallback: if seller join fails (migration not yet applied), retry without it
+  if (listingError && !listing) {
+    const { data: fallbackListing } = await supabase
+      .from('listings')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fallbackListing) {
+      listing = { ...fallbackListing, seller_contact: null };
+    }
+  }
 
   if (!listing) {
     notFound();
@@ -81,6 +98,48 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
       .select('*', { count: 'exact', head: true })
       .eq('listing_id', id),
   ]);
+
+  // Seller-related data fetching
+  const sellerContact = listing.seller_contact as {
+    id: string;
+    full_name: string;
+    phone: string;
+    email: string | null;
+  } | null;
+
+  let sellerLead: { id: string; status: any; is_active: boolean } | null = null;
+  let pendingSellerUpdateCount = 0;
+  let completedViewings: Array<{
+    id: string;
+    seller_updated: boolean;
+    seller_updated_at: string | null;
+    scheduled_at: string;
+    lead_id: string;
+  }> = [];
+
+  if (sellerContact) {
+    const [sellerLeadResult, pendingCountResult, completedViewingsResult] = await Promise.all([
+      supabase
+        .from('leads')
+        .select('id, status, is_active')
+        .eq('contact_id', sellerContact.id)
+        .eq('origin_listing_id', id)
+        .eq('lead_category', 'seller')
+        .eq('is_active', true)
+        .maybeSingle(),
+      getPendingSellerUpdateCount(supabase, id),
+      supabase
+        .from('viewings')
+        .select('id, seller_updated, seller_updated_at, scheduled_at, lead_id')
+        .eq('listing_id', id)
+        .eq('status', 'completed')
+        .order('scheduled_at', { ascending: false }),
+    ]);
+
+    sellerLead = sellerLeadResult.data ?? null;
+    pendingSellerUpdateCount = pendingCountResult;
+    completedViewings = completedViewingsResult.data ?? [];
+  }
 
   const price = listing.listing_type === 'sale' ? listing.asking_price : listing.asking_rental;
   const psf = listing.asking_price && listing.floor_area_sqft
@@ -177,6 +236,14 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
 
         {/* Right column */}
         <div className="space-y-5">
+          <SellerCard
+            seller={sellerContact}
+            sellerLead={sellerLead}
+            listingId={id}
+          />
+          {sellerContact && pendingSellerUpdateCount > 0 && (
+            <SellerUpdateReminder pendingCount={pendingSellerUpdateCount} />
+          )}
           <MarketingSection
             listingId={listing.id}
             listingStatus={listing.listing_status}
@@ -190,6 +257,37 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
           />
         </div>
       </div>
+
+      {/* Completed viewings with seller update status */}
+      {sellerContact && completedViewings.length > 0 && (
+        <div className="space-y-3">
+          <h2 className="font-display font-bold text-base text-white">
+            Completed Viewings
+          </h2>
+          <div className="space-y-2">
+            {completedViewings.map((viewing) => (
+              <div
+                key={viewing.id}
+                className="flex items-center justify-between bg-onyx-card border border-onyx-line rounded-xl px-4 py-3"
+              >
+                <div className="text-sm text-gray-2">
+                  Viewing on{' '}
+                  {new Date(viewing.scheduled_at).toLocaleDateString('en-SG', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </div>
+                <ViewingSellerStatusWrapper
+                  viewingId={viewing.id}
+                  sellerUpdated={viewing.seller_updated}
+                  sellerUpdatedAt={viewing.seller_updated_at}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ contactId: string }>;
+  searchParams: Promise<{ lead?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -19,8 +20,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return { title: contact?.full_name ? `${contact.full_name} – Chat` : 'Chat' };
 }
 
-export default async function ChatPage({ params }: PageProps) {
+export default async function ChatPage({ params, searchParams }: PageProps) {
   const { contactId } = await params;
+  const { lead: leadId } = await searchParams;
   const supabase = await createClient();
 
   // Fetch contact info
@@ -56,6 +58,7 @@ export default async function ChatPage({ params }: PageProps) {
       contact={contact as Contact}
       messages={(messages ?? []) as Message[]}
       tenantId={profile?.tenant_id ?? ''}
+      leadId={leadId ?? null}
     />
   );
 }

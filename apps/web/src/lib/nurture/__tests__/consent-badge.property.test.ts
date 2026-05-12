@@ -27,9 +27,11 @@ const dataRetentionExpiryArb = fc.oneof(
   fc.constant(null),
   // Past dates (expired)
   fc.date({ min: new Date('2018-01-01'), max: new Date(Date.now() - 86400000) })
+    .filter(d => !isNaN(d.getTime()))
     .map(d => d.toISOString().split('T')[0]),
   // Future dates (not expired)
   fc.date({ min: new Date(Date.now() + 86400000), max: new Date('2030-12-31') })
+    .filter(d => !isNaN(d.getTime()))
     .map(d => d.toISOString().split('T')[0])
 );
 
@@ -122,6 +124,7 @@ describe('Feature: nurture-playbooks, Property 13: Consent Badge Computation', (
 
   it('returns red when data_retention_expiry is in the past', () => {
     const pastDateArb = fc.date({ min: new Date('2018-01-01'), max: new Date(Date.now() - 86400000) })
+      .filter(d => !isNaN(d.getTime()))
       .map(d => d.toISOString().split('T')[0]);
 
     fc.assert(

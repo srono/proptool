@@ -13,7 +13,7 @@ const nonHdbPropertyTypeArb = fc.constantFrom('none', 'private', 'landed', 'comm
 const dateStringArb = fc.date({
   min: new Date('1990-01-01'),
   max: new Date('2050-12-31'),
-}).map(d => d.toISOString().split('T')[0]);
+}).filter(d => !isNaN(d.getTime())).map(d => d.toISOString().split('T')[0]);
 
 /** Generate an arbitrary MopInput */
 const mopInputArb: fc.Arbitrary<MopInput> = fc.record({

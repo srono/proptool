@@ -53,6 +53,7 @@ function listingArb(statusArb: fc.Arbitrary<ListingStatus> = allStatusArb): fc.A
     description: fc.oneof(fc.constant(null), fc.string({ minLength: 1, maxLength: 200 })),
     is_exclusive: fc.boolean(),
     exclusivity_expiry: fc.constant(null),
+    seller_contact_id: fc.constant(null),
     created_at: fc.constant('2024-01-01T00:00:00Z'),
     updated_at: fc.constant('2024-01-01T00:00:00Z'),
   });

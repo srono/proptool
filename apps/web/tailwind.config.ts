@@ -10,7 +10,7 @@ const config: Config = {
       colors: {
         // 10thirtyLabs brand — onyx-first dark palette
         onyx: {
-          DEFAULT: '#121212',
+          DEFAULT: '#0F0F0F',
           card: '#1A1A1A',
           raised: '#222222',
           line: '#2A2A2A',
@@ -39,9 +39,10 @@ const config: Config = {
           3: '#EBEBEB',
         },
         status: {
-          red: '#FF5A5A',
-          amber: '#F7B85C',
-          green: '#3FCB8E',
+          red: '#EF4444',
+          amber: '#F59E0B',
+          green: '#22C55E',
+          yellow: '#F59E0B',
         },
       },
       fontFamily: {

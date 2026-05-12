@@ -1,10 +1,19 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { SINGAPORE_DISTRICTS } from '@agentos/shared';
 import type { Listing, PropertyType, HdbType, Tenure, ListingType } from '@agentos/shared';
+import { SellerContactPicker } from './seller-contact-picker';
+import { attachSeller, removeSeller, changeSeller } from '@/lib/services/seller-service';
+import { useToast } from '@/components/ui/toast';
+
+interface SellerContact {
+  id: string;
+  full_name: string;
+  phone: string;
+}
 
 interface Props {
   initialData?: Partial<Listing>;
@@ -33,6 +42,7 @@ const TENURE_OPTIONS: { value: Tenure; label: string }[] = [
 
 export function ListingForm({ initialData }: Props) {
   const router = useRouter();
+  const { addToast } = useToast();
   const isEdit = !!initialData?.id;
 
   const [address, setAddress] = useState(initialData?.address ?? '');
@@ -53,6 +63,32 @@ export function ListingForm({ initialData }: Props) {
   const [exclusivityExpiry, setExclusivityExpiry] = useState(initialData?.exclusivity_expiry ?? '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Seller contact state
+  const [sellerContact, setSellerContact] = useState<SellerContact | null>(null);
+  const [initialSellerContact, setInitialSellerContact] = useState<SellerContact | null>(null);
+
+  // Fetch seller contact details on mount if initialData has seller_contact_id
+  useEffect(() => {
+    if (!initialData?.seller_contact_id) return;
+
+    const fetchSellerContact = async () => {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('contacts')
+        .select('id, full_name, phone')
+        .eq('id', initialData.seller_contact_id!)
+        .single();
+
+      if (data) {
+        const contact: SellerContact = { id: data.id, full_name: data.full_name, phone: data.phone };
+        setSellerContact(contact);
+        setInitialSellerContact(contact);
+      }
+    };
+
+    fetchSellerContact();
+  }, [initialData?.seller_contact_id]);
 
   const psf = useMemo(() => {
     const price = parseFloat(askingPrice);
@@ -95,7 +131,6 @@ export function ListingForm({ initialData }: Props) {
         floor_area_sqft: area,
         asking_price: listingType === 'sale' ? price : null,
         asking_rental: listingType === 'rental' ? rental : null,
-        psf: listingType === 'sale' ? computedPsf : null,
         listing_type: listingType,
         listing_status: initialData?.listing_status ?? 'draft',
         floor: floor.trim() || null,
@@ -105,6 +140,8 @@ export function ListingForm({ initialData }: Props) {
         is_exclusive: isExclusive,
         exclusivity_expiry: isExclusive && exclusivityExpiry ? exclusivityExpiry : null,
       };
+
+      let savedListingId: string | null = null;
 
       if (isEdit && initialData?.id) {
         const { error } = await supabase
@@ -117,20 +154,71 @@ export function ListingForm({ initialData }: Props) {
           alert('Failed to update listing. Please try again.');
           return;
         }
+        savedListingId = initialData.id;
       } else {
-        const { error } = await supabase.from('listings').insert(payload);
+        const { data, error } = await supabase.from('listings').insert(payload).select('id').single();
 
         if (error) {
           console.error('Failed to create listing:', error);
           alert('Failed to create listing. Please try again.');
           return;
         }
+        savedListingId = data?.id ?? null;
+      }
+
+      // Handle seller attach/remove/change logic
+      if (savedListingId) {
+        await handleSellerChange(supabase, savedListingId);
       }
 
       router.push('/listings');
       router.refresh();
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleSellerChange(supabase: ReturnType<typeof createClient>, listingId: string) {
+    const initialId = initialSellerContact?.id ?? null;
+    const currentId = sellerContact?.id ?? null;
+
+    // No change
+    if (initialId === currentId) return;
+
+    try {
+      if (!initialId && currentId) {
+        // No initial seller, seller now selected → attach
+        const { data: { user } } = await supabase.auth.getUser();
+        const { data: profile } = await supabase
+          .from('users')
+          .select('tenant_id')
+          .eq('id', user!.id)
+          .single();
+        const tenantId = profile?.tenant_id ?? '';
+        const result = await attachSeller(supabase, listingId, currentId, tenantId);
+        if (result.leadCreationError) {
+          addToast('Listing saved, but seller lead could not be created. You can retry from the listing detail page.', 'error');
+        }
+      } else if (initialId && !currentId) {
+        // Initial seller exists, seller now cleared → remove
+        await removeSeller(supabase, listingId);
+      } else if (initialId && currentId && initialId !== currentId) {
+        // Seller changed to different contact → change
+        const { data: { user } } = await supabase.auth.getUser();
+        const { data: profile } = await supabase
+          .from('users')
+          .select('tenant_id')
+          .eq('id', user!.id)
+          .single();
+        const tenantId = profile?.tenant_id ?? '';
+        const result = await changeSeller(supabase, listingId, currentId, tenantId);
+        if (result.leadCreationError) {
+          addToast('Listing saved, but seller lead could not be created. You can retry from the listing detail page.', 'error');
+        }
+      }
+    } catch (error) {
+      console.error('[ListingForm] seller change error:', error);
+      addToast('Listing saved, but there was an issue updating the seller. Please check the listing detail page.', 'error');
     }
   }
 
@@ -432,6 +520,16 @@ export function ListingForm({ initialData }: Props) {
             />
           </div>
         )}
+      </div>
+
+      {/* Seller */}
+      <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4 space-y-4">
+        <h2 className="text-sm font-display font-bold text-white">Seller</h2>
+        <p className="text-xs text-gray-2">Link a seller contact to this listing (optional)</p>
+        <SellerContactPicker
+          value={sellerContact}
+          onChange={setSellerContact}
+        />
       </div>
 
       {/* Submit */}

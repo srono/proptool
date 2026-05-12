@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
 import { ListingsCardGrid } from '../listings-card-grid';
-import type { Listing } from '@agentos/shared';
+import type { ListingWithSeller } from '@agentos/shared';
 
 /**
  * Feature: ui-ux-consistency-fixes, Property 3: ListingCard minimum font size
@@ -14,12 +14,12 @@ import type { Listing } from '@agentos/shared';
  * with a value below 11px.
  */
 describe('Feature: ui-ux-consistency-fixes, Property 3: ListingCard minimum font size', () => {
-  const propertyTypes = fc.constantFrom('hdb', 'condo', 'landed', 'commercial') as fc.Arbitrary<Listing['property_type']>;
-  const listingStatuses = fc.constantFrom('draft', 'live', 'under_offer', 'sold', 'rented', 'withdrawn') as fc.Arbitrary<Listing['listing_status']>;
-  const listingTypes = fc.constantFrom('sale', 'rental') as fc.Arbitrary<Listing['listing_type']>;
+  const propertyTypes = fc.constantFrom('hdb', 'condo', 'landed', 'commercial') as fc.Arbitrary<ListingWithSeller['property_type']>;
+  const listingStatuses = fc.constantFrom('draft', 'live', 'under_offer', 'sold', 'rented', 'withdrawn') as fc.Arbitrary<ListingWithSeller['listing_status']>;
+  const listingTypes = fc.constantFrom('sale', 'rental') as fc.Arbitrary<ListingWithSeller['listing_type']>;
   const districts = fc.stringMatching(/^D(0[1-9]|[12][0-9])$/);
 
-  const arbListing: fc.Arbitrary<Listing> = fc.record({
+  const arbListing: fc.Arbitrary<ListingWithSeller> = fc.record({
     id: fc.uuid(),
     tenant_id: fc.uuid(),
     agent_id: fc.uuid(),
@@ -27,8 +27,8 @@ describe('Feature: ui-ux-consistency-fixes, Property 3: ListingCard minimum font
     postal_code: fc.stringMatching(/^\d{6}$/),
     district: districts,
     property_type: propertyTypes,
-    hdb_type: fc.constantFrom(null, '2room', '3room', '4room', '5room', 'executive') as fc.Arbitrary<Listing['hdb_type']>,
-    tenure: fc.constantFrom('freehold', '99yr', '999yr') as fc.Arbitrary<Listing['tenure']>,
+    hdb_type: fc.constantFrom(null, '2room', '3room', '4room', '5room', 'executive') as fc.Arbitrary<ListingWithSeller['hdb_type']>,
+    tenure: fc.constantFrom('freehold', '99yr', '999yr') as fc.Arbitrary<ListingWithSeller['tenure']>,
     floor_area_sqft: fc.integer({ min: 100, max: 50000 }),
     asking_price: fc.oneof(fc.constant(null), fc.integer({ min: 100000, max: 50000000 })),
     psf: fc.oneof(fc.constant(null), fc.integer({ min: 100, max: 10000 })),
@@ -42,6 +42,15 @@ describe('Feature: ui-ux-consistency-fixes, Property 3: ListingCard minimum font
     description: fc.oneof(fc.constant(null), fc.string({ minLength: 0, maxLength: 200 })),
     is_exclusive: fc.boolean(),
     exclusivity_expiry: fc.oneof(fc.constant(null), fc.constant('2025-12-31')),
+    seller_contact_id: fc.oneof(fc.constant(null), fc.uuid()),
+    seller_contact: fc.oneof(
+      fc.constant(null),
+      fc.record({
+        id: fc.uuid(),
+        full_name: fc.string({ minLength: 1, maxLength: 50 }).filter((s) => s.trim().length > 0),
+        phone: fc.stringMatching(/^\+65\d{8}$/),
+      })
+    ),
     created_at: fc.constant('2024-01-01T00:00:00Z'),
     updated_at: fc.constant('2024-06-01T00:00:00Z'),
   });

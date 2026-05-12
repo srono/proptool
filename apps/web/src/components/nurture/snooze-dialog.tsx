@@ -210,7 +210,7 @@ export function SnoozeDialog({ taskId, open, onOpenChange, onConfirm }: SnoozeDi
           <button
             type="button"
             onClick={handleClose}
-            className="text-gray-2 hover:text-white transition-colors p-1"
+            className="text-gray-2 hover:text-white transition-colors duration-150 p-1 rounded-[8px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2"
             aria-label="Close"
           >
             <svg
@@ -251,7 +251,7 @@ export function SnoozeDialog({ taskId, open, onOpenChange, onConfirm }: SnoozeDi
           min={minDateStr}
           max={maxDateStr}
           disabled={saving}
-          className="w-full bg-onyx border border-onyx-line rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-onyx border border-onyx-line rounded-[14px] px-3 py-2.5 text-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         />
         <p className="text-[11px] text-gray-2 mt-1">
           Between {format(minDate, 'MMM d, yyyy')} and {format(maxDate, 'MMM d, yyyy')}
@@ -268,7 +268,7 @@ export function SnoozeDialog({ taskId, open, onOpenChange, onConfirm }: SnoozeDi
             type="button"
             onClick={handleClose}
             disabled={saving}
-            className="flex-1 py-2.5 text-sm font-semibold text-gray-2 border border-onyx-line rounded-lg hover:text-white hover:border-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-2.5 text-sm font-semibold text-gray-2 border border-onyx-line rounded-[14px] hover:text-white hover:border-white/20 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
@@ -276,7 +276,7 @@ export function SnoozeDialog({ taskId, open, onOpenChange, onConfirm }: SnoozeDi
             type="button"
             onClick={handleConfirmClick}
             disabled={!canConfirm || saving}
-            className={`flex-1 btn-primary py-2.5 text-sm font-semibold ${
+            className={`flex-1 py-2.5 text-sm font-semibold rounded-[14px] bg-brand text-white hover:bg-brand-deep transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2 ${
               !canConfirm || saving ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >

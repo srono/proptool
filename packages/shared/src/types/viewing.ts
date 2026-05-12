@@ -13,6 +13,7 @@ export interface Viewing {
   buyer_interest_level: number | null; // 1-5
   objections: string | null;
   seller_updated: boolean;
+  seller_updated_at: string | null;
   next_action: string | null;
   created_at: string;
 }

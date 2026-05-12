@@ -27,6 +27,16 @@ export interface Listing {
   description: string | null;
   is_exclusive: boolean;
   exclusivity_expiry: string | null;
+  seller_contact_id: string | null;
   created_at: string;
   updated_at: string;
+}
+
+// Extended type for list views with joined seller data
+export interface ListingWithSeller extends Listing {
+  seller_contact: {
+    id: string;
+    full_name: string;
+    phone: string;
+  } | null;
 }

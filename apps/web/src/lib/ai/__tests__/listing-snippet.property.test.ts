@@ -54,6 +54,7 @@ function saleListing(): fc.Arbitrary<Listing> {
     description: descriptionArb,
     is_exclusive: fc.boolean(),
     exclusivity_expiry: fc.constant(null),
+    seller_contact_id: fc.constant(null),
     created_at: fc.constant('2024-01-01T00:00:00Z'),
     updated_at: fc.constant('2024-01-01T00:00:00Z'),
   });
@@ -84,6 +85,7 @@ function rentalListing(): fc.Arbitrary<Listing> {
     description: descriptionArb,
     is_exclusive: fc.boolean(),
     exclusivity_expiry: fc.constant(null),
+    seller_contact_id: fc.constant(null),
     created_at: fc.constant('2024-01-01T00:00:00Z'),
     updated_at: fc.constant('2024-01-01T00:00:00Z'),
   });

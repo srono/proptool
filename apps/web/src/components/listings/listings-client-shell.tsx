@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import type { Listing } from '@agentos/shared';
+import type { ListingWithSeller } from '@agentos/shared';
 import { useViewMode } from './hooks/use-view-mode';
 import { useBreakpoint } from './hooks/use-breakpoint';
 import { useListingsFilter } from './hooks/use-listings-filter';
@@ -13,7 +13,7 @@ import { ListingsCardGrid } from './listings-card-grid';
 import { PillTabs } from '@/components/ui/pill-tabs';
 
 interface ListingsClientShellProps {
-  listings: Listing[];
+  listings: ListingWithSeller[];
   activeTab: string;
 }
 
@@ -117,13 +117,13 @@ export function ListingsClientShell({ listings, activeTab }: ListingsClientShell
         </div>
       ) : showTable ? (
         <ListingsTable
-          listings={filteredListings}
+          listings={filteredListings as ListingWithSeller[]}
           sort={sort}
           onSort={toggleSort}
           breakpoint={breakpoint}
         />
       ) : showCards ? (
-        <ListingsCardGrid listings={filteredListings} />
+        <ListingsCardGrid listings={filteredListings as ListingWithSeller[]} />
       ) : null}
     </div>
   );
