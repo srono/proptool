@@ -236,7 +236,7 @@ export function AdCopyClientShell({
       <div className="grid grid-cols-1 md:grid-cols-[340px_1fr] gap-5">
         {/* Left: Generation Form */}
         <div className="bg-onyx-card rounded-2xl border border-onyx-line p-5">
-          <h2 className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-4">
+          <h2 className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-4">
             Generation Settings
           </h2>
           <GenerationForm

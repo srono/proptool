@@ -17,7 +17,7 @@ export function BuyerFitPanel({ fitSignals, watchouts }: Props) {
           <ul className="space-y-1.5">
             {fitSignals.map((signal, i) => (
               <li key={i} className="text-xs text-status-green flex items-start gap-2">
-                <span className="shrink-0 mt-0.5">✓</span>
+                <span className="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-status-green" />
                 <span>{signal}</span>
               </li>
             ))}
@@ -30,7 +30,7 @@ export function BuyerFitPanel({ fitSignals, watchouts }: Props) {
           <ul className="space-y-1.5">
             {watchouts.map((w, i) => (
               <li key={i} className="text-xs text-status-amber flex items-start gap-2">
-                <span className="shrink-0 mt-0.5">!</span>
+                <span className="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-status-amber" />
                 <span>{w}</span>
               </li>
             ))}

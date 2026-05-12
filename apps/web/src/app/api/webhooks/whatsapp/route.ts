@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import {
+  resolveContact,
+  updateLatestSource,
+  updateLastInbound,
+} from '@/lib/services/contact-service';
+import type { ContactCreateData } from '@/lib/services/contact-service';
+import { checkDuplicates } from '@/lib/services/lead-service';
 
 /**
  * POST — Receives inbound WhatsApp messages from 360dialog.
  * 360dialog webhook payload structure:
  * { messages: [{ from, id, timestamp, type, text?: { body }, image?: { ... } }], contacts: [...] }
+ *
+ * Uses Contact Service for resolution and Lead Service for duplicate detection.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +25,7 @@ export async function POST(request: NextRequest) {
     const waContacts = body.contacts ?? [];
 
     for (const msg of messages) {
-      const senderPhone = normalizePhone(msg.from);
+      const senderPhone = msg.from;
       const messageId = msg.id;
       const messageBody = msg.text?.body ?? msg.caption ?? '';
       const mediaUrl = msg.image?.link ?? msg.document?.link ?? msg.video?.link ?? null;
@@ -33,12 +42,25 @@ export async function POST(request: NextRequest) {
       const tenantId = await resolveTenantId(supabase, body.metadata?.phone_number_id);
       if (!tenantId) continue;
 
-      // Find or create contact by phone
-      const contact = await findOrCreateContact(supabase, {
-        tenantId,
+      // --- Step 13.2: Use Contact Service resolveContact() ---
+      const contactData: ContactCreateData = {
+        tenant_id: tenantId,
+        full_name: senderName,
         phone: senderPhone,
-        name: senderName,
-      });
+        email: null,
+        source: 'whatsapp',
+        whatsapp_optin: true,
+        consent_source: 'whatsapp',
+        consent_given_at: new Date().toISOString(),
+      };
+
+      const contact = await resolveContact(supabase, tenantId, senderPhone, contactData);
+
+      // --- Step 13.3: Update latest source after contact resolution ---
+      await updateLatestSource(supabase, contact.id, 'whatsapp');
+
+      // --- Step 13.4: Update last inbound (WhatsApp is an inbound channel) ---
+      await updateLastInbound(supabase, contact.id);
 
       // Find active lead for this contact (most recent non-closed lead)
       const activeLead = await findActiveLead(supabase, contact.id, tenantId);
@@ -70,17 +92,36 @@ export async function POST(request: NextRequest) {
           .eq('id', activeLead.id);
       }
 
-      // If no lead exists and this is a new contact, create a lead from WhatsApp
+      // --- Step 13.5: If no lead exists, create one with duplicate detection ---
       if (!activeLead) {
+        const leadCategory = 'buyer'; // Default category for WhatsApp-initiated leads
+        const dealType = 'sale'; // Default deal type for WhatsApp-initiated leads
+
+        // Check for duplicates before creating
+        const duplicateDetection = await checkDuplicates(
+          supabase,
+          contact.id,
+          leadCategory,
+          dealType
+        );
+
+        const now = new Date().toISOString();
+
+        // Auto-create new lead by default for webhooks, store duplicate_of_lead_id if detected
         await supabase.from('leads').insert({
           tenant_id: tenantId,
           contact_id: contact.id,
           status: 'new_lead',
           source: 'whatsapp',
-          deal_type: 'sale',
+          deal_type: dealType,
+          lead_category: leadCategory,
           urgency: 'warm',
+          is_active: true,
+          opened_at: now,
+          // Store duplicate_of_lead_id if a duplicate was detected
+          duplicate_of_lead_id: duplicateDetection.existingLead?.id ?? null,
           eligibility_risk: false,
-          last_activity_at: new Date().toISOString(),
+          last_activity_at: now,
         });
       }
     }
@@ -93,18 +134,6 @@ export async function POST(request: NextRequest) {
 }
 
 // --- Helper functions ---
-
-function normalizePhone(raw: string): string {
-  let digits = raw.replace(/\D/g, '');
-  if (digits.startsWith('65') && digits.length === 10) {
-    digits = '+' + digits;
-  } else if (digits.length === 8) {
-    digits = '+65' + digits;
-  } else if (!digits.startsWith('+')) {
-    digits = '+' + digits;
-  }
-  return digits;
-}
 
 async function resolveTenantId(
   supabase: ReturnType<typeof createAdminClient>,
@@ -128,43 +157,6 @@ async function resolveTenantId(
     .single();
 
   return tenant?.id ?? null;
-}
-
-async function findOrCreateContact(
-  supabase: ReturnType<typeof createAdminClient>,
-  params: { tenantId: string; phone: string; name: string }
-) {
-  const { data: existing } = await supabase
-    .from('contacts')
-    .select('*')
-    .eq('tenant_id', params.tenantId)
-    .eq('phone', params.phone)
-    .single();
-
-  if (existing) return existing;
-
-  const { data: newContact, error } = await supabase
-    .from('contacts')
-    .insert({
-      tenant_id: params.tenantId,
-      full_name: params.name,
-      phone: params.phone,
-      email: null,
-      source: 'whatsapp',
-      lead_type: 'buyer',
-      whatsapp_optin: true,
-      consent_source: 'whatsapp',
-      consent_given_at: new Date().toISOString(),
-    })
-    .select()
-    .single();
-
-  if (error) {
-    console.error('[WhatsApp Webhook] Contact creation error:', error);
-    throw error;
-  }
-
-  return newContact!;
 }
 
 async function findActiveLead(

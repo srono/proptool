@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import {
+  resolveContact,
+  updateLatestSource,
+  updateLastInbound,
+} from '@/lib/services/contact-service';
+import type { ContactCreateData } from '@/lib/services/contact-service';
+import { checkDuplicates } from '@/lib/services/lead-service';
 
 const VERIFY_TOKEN = process.env.META_WEBHOOK_VERIFY_TOKEN!;
 
@@ -23,6 +30,8 @@ export async function GET(request: NextRequest) {
 /**
  * POST — Receives leadgen webhook events from Meta (Facebook Lead Ads).
  * Payload structure: { entry: [{ changes: [{ field: 'leadgen', value: { ... } }] }] }
+ *
+ * Uses Contact Service for resolution and Lead Service for duplicate detection.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -39,7 +48,6 @@ export async function POST(request: NextRequest) {
         const adId = leadgenValue.ad_id ?? null;
         const adsetId = leadgenValue.adgroup_id ?? null;
         const campaignId = leadgenValue.campaign_id ?? null;
-        const formId = leadgenValue.form_id ?? null;
 
         // Fetch the actual lead data from Meta Graph API
         const leadData = await fetchMetaLeadData(leadgenId);
@@ -52,13 +60,25 @@ export async function POST(request: NextRequest) {
         const tenantId = await resolveTenantId(supabase, entry.id);
         if (!tenantId) continue;
 
-        // Find or create contact by phone
-        const contact = await findOrCreateContact(supabase, {
-          tenantId,
+        // --- Step 13.1: Use Contact Service resolveContact() ---
+        const contactData: ContactCreateData = {
+          tenant_id: tenantId,
+          full_name: name ?? 'Facebook Lead',
           phone,
-          name: name ?? 'Facebook Lead',
-          email,
-        });
+          email: email ?? null,
+          source: 'facebook_ad',
+          whatsapp_optin: false,
+          consent_source: 'facebook_ad',
+          consent_given_at: new Date().toISOString(),
+        };
+
+        const contact = await resolveContact(supabase, tenantId, phone, contactData);
+
+        // --- Step 13.3: Update latest source after contact resolution ---
+        await updateLatestSource(supabase, contact.id, 'facebook_ad');
+
+        // --- Step 13.4: Update last inbound (Facebook Ad is an inbound channel) ---
+        await updateLastInbound(supabase, contact.id);
 
         // Compute intent score from form answers
         const intentScore = computeIntentScore(formAnswers);
@@ -68,7 +88,19 @@ export async function POST(request: NextRequest) {
         const dealType = formAnswers?.deal_type ?? 'sale';
         const eligibilityRisk = checkEligibilityRisk(residencyStatus, dealType);
 
-        // Create the lead
+        // Determine lead category from deal type
+        const leadCategory = deriveCategoryFromDealType(dealType);
+
+        // --- Step 13.5: Duplicate detection for webhook-created leads ---
+        const duplicateDetection = await checkDuplicates(
+          supabase,
+          contact.id,
+          leadCategory,
+          dealType
+        );
+
+        // Create the lead (auto-create new lead by default for webhooks)
+        const now = new Date().toISOString();
         const { data: newLead, error: leadError } = await supabase.from('leads').insert({
           tenant_id: tenantId,
           contact_id: contact.id,
@@ -79,6 +111,7 @@ export async function POST(request: NextRequest) {
           ad_creative_id: adId,
           ad_purpose: formAnswers?.ad_purpose ?? null,
           deal_type: dealType,
+          lead_category: leadCategory,
           urgency: intentScore >= 4 ? 'hot' : intentScore >= 2 ? 'warm' : 'cold',
           budget_min: formAnswers?.budget_min ? Number(formAnswers.budget_min) : null,
           budget_max: formAnswers?.budget_max ? Number(formAnswers.budget_max) : null,
@@ -89,7 +122,11 @@ export async function POST(request: NextRequest) {
             : null,
           intent_score: intentScore,
           timeline_declared: formAnswers?.timeline ?? null,
-          last_activity_at: new Date().toISOString(),
+          is_active: true,
+          opened_at: now,
+          // Store duplicate_of_lead_id if a duplicate was detected
+          duplicate_of_lead_id: duplicateDetection.existingLead?.id ?? null,
+          last_activity_at: now,
         }).select('assigned_to').single();
 
         if (leadError) {
@@ -159,7 +196,7 @@ function parseLeadFields(leadData: Record<string, unknown>) {
     if (key === 'full_name' || key === 'name') {
       name = value;
     } else if (key === 'phone_number' || key === 'phone') {
-      phone = normalizePhone(value);
+      phone = value;
     } else if (key === 'email') {
       email = value;
     } else {
@@ -168,19 +205,6 @@ function parseLeadFields(leadData: Record<string, unknown>) {
   }
 
   return { name, phone, email, formAnswers };
-}
-
-function normalizePhone(raw: string): string {
-  // Strip non-digits, ensure +65 prefix for SG numbers
-  let digits = raw.replace(/\D/g, '');
-  if (digits.startsWith('65') && digits.length === 10) {
-    digits = '+' + digits;
-  } else if (digits.length === 8) {
-    digits = '+65' + digits;
-  } else if (!digits.startsWith('+')) {
-    digits = '+' + digits;
-  }
-  return digits;
 }
 
 function computeIntentScore(formAnswers: Record<string, string> | null): number {
@@ -213,6 +237,25 @@ function checkEligibilityRisk(
   return riskyStatuses.includes(residencyStatus) && landedDealTypes.includes(dealType);
 }
 
+/**
+ * Derive lead_category from deal_type for webhook-created leads.
+ */
+function deriveCategoryFromDealType(dealType: string): string {
+  switch (dealType) {
+    case 'sale':
+    case 'resale':
+      return 'buyer';
+    case 'rental':
+      return 'tenant';
+    case 'landlord_rep':
+      return 'landlord';
+    case 'tenant_rep':
+      return 'tenant';
+    default:
+      return 'buyer';
+  }
+}
+
 async function resolveTenantId(
   supabase: ReturnType<typeof createAdminClient>,
   pageId: string
@@ -234,41 +277,4 @@ async function resolveTenantId(
     .single();
 
   return tenant?.id ?? null;
-}
-
-async function findOrCreateContact(
-  supabase: ReturnType<typeof createAdminClient>,
-  params: { tenantId: string; phone: string; name: string; email: string | null }
-) {
-  // Try to find existing contact by phone
-  const { data: existing } = await supabase
-    .from('contacts')
-    .select('*')
-    .eq('tenant_id', params.tenantId)
-    .eq('phone', params.phone)
-    .single();
-
-  if (existing) return existing;
-
-  // Create new contact
-  const { data: newContact, error } = await supabase
-    .from('contacts')
-    .insert({
-      tenant_id: params.tenantId,
-      full_name: params.name,
-      phone: params.phone,
-      email: params.email,
-      source: 'facebook_ad',
-      lead_type: 'buyer',
-      whatsapp_optin: false,
-    })
-    .select()
-    .single();
-
-  if (error) {
-    console.error('[Meta Webhook] Contact creation error:', error);
-    throw error;
-  }
-
-  return newContact!;
 }

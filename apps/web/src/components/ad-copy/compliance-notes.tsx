@@ -53,7 +53,7 @@ export function ComplianceNotes({ warnings, checkFailed }: ComplianceNotesProps)
     <div className="rounded-xl bg-status-amber/10 border border-status-amber/30 px-4 py-3 space-y-2">
       <div className="flex items-center gap-2 mb-2">
         <AlertTriangle className="h-4 w-4 text-status-amber shrink-0" />
-        <p className="text-xs text-status-amber font-semibold uppercase tracking-wide">
+        <p className="text-xs text-status-amber font-semibold uppercase tracking-label">
           Compliance Warnings ({warnings.length})
         </p>
       </div>

@@ -33,7 +33,7 @@ export function Timeline({ items }: Props) {
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-display font-semibold text-gray-2 uppercase tracking-wider">
+                  <span className="text-[11px] font-display font-semibold text-gray-2 uppercase tracking-label">
                     {formatTimelineLabel(item.type, item.direction)}
                   </span>
                   <span className="text-[11px] text-gray-2/60">

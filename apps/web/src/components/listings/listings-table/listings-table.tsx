@@ -67,7 +67,7 @@ export function ListingsTable({ listings, sort, onSort, breakpoint }: ListingsTa
               return (
                 <th
                   key={col.key}
-                  className={`px-3 py-2.5 text-[11px] font-medium uppercase tracking-wider whitespace-nowrap ${
+                  className={`px-3 py-2.5 text-[11px] font-medium uppercase tracking-label whitespace-nowrap ${
                     col.align === 'right' ? 'text-right' : 'text-left'
                   } ${col.sortable ? 'cursor-pointer select-none hover:text-white' : ''} ${
                     isActive ? 'text-aqua' : 'text-gray-2'

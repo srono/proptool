@@ -55,7 +55,7 @@ export function AreaInsightHero({ listingId, insights: initialInsights, district
       <div className="relative flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="w-1.5 h-1.5 rounded-full bg-aqua" />
-          <span className="font-display font-bold text-xs tracking-[1.5px] text-aqua">
+          <span className="font-display font-bold text-xs tracking-label text-aqua">
             AREA INSIGHT · {district}
           </span>
         </div>
@@ -78,7 +78,7 @@ export function AreaInsightHero({ listingId, insights: initialInsights, district
       <div className="relative grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6 mt-5">
         {/* PSF Chart */}
         <div>
-          <div className="text-[11px] text-gray-2 font-display font-semibold tracking-wider uppercase mb-3">
+          <div className="text-[11px] text-gray-2 font-display font-semibold tracking-label uppercase mb-3">
             PSF · trailing 12 months · {district} condo
           </div>
           <PSFChart data={psfData} askingPsf={askingPsf} />
@@ -86,7 +86,7 @@ export function AreaInsightHero({ listingId, insights: initialInsights, district
 
         {/* Talking points */}
         <div>
-          <div className="text-[11px] text-gray-2 font-display font-semibold tracking-wider uppercase mb-3">
+          <div className="text-[11px] text-gray-2 font-display font-semibold tracking-label uppercase mb-3">
             Talking points
           </div>
           <ul className="space-y-0">
@@ -179,7 +179,7 @@ function ComparablesTable({
     <div className="relative mt-6">
       {/* Header */}
       <div className="flex items-baseline justify-between mb-2.5">
-        <span className="text-[11px] text-gray-2 font-display font-semibold tracking-wider uppercase">
+        <span className="text-[11px] text-gray-2 font-display font-semibold tracking-label uppercase">
           Recent comparables · 500m radius
         </span>
         <span className="text-[11px] text-gray-2">
@@ -190,7 +190,7 @@ function ComparablesTable({
       {/* Table */}
       <div className="border border-onyx-line rounded-xl overflow-hidden">
         {/* Header row */}
-        <div className="grid grid-cols-[2.4fr_0.9fr_0.9fr_0.9fr_0.9fr_0.7fr] px-3.5 py-2.5 bg-white/[0.02] border-b border-onyx-line text-[10px] text-gray-2 font-display font-bold tracking-wider uppercase">
+        <div className="grid grid-cols-[2.4fr_0.9fr_0.9fr_0.9fr_0.9fr_0.7fr] px-3.5 py-2.5 bg-white/[0.02] border-b border-onyx-line text-[10px] text-gray-2 font-display font-bold tracking-label uppercase">
           <span>Address</span>
           <span>Type</span>
           <span className="text-right">Sqft</span>

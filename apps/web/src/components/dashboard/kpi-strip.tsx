@@ -51,7 +51,7 @@ export function KPIStrip({
           key={k.label}
           className="bg-onyx-card border border-onyx-line rounded-2xl p-[18px]"
         >
-          <div className="text-xs text-gray-2 font-display font-semibold tracking-wide">
+          <div className="text-xs text-gray-2 font-display font-semibold tracking-label">
             {k.label}
           </div>
           <div className="flex items-baseline justify-between mt-2">
@@ -71,7 +71,7 @@ export function KPIStrip({
   );
 }
 
-function Sparkline({ data, warn }: { data: number[]; warn?: boolean }) {
+export function Sparkline({ data, warn }: { data: number[]; warn?: boolean }) {
   const W = 80;
   const H = 32;
   const max = Math.max(...data);
@@ -90,7 +90,7 @@ function Sparkline({ data, warn }: { data: number[]; warn?: boolean }) {
       <polyline
         points={points}
         fill="none"
-        stroke={warn ? '#FF5A5A' : '#8EFEFF'}
+        stroke={warn ? 'var(--sparkline-negative)' : 'var(--sparkline-positive)'}
         strokeWidth="1.6"
       />
     </svg>

@@ -9,7 +9,7 @@ import Link from 'next/link';
  */
 export function TheBrief() {
   return (
-    <div className="relative rounded-3xl p-7 overflow-hidden bg-gradient-to-br from-brand-deep via-brand to-[#0C5AFF]">
+    <div className="relative rounded-2xl p-7 overflow-hidden bg-gradient-to-br from-brand-deep via-brand to-[#0C5AFF]">
       {/* Aqua glow */}
       <div className="absolute -right-10 -top-10 w-[220px] h-[220px] rounded-full bg-[radial-gradient(closest-side,rgba(142,254,255,0.5),transparent)]" />
       <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(142,254,255,0.18),transparent_60%)]" />
@@ -17,7 +17,7 @@ export function TheBrief() {
       {/* Header label */}
       <div className="relative flex items-center gap-2">
         <span className="w-1.5 h-1.5 rounded-full bg-aqua shadow-[0_0_12px_theme(colors.aqua.DEFAULT)]" />
-        <span className="font-display text-[11px] font-bold tracking-[1.5px] text-aqua">
+        <span className="font-display text-[11px] font-bold tracking-label text-aqua">
           THE BRIEF · 10:30
         </span>
       </div>
@@ -46,7 +46,7 @@ export function TheBrief() {
 
         {/* What to say */}
         <div className="border-l border-white/[0.18] pl-7 hidden lg:block">
-          <div className="text-[11px] font-semibold tracking-wider text-white/60">
+          <div className="text-[11px] font-semibold tracking-label text-white/60">
             WHAT TO SAY
           </div>
           <ul className="mt-3 space-y-2 text-[13px] text-white leading-relaxed">
@@ -58,7 +58,7 @@ export function TheBrief() {
 
         {/* Risk / Watchout */}
         <div className="border-l border-white/[0.18] pl-7 hidden lg:block">
-          <div className="text-[11px] font-semibold tracking-wider text-white/60">
+          <div className="text-[11px] font-semibold tracking-label text-white/60">
             RISK / WATCHOUT
           </div>
           <ul className="mt-3 space-y-2 text-[13px] text-white leading-relaxed">

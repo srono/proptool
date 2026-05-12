@@ -69,7 +69,7 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <div className="relative text-[11px] opacity-70 tracking-wide">
+        <div className="relative text-[11px] opacity-70 tracking-label">
           PDPA-aligned · CEA-aware · Singapore data residency
         </div>
       </div>
@@ -85,7 +85,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="email"
-              className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5"
+              className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5"
             >
               Email
             </label>
@@ -103,7 +103,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="password"
-              className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5"
+              className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5"
             >
               Password
             </label>

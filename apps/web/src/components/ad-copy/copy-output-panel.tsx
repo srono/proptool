@@ -189,7 +189,7 @@ function VariantTextArea({ variant, onChange, isGenerating }: VariantTextAreaPro
     <div className="bg-onyx-card rounded-2xl border border-onyx-line p-4">
       <label
         htmlFor={`variant-${variant.type}`}
-        className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-2"
+        className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-2"
       >
         {label}
       </label>

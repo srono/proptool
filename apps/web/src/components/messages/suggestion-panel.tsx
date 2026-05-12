@@ -129,7 +129,7 @@ export function SuggestionPanel({
     <div className="px-5 lg:px-7 py-3 border-t border-onyx-line bg-onyx-card/50">
       {/* Header row with controls */}
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[11px] font-display font-bold tracking-wider text-aqua uppercase">
+        <span className="text-[11px] font-display font-bold tracking-label text-aqua uppercase">
           Suggested Replies
         </span>
         <div className="flex items-center gap-1">

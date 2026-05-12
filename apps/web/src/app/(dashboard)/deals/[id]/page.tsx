@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .select('lead:leads(contact:contacts(full_name))')
     .eq('id', id)
     .single();
-  const lead = deal?.lead as { contact: { full_name: string } | null } | null;
+  const lead = deal?.lead as unknown as { contact: { full_name: string } | null } | null;
   const name = lead?.contact?.full_name;
   return { title: name ? `${name} – Deal` : 'Deal Detail' };
 }

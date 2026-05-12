@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { PageHeader } from '@/components/ui/page-header';
 
 export const metadata = { title: 'Deals' };
 
@@ -54,10 +55,17 @@ export default async function DealsPage({
 
   return (
     <div className="p-4 lg:p-7 space-y-5">
+      <PageHeader
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Deals' },
+        ]}
+        title="Deals"
+      />
+
       {/* Header */}
       <div className="flex items-end justify-between border-b border-onyx-line pb-5">
         <div>
-          <h1 className="font-display font-bold text-[26px] text-white tracking-tight">Deals</h1>
           <p className="text-[13px] text-gray-2">Track your transactions and commissions</p>
         </div>
         <Link

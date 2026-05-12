@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { LeadStageSelector } from './lead-stage-selector';
 import { LeadClientSection } from './lead-client-section';
 import { QualificationChecklist } from './qualification-checklist';
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .select('contact:contacts(full_name)')
     .eq('id', id)
     .single();
-  const contact = lead?.contact as { full_name: string } | null;
+  const contact = lead?.contact as unknown as { full_name: string } | null;
   return { title: contact?.full_name ? `${contact.full_name} – Lead` : 'Lead Detail' };
 }
 
@@ -33,7 +34,6 @@ export default async function LeadDetailPage({ params }: Props) {
     .select(`
       *,
       contact:contacts(*),
-      messages:messages(*, id, direction, channel, body, media_url, sent_at),
       tasks:tasks(*),
       viewings:viewings(*),
       buyer_requirements:buyer_requirements(*)
@@ -41,12 +41,19 @@ export default async function LeadDetailPage({ params }: Props) {
     .eq('id', id)
     .single();
 
+  // 10.5: Scope messages to only those where lead_id matches current lead
+  const { data: leadMessages } = await supabase
+    .from('messages')
+    .select('id, direction, channel, body, media_url, sent_at')
+    .eq('lead_id', id)
+    .order('sent_at', { ascending: false });
+
   if (error || !lead) {
     notFound();
   }
 
   const contact = lead.contact;
-  const messages = lead.messages ?? [];
+  const messages = leadMessages ?? [];
   const tasks = lead.tasks ?? [];
   const viewings = lead.viewings ?? [];
   const buyerRequirements = lead.buyer_requirements?.[0] ?? null;
@@ -95,6 +102,12 @@ export default async function LeadDetailPage({ params }: Props) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 border-b border-onyx-line pb-5">
         <div>
+          {/* 10.1: Lead title displayed prominently */}
+          {lead.lead_title && (
+            <p className="text-sm font-display font-semibold text-aqua mb-1">
+              {lead.lead_title}
+            </p>
+          )}
           <h1 className="font-display font-bold text-[26px] text-white tracking-tight">
             {contact?.full_name ?? 'Unknown Contact'}
           </h1>
@@ -104,6 +117,26 @@ export default async function LeadDetailPage({ params }: Props) {
 
           {/* Chips */}
           <div className="flex flex-wrap items-center gap-2 mt-3">
+            {/* 10.1: Lead category badge */}
+            {lead.lead_category && (
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium border text-brand border-brand/50 bg-brand/[0.12]">
+                {lead.lead_category.replace(/_/g, ' ').toUpperCase()}
+              </span>
+            )}
+            {/* 10.2: is_active indicator */}
+            {lead.is_active === false && (
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium border text-status-red border-status-red/40 bg-status-red/10">
+                CLOSED
+                {lead.closed_at && (
+                  <> · {new Date(lead.closed_at).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })}</>
+                )}
+              </span>
+            )}
+            {lead.is_active === true && (
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium border text-status-green border-status-green/40 bg-status-green/10">
+                ACTIVE
+              </span>
+            )}
             {lead.verification_score && (
               <span className={`chip ${
                 lead.verification_score === 3
@@ -138,6 +171,23 @@ export default async function LeadDetailPage({ params }: Props) {
               {lead.source.replace(/_/g, ' ').toUpperCase()}
             </span>
           </div>
+
+          {/* 10.2: Close reason when applicable */}
+          {lead.is_active === false && lead.close_reason && (
+            <p className="text-[12px] text-gray-2 mt-2">
+              Close reason: <span className="text-white">{lead.close_reason}</span>
+            </p>
+          )}
+
+          {/* 10.3: View Contact Profile navigation link */}
+          {contact?.id && (
+            <Link
+              href={`/contacts/${contact.id}`}
+              className="inline-flex items-center gap-1 text-[13px] text-aqua hover:underline mt-3"
+            >
+              View Contact Profile →
+            </Link>
+          )}
         </div>
 
         <LeadStageSelector leadId={lead.id} currentStage={lead.status} />

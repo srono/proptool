@@ -48,6 +48,9 @@ const config: Config = {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Figtree', 'BT Beau Sans', 'Inter', 'sans-serif'],
       },
+      letterSpacing: {
+        label: '0.05em',
+      },
       borderRadius: {
         pill: '999px',
       },

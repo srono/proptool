@@ -67,7 +67,7 @@ export function ListingsCardGrid({ listings }: ListingsCardGridProps) {
                 <p className="text-[11px] font-semibold text-white truncate">
                   {listing.address}
                 </p>
-                <p className="text-[9px] text-gray-2 mt-0.5">
+                <p className="text-[11px] text-gray-2 mt-0.5">
                   {listing.district} · {listing.property_type.toUpperCase()}
                 </p>
                 <div className="mt-2">
@@ -76,7 +76,7 @@ export function ListingsCardGrid({ listings }: ListingsCardGridProps) {
                     {listing.listing_type === 'rental' && price ? '/mo' : ''}
                   </span>
                   {listing.listing_type === 'sale' && (
-                    <span className="text-[9px] text-gray-2 block mt-0.5">
+                    <span className="text-[11px] text-gray-2 block mt-0.5">
                       {formatPsf(listing.asking_price, listing.floor_area_sqft)}
                     </span>
                   )}

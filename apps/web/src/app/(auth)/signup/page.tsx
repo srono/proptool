@@ -68,7 +68,7 @@ export default function SignupPage() {
             Pipeline, viewings, WhatsApp, and deals — all in one place. Start your 14-day free trial.
           </p>
         </div>
-        <div className="relative text-[11px] opacity-70 tracking-wide">
+        <div className="relative text-[11px] opacity-70 tracking-label">
           PDPA-aligned · CEA-aware · Singapore data residency
         </div>
       </div>
@@ -82,7 +82,7 @@ export default function SignupPage() {
 
         <form onSubmit={handleSignup} className="mt-8 space-y-4">
           <div>
-            <label htmlFor="fullName" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="fullName" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Full Name
             </label>
             <input
@@ -96,7 +96,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="signupEmail" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="signupEmail" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Email
             </label>
             <input
@@ -110,7 +110,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="signupPhone" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="signupPhone" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Phone (Singapore)
             </label>
             <input
@@ -124,7 +124,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="signupPassword" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="signupPassword" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Password
             </label>
             <input
@@ -139,7 +139,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="ceaNumber" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="ceaNumber" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               CEA Licence Number <span className="opacity-60">(optional)</span>
             </label>
             <input

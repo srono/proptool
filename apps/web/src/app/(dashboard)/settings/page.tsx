@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { SettingsTabs } from '@/components/settings/settings-tabs';
+import { PageHeader } from '@/components/ui/page-header';
 
 export const metadata = { title: 'Settings' };
 
@@ -32,8 +33,15 @@ export default async function SettingsPage() {
 
   return (
     <div className="p-4 lg:p-7 max-w-3xl mx-auto space-y-5">
+      <PageHeader
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Settings' },
+        ]}
+        title="Settings"
+      />
+
       <div className="border-b border-onyx-line pb-5">
-        <h1 className="font-display font-bold text-[26px] text-white tracking-tight">Settings</h1>
         <p className="text-[13px] text-gray-2">Manage your account and preferences</p>
       </div>
 

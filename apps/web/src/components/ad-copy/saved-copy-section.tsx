@@ -95,7 +95,7 @@ export function SavedCopySection({ records }: SavedCopySectionProps) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase">
+      <h3 className="text-[11px] text-gray-2 font-semibold tracking-label uppercase">
         Saved Copy ({records.length})
       </h3>
       <div className="space-y-2">

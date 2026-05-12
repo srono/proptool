@@ -12,7 +12,9 @@ const navItems = [
   { href: '/listings', label: 'Listings', badgeKey: null },
   { href: '/viewings', label: 'Viewings', badgeKey: null },
   { href: '/messages', label: 'Messages', badgeKey: 'unread_messages_count' },
+  { href: '/nurture', label: 'Nurture', badgeKey: null },
   { href: '/deals', label: 'Deals', badgeKey: null },
+  { href: '/contacts', label: 'Contacts', badgeKey: null },
   { href: '/tools', label: 'Insights', badgeKey: null },
   { href: '/settings', label: 'Settings', badgeKey: null },
 ] as const;

@@ -243,7 +243,7 @@ export function NoteDialog({ open, onClose, leadId, contactId, onSaved }: NoteDi
           onChange={handleInput}
           disabled={saving}
           placeholder="Write a note..."
-          className="w-full min-h-[6rem] resize-y bg-onyx border border-onyx-line rounded-lg p-3 text-sm text-white placeholder:text-gray-2/60 focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full min-h-[6rem] resize-y bg-onyx border border-onyx-line rounded-xl p-3 text-sm text-white placeholder:text-gray-2/60 focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
           rows={4}
         />
 

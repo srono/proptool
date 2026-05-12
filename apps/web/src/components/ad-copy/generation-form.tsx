@@ -107,7 +107,7 @@ export function GenerationForm({ onGenerate, isGenerating, listingData }: Genera
       <div>
         <label
           htmlFor="platform"
-          className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5"
+          className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5"
         >
           Platform <span className="text-brand">*</span>
         </label>
@@ -132,7 +132,7 @@ export function GenerationForm({ onGenerate, isGenerating, listingData }: Genera
       <div>
         <label
           htmlFor="tone"
-          className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5"
+          className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5"
         >
           Tone <span className="text-brand">*</span>
         </label>
@@ -157,7 +157,7 @@ export function GenerationForm({ onGenerate, isGenerating, listingData }: Genera
       <div>
         <label
           htmlFor="length"
-          className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5"
+          className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5"
         >
           Length <span className="text-brand">*</span>
         </label>
@@ -182,7 +182,7 @@ export function GenerationForm({ onGenerate, isGenerating, listingData }: Genera
       <div>
         <label
           htmlFor="cta_style"
-          className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5"
+          className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5"
         >
           CTA Style <span className="text-brand">*</span>
         </label>
@@ -207,7 +207,7 @@ export function GenerationForm({ onGenerate, isGenerating, listingData }: Genera
       <div>
         <label
           htmlFor="target_audience"
-          className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5"
+          className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5"
         >
           Target Audience <span className="text-gray-2/50 text-[10px] normal-case">(optional)</span>
         </label>

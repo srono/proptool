@@ -102,12 +102,12 @@ export function CopyVariantCard({
     <div className="rounded-xl border border-onyx-line bg-onyx-raised p-4 space-y-3">
       {/* Header: type label + badges */}
       <div className="flex items-center justify-between">
-        <span className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase">
+        <span className="text-[11px] text-gray-2 font-semibold tracking-label uppercase">
           {label}
         </span>
         <div className="flex items-center gap-2">
           {isPublished && (
-            <span className="inline-flex items-center rounded-full bg-brand/15 px-2.5 py-0.5 text-[10px] font-semibold text-brand uppercase tracking-wide">
+            <span className="inline-flex items-center rounded-full bg-brand/15 px-2.5 py-0.5 text-[10px] font-semibold text-brand uppercase tracking-label">
               Used
             </span>
           )}
@@ -126,7 +126,7 @@ export function CopyVariantCard({
           disabled={isGenerating}
           readOnly={!clipboardAvailable && false}
           aria-label={`${label} content`}
-          className={`w-full bg-onyx border border-onyx-line rounded-lg px-3 py-2.5 text-sm text-white resize-y min-h-[100px] focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`w-full bg-onyx border border-onyx-line rounded-xl px-3 py-2.5 text-sm text-white resize-y min-h-[100px] focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed ${
             !clipboardAvailable ? 'select-all' : ''
           }`}
           maxLength={maxLength}

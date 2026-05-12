@@ -200,7 +200,7 @@ export function ViewingForm({ leads, listings, preselectedLeadId, googleCalendar
         <h2 className="text-sm font-semibold text-white">Viewing Details</h2>
 
         <div>
-          <label htmlFor="lead" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label htmlFor="lead" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Lead *
           </label>
           <select
@@ -222,7 +222,7 @@ export function ViewingForm({ leads, listings, preselectedLeadId, googleCalendar
         </div>
 
         <div>
-          <label htmlFor="listing" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label htmlFor="listing" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Listing *
           </label>
           <select
@@ -243,7 +243,7 @@ export function ViewingForm({ leads, listings, preselectedLeadId, googleCalendar
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label htmlFor="date" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+            <label htmlFor="date" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
               Date *
             </label>
             <input
@@ -256,7 +256,7 @@ export function ViewingForm({ leads, listings, preselectedLeadId, googleCalendar
             />
           </div>
           <div>
-            <label htmlFor="time" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+            <label htmlFor="time" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
               Time *
             </label>
             <input
@@ -268,7 +268,7 @@ export function ViewingForm({ leads, listings, preselectedLeadId, googleCalendar
             />
           </div>
           <div>
-            <label htmlFor="duration" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+            <label htmlFor="duration" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
               Duration (min)
             </label>
             <select

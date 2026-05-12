@@ -88,7 +88,7 @@ export default function StampDutyCalculatorPage() {
       <div className="bg-onyx-card rounded-2xl border border-onyx-line p-6 space-y-4">
         {/* Purchase Price */}
         <div>
-          <label className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Purchase Price (S$)
           </label>
           <input
@@ -102,7 +102,7 @@ export default function StampDutyCalculatorPage() {
 
         {/* Buyer Profile */}
         <div>
-          <label className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Buyer Profile
           </label>
           <select
@@ -120,7 +120,7 @@ export default function StampDutyCalculatorPage() {
 
         {/* Property Count */}
         <div>
-          <label className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Property Number
           </label>
           <select

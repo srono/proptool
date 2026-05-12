@@ -142,7 +142,7 @@ export function PipelineListView({ leads, sort, onSort, breakpoint }: PipelineLi
               className=""
             />
             {/* Phone — desktop only */}
-            <th className="hidden lg:table-cell px-3 py-3 text-[11px] font-semibold text-gray-2 uppercase tracking-wider whitespace-nowrap">
+            <th className="hidden lg:table-cell px-3 py-3 text-[11px] font-semibold text-gray-2 uppercase tracking-label whitespace-nowrap">
               Phone
             </th>
             {/* Remaining sortable columns */}
@@ -183,7 +183,7 @@ function SortableHeader({ column, label, sort, onSort, className = '' }: Sortabl
 
   return (
     <th
-      className={`px-3 py-3 text-[11px] font-semibold text-gray-2 uppercase tracking-wider whitespace-nowrap cursor-pointer select-none hover:text-white transition-colors ${className}`}
+      className={`px-3 py-3 text-[11px] font-semibold text-gray-2 uppercase tracking-label whitespace-nowrap cursor-pointer select-none hover:text-white transition-colors ${className}`}
       onClick={() => onSort(column)}
       aria-sort={isActive ? (sort.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
     >

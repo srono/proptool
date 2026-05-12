@@ -14,6 +14,8 @@ export type ResidencyStatus = 'citizen' | 'pr' | 'ep' | 'other';
 export type PropertyOwnership = 'none' | 'hdb' | 'private' | 'multiple';
 export type TimelineDeclared = '0_3mo' | '3_6mo' | '6_12mo' | 'exploring';
 
+export type LeadCategory = 'buyer' | 'seller' | 'landlord' | 'tenant' | 'co_broke' | 'nurture';
+
 export type PipelineStage =
   | 'new_lead'
   | 'contacted'
@@ -43,6 +45,16 @@ export interface Lead {
   budget_max: number | null;
   move_in_by: string | null;
   notes: string | null;
+
+  // Opportunity-lifecycle fields
+  lead_title: string | null;
+  lead_category: LeadCategory;
+  is_active: boolean;
+  opened_at: string;
+  closed_at: string | null;
+  close_reason: string | null;
+  origin_listing_id: string | null;
+  duplicate_of_lead_id: string | null;
 
   // Qualification fields
   residency_status: ResidencyStatus | null;
@@ -91,4 +103,35 @@ export interface BuyerRequirement {
   deal_type: DealType | null;
   timeline: string | null;
   additional_notes: string | null;
+}
+
+import type { Contact } from './contact';
+
+/**
+ * Warning shown to agents when a potential duplicate lead is detected.
+ * Provides context about the existing contact's lead history.
+ */
+export interface DuplicateWarning {
+  existingContact: Contact;
+  pastLeadsCount: number;
+  closedDealsCount: number;
+  activeLeadsCount: number;
+  /** Active lead with same category created within 14 days */
+  potentialDuplicate?: Lead;
+}
+
+/**
+ * Result from the Duplicate Detection Engine.
+ * Indicates whether a new lead would be a potential duplicate and provides
+ * context banner data for the agent.
+ */
+export interface DuplicateDetectionResult {
+  isDuplicate: boolean;
+  reason?: string;
+  existingLead?: Lead;
+  contextBanner: {
+    pastLeadsCount: number;
+    closedDealsCount: number;
+    activeLeadsCount: number;
+  };
 }

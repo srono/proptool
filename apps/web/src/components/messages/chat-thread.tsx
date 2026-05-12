@@ -130,7 +130,7 @@ export function ChatThread({ contact, messages: initialMessages, tenantId }: Cha
         <div className="flex items-center gap-3">
           <Link
             href="/messages"
-            className="lg:hidden p-1 -ml-1 rounded-md hover:bg-onyx-card text-gray-2"
+            className="lg:hidden p-1 -ml-1 rounded-xl hover:bg-onyx-card text-gray-2"
             aria-label="Back to messages"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

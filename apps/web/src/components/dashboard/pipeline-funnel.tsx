@@ -39,7 +39,7 @@ export function PipelineFunnel() {
                 opacity: 0.9,
               }}
             />
-            <span className="text-[10px] text-gray-2 mt-2 font-display font-semibold tracking-wider uppercase">
+            <span className="text-[10px] text-gray-2 mt-2 font-display font-semibold tracking-label uppercase">
               {s.label}
             </span>
           </div>

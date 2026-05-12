@@ -156,7 +156,7 @@ function ProfileTab({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="fullName" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label htmlFor="fullName" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Full Name
           </label>
           <input
@@ -168,7 +168,7 @@ function ProfileTab({
           />
         </div>
         <div>
-          <label htmlFor="email" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label htmlFor="email" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Email
           </label>
           <input
@@ -180,7 +180,7 @@ function ProfileTab({
           />
         </div>
         <div>
-          <label htmlFor="phone" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label htmlFor="phone" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Phone
           </label>
           <input
@@ -193,7 +193,7 @@ function ProfileTab({
           />
         </div>
         <div>
-          <label htmlFor="agencyName" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label htmlFor="agencyName" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             Agency Name
           </label>
           <input
@@ -206,7 +206,7 @@ function ProfileTab({
           />
         </div>
         <div>
-          <label htmlFor="ceaLicence" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label htmlFor="ceaLicence" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             CEA Licence Number
           </label>
           <input
@@ -219,7 +219,7 @@ function ProfileTab({
           />
         </div>
         <div>
-          <label htmlFor="ceaExpiry" className="text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5 block">
+          <label htmlFor="ceaExpiry" className="text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5 block">
             CEA Expiry Date
           </label>
           <input
@@ -425,7 +425,7 @@ function NotificationsTab({
               aria-checked={prefs[item.key]}
               onClick={() => togglePref(item.key)}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
-                prefs[item.key] ? 'bg-brand-600' : 'bg-onyx-raised'
+                prefs[item.key] ? 'bg-brand' : 'bg-onyx-raised'
               }`}
             >
               <span

@@ -1,25 +1,41 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { MessagesLeadFilter } from './messages-lead-filter';
 
 export const metadata = { title: 'Messages' };
 
-export default async function MessagesPage() {
+export default async function MessagesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ lead?: string }>;
+}) {
   const supabase = await createClient();
+  const params = await searchParams;
+  const leadFilter = params.lead || null;
 
-  const { data: conversations } = await supabase
+  // Build messages query — optionally filter by lead_id
+  let messagesQuery = supabase
     .from('messages')
     .select(`
       id,
       contact_id,
+      lead_id,
       body,
       direction,
       status,
       sent_at,
       media_url,
-      contact:contacts(id, full_name, phone)
+      contact:contacts(id, full_name, phone),
+      lead:leads(id, lead_title, lead_category)
     `)
     .neq('channel', 'note')
     .order('sent_at', { ascending: false });
+
+  if (leadFilter) {
+    messagesQuery = messagesQuery.eq('lead_id', leadFilter);
+  }
+
+  const { data: conversations } = await messagesQuery;
 
   // Group by contact_id and keep only the latest message per contact
   const contactMap = new Map<string, {
@@ -32,6 +48,7 @@ export default async function MessagesPage() {
     last_message_at: string;
     has_media: boolean;
     unread_count: number;
+    active_lead_label: string | null;
   }>();
 
   if (conversations) {
@@ -39,6 +56,7 @@ export default async function MessagesPage() {
       if (contactMap.has(msg.contact_id)) continue;
 
       const contact = msg.contact as unknown as { id: string; full_name: string; phone: string } | null;
+      const lead = msg.lead as unknown as { id: string; lead_title: string | null; lead_category: string } | null;
 
       contactMap.set(msg.contact_id, {
         contact_id: msg.contact_id,
@@ -50,6 +68,7 @@ export default async function MessagesPage() {
         last_message_at: msg.sent_at,
         has_media: !!msg.media_url,
         unread_count: 0,
+        active_lead_label: lead ? (lead.lead_title || lead.lead_category) : null,
       });
     }
   }
@@ -65,6 +84,20 @@ export default async function MessagesPage() {
 
   const contactList = Array.from(contactMap.values());
 
+  // Fetch leads for the filter dropdown
+  const { data: leads } = await supabase
+    .from('leads')
+    .select('id, lead_title, lead_category, contact:contacts(full_name)')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  const leadOptions = (leads ?? []).map((l) => ({
+    id: l.id,
+    label: l.lead_title || l.lead_category,
+    contact_name: (l.contact as unknown as { full_name: string } | null)?.full_name ?? '',
+  }));
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -74,17 +107,16 @@ export default async function MessagesPage() {
         </h1>
         <p className="text-xs text-gray-2 mt-0.5">WhatsApp · 1 number</p>
 
-        {/* Search */}
+        {/* Lead filter */}
         <div className="mt-3">
-          <input
-            type="search"
-            placeholder="Search contacts..."
-            className="w-full rounded-pill border border-onyx-line bg-onyx-card py-2.5 px-4 text-sm text-white placeholder:text-gray-2 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+          <MessagesLeadFilter
+            leads={leadOptions}
+            currentLeadId={leadFilter}
           />
         </div>
       </div>
 
-      {/* Conversation list */}
+      {/* Conversation list — grouped by contact */}
       <div className="flex-1 overflow-y-auto">
         {contactList.length > 0 ? (
           <div>
@@ -107,6 +139,11 @@ export default async function MessagesPage() {
                       {formatTime(convo.last_message_at)}
                     </span>
                   </div>
+                  {convo.active_lead_label && (
+                    <span className="text-[10px] text-aqua">
+                      {convo.active_lead_label}
+                    </span>
+                  )}
                   <div className="flex items-center justify-between mt-0.5">
                     <span className="text-xs text-gray-2 truncate max-w-[200px]">
                       {convo.last_message_direction === 'outbound' && (

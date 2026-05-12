@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useId } from 'react';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 import {
   DndContext,
   DragOverlay,
@@ -203,8 +204,15 @@ export function PipelineBoard({ leads, stages }: PipelineBoardProps) {
                   />
                 ))}
                 {/* Drop zone hint */}
-                <div className="border border-dashed border-onyx-line rounded-[14px] p-3 text-center text-gray-2 text-[11px]">
-                  + drag here
+                <div
+                  className={cn(
+                    'border border-onyx-line rounded-[14px] p-3 text-center text-[11px] transition-colors',
+                    activeId !== null
+                      ? 'border-brand/60 bg-brand/5 text-brand'
+                      : 'border-onyx-line/50 text-gray-2/60'
+                  )}
+                >
+                  Drop here
                 </div>
               </DroppableColumn>
             );

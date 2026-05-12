@@ -3,6 +3,15 @@ import Link from 'next/link';
 
 export const metadata = { title: 'Lead Inbox' };
 
+const CATEGORY_COLORS: Record<string, string> = {
+  buyer: 'text-aqua border-aqua/40 bg-aqua/10',
+  seller: 'text-brand border-brand/40 bg-brand/10',
+  landlord: 'text-amber-400 border-amber-400/40 bg-amber-400/10',
+  tenant: 'text-emerald-400 border-emerald-400/40 bg-emerald-400/10',
+  co_broke: 'text-purple-400 border-purple-400/40 bg-purple-400/10',
+  nurture: 'text-gray-2 border-gray-2/40 bg-gray-2/10',
+};
+
 export default async function LeadsPage() {
   const supabase = await createClient();
 
@@ -10,7 +19,7 @@ export default async function LeadsPage() {
     .from('leads')
     .select(`
       *,
-      contact:contacts(full_name, phone, email, linkedin_url)
+      contact:contacts(id, full_name, phone, email, linkedin_url)
     `)
     .eq('status', 'new_lead')
     .order('created_at', { ascending: false })
@@ -30,39 +39,52 @@ export default async function LeadsPage() {
 
       <div className="space-y-2.5">
         {leads && leads.length > 0 ? (
-          leads.map((lead) => (
-            <Link key={lead.id} href={`/leads/${lead.id}`}>
-              <div className="bg-onyx-card border border-onyx-line rounded-2xl p-4 hover:border-brand/50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-semibold text-white truncate">
-                        {lead.contact?.full_name ?? 'Unknown'}
+          leads.map((lead) => {
+            const categoryColor = CATEGORY_COLORS[lead.lead_category] ?? CATEGORY_COLORS.buyer;
+            return (
+              <Link key={lead.id} href={`/leads/${lead.id}`}>
+                <div className="bg-onyx-card border border-onyx-line rounded-2xl p-4 hover:border-brand/50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-white truncate">
+                          {lead.contact?.full_name ?? 'Unknown'}
+                        </p>
+                        {lead.lead_category && (
+                          <span className={`chip text-[10px] ${categoryColor}`}>
+                            {lead.lead_category}
+                          </span>
+                        )}
+                        {lead.eligibility_risk && (
+                          <span className="chip text-status-red border-status-red/40 bg-status-red/10">
+                            ELIG WATCH
+                          </span>
+                        )}
+                      </div>
+                      {lead.lead_title && (
+                        <p className="text-xs text-aqua mt-0.5 truncate">
+                          {lead.lead_title}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-2 mt-0.5">
+                        {lead.contact?.phone} · {lead.source.replace('_', ' ')} · {lead.deal_type}
                       </p>
-                      {lead.eligibility_risk && (
-                        <span className="chip text-status-red border-status-red/40 bg-status-red/10">
-                          ELIG WATCH
-                        </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[11px] text-gray-2">
+                        {new Date(lead.created_at).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })}
+                      </span>
+                      {lead.intent_score && (
+                        <p className="text-[11px] text-aqua mt-0.5">
+                          Intent: {lead.intent_score}/5
+                        </p>
                       )}
                     </div>
-                    <p className="text-xs text-gray-2 mt-0.5">
-                      {lead.contact?.phone} · {lead.source.replace('_', ' ')} · {lead.deal_type}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[11px] text-gray-2">
-                      {new Date(lead.created_at).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })}
-                    </span>
-                    {lead.intent_score && (
-                      <p className="text-[11px] text-aqua mt-0.5">
-                        Intent: {lead.intent_score}/5
-                      </p>
-                    )}
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))
+              </Link>
+            );
+          })
         ) : (
           <div className="text-center py-16 bg-onyx-card rounded-2xl border border-onyx-line">
             <div className="mx-auto w-12 h-12 rounded-full bg-brand/10 border border-brand/30 flex items-center justify-center mb-4">

@@ -138,7 +138,7 @@ export function PipelineClientShell({ leads, stages }: PipelineClientShellProps)
           <button
             type="button"
             onClick={clearAllFilters}
-            className="mt-4 text-sm text-aqua hover:text-white transition-colors underline underline-offset-2"
+            className="mt-4 text-sm text-brand hover:text-brand/70 transition-colors"
           >
             Clear all filters
           </button>

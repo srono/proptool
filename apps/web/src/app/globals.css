@@ -12,6 +12,9 @@
     --brand: #2859F7;
     --brand-deep: #0945E6;
     --aqua: #8EFEFF;
+    --status-red: #FF5A5A;
+    --sparkline-positive: var(--aqua);
+    --sparkline-negative: var(--status-red);
   }
 
   body {

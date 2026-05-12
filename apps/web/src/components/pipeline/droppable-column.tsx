@@ -51,7 +51,7 @@ export function DroppableColumn({
           <span
             className={`w-1.5 h-1.5 rounded-full ${stageColors[colorIndex] ?? 'bg-brand'}`}
           />
-          <span className="font-display font-bold text-xs tracking-[1.2px] text-white uppercase">
+          <span className="font-display font-bold text-xs tracking-label text-white uppercase">
             {label}
           </span>
         </div>

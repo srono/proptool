@@ -1,0 +1,4 @@
+-- PropAgent SG — Nurture Playbooks Seed Data
+-- NOTE: All nurture data is now included in demo-seed.sql.
+-- This file is kept for backwards compatibility but is no longer needed separately.
+-- Run demo-seed.sql instead for the complete dataset.

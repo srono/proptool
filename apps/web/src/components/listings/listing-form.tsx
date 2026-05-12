@@ -170,7 +170,7 @@ export function ListingForm({ initialData }: Props) {
         <h2 className="text-sm font-display font-bold text-white">Property Details</h2>
 
         <div>
-          <label htmlFor="address" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+          <label htmlFor="address" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
             Address *
           </label>
           <input
@@ -186,7 +186,7 @@ export function ListingForm({ initialData }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="postalCode" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="postalCode" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Postal Code *
             </label>
             <input
@@ -202,7 +202,7 @@ export function ListingForm({ initialData }: Props) {
           </div>
 
           <div>
-            <label htmlFor="district" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="district" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               District
             </label>
             <select
@@ -223,7 +223,7 @@ export function ListingForm({ initialData }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="propertyType" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="propertyType" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Property Type *
             </label>
             <select
@@ -244,7 +244,7 @@ export function ListingForm({ initialData }: Props) {
 
           {propertyType === 'hdb' && (
             <div>
-              <label htmlFor="hdbType" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+              <label htmlFor="hdbType" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
                 HDB Type
               </label>
               <select
@@ -266,7 +266,7 @@ export function ListingForm({ initialData }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="tenure" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="tenure" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Tenure *
             </label>
             <select
@@ -286,7 +286,7 @@ export function ListingForm({ initialData }: Props) {
           </div>
 
           <div>
-            <label htmlFor="floorAreaSqft" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="floorAreaSqft" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Floor Area (sqft) *
             </label>
             <input
@@ -304,7 +304,7 @@ export function ListingForm({ initialData }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label htmlFor="floor" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="floor" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Floor
             </label>
             <input
@@ -318,7 +318,7 @@ export function ListingForm({ initialData }: Props) {
           </div>
 
           <div>
-            <label htmlFor="unitNumber" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="unitNumber" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Unit Number
             </label>
             <input
@@ -332,7 +332,7 @@ export function ListingForm({ initialData }: Props) {
           </div>
 
           <div>
-            <label htmlFor="completionYear" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="completionYear" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Completion Year
             </label>
             <input
@@ -355,7 +355,7 @@ export function ListingForm({ initialData }: Props) {
 
         {listingType === 'sale' ? (
           <div>
-            <label htmlFor="askingPrice" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="askingPrice" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Asking Price ($)
             </label>
             <input
@@ -375,7 +375,7 @@ export function ListingForm({ initialData }: Props) {
           </div>
         ) : (
           <div>
-            <label htmlFor="askingRental" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="askingRental" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Asking Rental ($/month)
             </label>
             <input
@@ -420,7 +420,7 @@ export function ListingForm({ initialData }: Props) {
 
         {isExclusive && (
           <div>
-            <label htmlFor="exclusivityExpiry" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="exclusivityExpiry" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Exclusivity Expiry Date
             </label>
             <input

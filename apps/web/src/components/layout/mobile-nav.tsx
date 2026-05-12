@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 const mobileNavItems = [
   { href: '/dashboard', label: 'Home' },
   { href: '/leads', label: 'Lead Inbox' },
-  { href: '/pipeline', label: 'Pipe' },
+  { href: '/nurture', label: 'Nurture' },
   { href: '/messages', label: 'Chat' },
   { href: '/settings', label: 'More' },
 ];
@@ -33,14 +33,8 @@ export function MobileNav({ className }: { className?: string }) {
             >
               <span
                 className={cn(
-                  'w-[5px] h-[5px] rounded-full',
-                  isActive ? 'bg-aqua' : 'bg-gray-2'
-                )}
-              />
-              <span
-                className={cn(
-                  'text-[10px] font-semibold',
-                  isActive ? 'text-white' : 'text-gray-2'
+                  'px-2.5 py-1 rounded-pill text-[11px] font-semibold transition-colors',
+                  isActive ? 'bg-brand text-white' : 'text-gray-2'
                 )}
               >
                 {item.label}

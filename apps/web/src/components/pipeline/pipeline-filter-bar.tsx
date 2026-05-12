@@ -217,7 +217,7 @@ export function PipelineFilterBar({
         <button
           type="button"
           onClick={onClearAll}
-          className="text-sm text-gray-2 hover:text-white transition-colors underline underline-offset-2"
+          className="text-sm text-brand hover:text-brand/70 transition-colors"
         >
           Clear all filters
         </button>

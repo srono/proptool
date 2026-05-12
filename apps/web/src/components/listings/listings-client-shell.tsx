@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { Listing } from '@agentos/shared';
 import { useViewMode } from './hooks/use-view-mode';
 import { useBreakpoint } from './hooks/use-breakpoint';
@@ -9,13 +10,22 @@ import { ViewToggle } from './view-toggle';
 import { FilterBar } from './filter-bar/filter-bar';
 import { ListingsTable } from './listings-table/listings-table';
 import { ListingsCardGrid } from './listings-card-grid';
+import { PillTabs } from '@/components/ui/pill-tabs';
 
 interface ListingsClientShellProps {
   listings: Listing[];
   activeTab: string;
 }
 
+const listingTabs = [
+  { label: 'All', value: 'all' },
+  { label: 'Sale', value: 'sale' },
+  { label: 'Rental', value: 'rental' },
+  { label: 'Draft', value: 'draft' },
+];
+
 export function ListingsClientShell({ listings, activeTab }: ListingsClientShellProps) {
+  const router = useRouter();
   const { viewMode, setViewMode } = useViewMode();
   const breakpoint = useBreakpoint();
   const {
@@ -35,13 +45,19 @@ export function ListingsClientShell({ listings, activeTab }: ListingsClientShell
   const showTable = viewMode === 'list' && !isMobile;
   const showCards = viewMode === 'card' || isMobile;
 
+  const handleTabChange = (value: string) => {
+    router.push(value === 'all' ? '/listings' : `/listings?tab=${value}`);
+  };
+
   return (
     <div className="space-y-4">
-      {/* Page Header with View Toggle */}
+      {/* Tab Switcher with View Toggle */}
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-medium text-gray-2">
-          {activeTab === 'all' ? 'All Listings' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-        </h2>
+        <PillTabs
+          tabs={listingTabs}
+          value={activeTab}
+          onChange={handleTabChange}
+        />
         <ViewToggle
           viewMode={viewMode}
           onToggle={setViewMode}
@@ -94,7 +110,7 @@ export function ListingsClientShell({ listings, activeTab }: ListingsClientShell
           <button
             type="button"
             onClick={clearAllFilters}
-            className="mt-4 text-sm text-aqua hover:text-white transition-colors underline underline-offset-2"
+            className="mt-4 text-sm text-brand hover:text-brand/70 transition-colors"
           >
             Clear all filters
           </button>

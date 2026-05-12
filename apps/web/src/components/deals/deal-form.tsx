@@ -117,7 +117,7 @@ export function DealForm({ leads, listings }: Props) {
         <h2 className="text-sm font-display font-bold text-white">Parties & Property</h2>
 
         <div>
-          <label htmlFor="lead" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+          <label htmlFor="lead" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
             Lead *
           </label>
           <select
@@ -140,7 +140,7 @@ export function DealForm({ leads, listings }: Props) {
         </div>
 
         <div>
-          <label htmlFor="listing" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+          <label htmlFor="listing" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
             Listing (optional)
           </label>
           <select
@@ -160,7 +160,7 @@ export function DealForm({ leads, listings }: Props) {
         </div>
 
         <div>
-          <label htmlFor="dealType" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+          <label htmlFor="dealType" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
             Deal Type
           </label>
           <select
@@ -183,7 +183,7 @@ export function DealForm({ leads, listings }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="offerPrice" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="offerPrice" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Offer Price ($)
             </label>
             <input
@@ -196,7 +196,7 @@ export function DealForm({ leads, listings }: Props) {
             />
           </div>
           <div>
-            <label htmlFor="agreedPrice" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="agreedPrice" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Agreed Price ($)
             </label>
             <input
@@ -217,7 +217,7 @@ export function DealForm({ leads, listings }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="commissionPct" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="commissionPct" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Commission %
             </label>
             <input
@@ -231,7 +231,7 @@ export function DealForm({ leads, listings }: Props) {
             />
           </div>
           <div>
-            <label className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Commission Amount
             </label>
             <div className="rounded-xl border border-onyx-line bg-onyx-raised px-4 py-3 text-sm text-gray-2">
@@ -242,7 +242,7 @@ export function DealForm({ leads, listings }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="coBrokeAgent" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="coBrokeAgent" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Co-broke Agent (optional)
             </label>
             <input
@@ -255,7 +255,7 @@ export function DealForm({ leads, listings }: Props) {
             />
           </div>
           <div>
-            <label htmlFor="coBrokeSplit" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="coBrokeSplit" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Co-broke Split %
             </label>
             <input
@@ -303,7 +303,7 @@ export function DealForm({ leads, listings }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label htmlFor="otpDate" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="otpDate" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               OTP / LOI Date
             </label>
             <input
@@ -315,7 +315,7 @@ export function DealForm({ leads, listings }: Props) {
             />
           </div>
           <div>
-            <label htmlFor="exerciseDeadline" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="exerciseDeadline" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Exercise Deadline
             </label>
             <input
@@ -327,7 +327,7 @@ export function DealForm({ leads, listings }: Props) {
             />
           </div>
           <div>
-            <label htmlFor="completionDate" className="block text-[11px] text-gray-2 font-semibold tracking-wide uppercase mb-1.5">
+            <label htmlFor="completionDate" className="block text-[11px] text-gray-2 font-semibold tracking-label uppercase mb-1.5">
               Completion Date
             </label>
             <input

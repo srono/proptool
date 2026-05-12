@@ -44,7 +44,7 @@ export function MatchedBuyersCard({ count }: Props) {
               >
                 {b.fit}
               </div>
-              <div className="text-[10px] text-gray-2 tracking-wide">FIT</div>
+              <div className="text-[10px] text-gray-2 tracking-label">FIT</div>
             </div>
           </div>
         ))}
